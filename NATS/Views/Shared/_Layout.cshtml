@@ -1,0 +1,261 @@
+﻿@{
+    ViewBag.RenderSubcribeForm = false;
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title>@ViewBag.PageTitle - Trung tâm Khoa học Đào tạo và Thẩm mỹ Quốc Gia</title>
+        <!-- **Favicon** -->
+        <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+        <!-- **CSS - stylesheets** -->
+        <link href="/css/style.css" rel="stylesheet" type="text/css" media="all" />
+        <link href="/css/responsive.css" rel="stylesheet" type="text/css" media="all" />
+        @await RenderSectionAsync("Styles", required: false)
+        <!-- **Additional - stylesheets** -->
+        <script type="text/javascript" src="/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/jquery.jcarousel.min.js"></script>
+        <script type="text/javascript" src="/js/spa.custom.js"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+
+    </head>
+
+    <body class="home">
+        <!-- **Header** -->
+        <div id="header">
+            <div class="container">
+                <!-- **Top-Menu** -->
+                <div id="top-menu">
+                    <ul class="menu">
+                        <li class='@ViewBag.CurrentPageName == "Index" ? "current_page_item" )'>
+                            <a asp-action="Index" asp-controller="Home" title="">
+                                <span>Home page</span>
+                                Trang chủ
+                            </a>     
+                        </li>                                                   
+                        <li class='@ViewBag.CurrentPageName == "AboutUs" ? "current_page_item" )'>
+                            <a asp-action="AboutUs" asp-controller="Home" title="">
+                                <span>About us</span>
+                                Giới thiệu
+                            </a>
+                        </li>
+                        <li class='@ViewBag.CurrentPageName == "TeamMembers" ? "current_page_item" )'>
+                            <a asp-action="TeamMembers" asp-controller="Home" title="">
+                                <span>Members</span>
+                                Đội ngũ
+                            </a>
+                        </li>
+                        <li class='@ViewBag.CurrentPageName == "Courses" ? "current_page_item" )'>
+                            <a asp-action="Education" asp-controller="Home" title="">
+                                <span>Education</span>
+                                Đào tạo
+                            </a>                   
+                            <ul>
+                                <li>
+                                    <a asp-action="CourseList" asp-controller="Home" title="">
+                                        Khoá học
+                                    </a>
+                                </li>  
+                            </ul> 
+                        </li>
+                        <li class='@ViewBag.CurrentPageName == "Services" ? "current_page_item" )'>
+                            <a asp-action="BusinessServiceList" asp-controller="Home" title="">
+                                <span>Services</span>
+                                Dịch vụ
+                            </a>
+                        </li>
+                        <li class='@ViewBag.CurrentPageName == "Products" ? "current_page_item" )'>
+                            <a asp-action="ProductList" asp-controller="Home" title="">
+                                <span>Products</span>
+                                Sản phẩm
+                            </a>
+                        </li>
+                        <li class='@ViewBag.CurrentPageName == "Blogs" ? "current_page_item" )'>
+                            <a asp-action="Index" asp-controller="Home" title="">
+                                <span>News</span>
+                                Tin tức
+                            </a>
+                        </li>
+                    </ul>        	
+                </div><!-- **Top-Menu - End** -->
+                
+                <!-- **Logo** -->
+                <div id="logo">
+                    <a asp-action="Index" asp-controller="Home" title="" style="display: flex; align-items: center">
+                        <img src="/images/nats-logo.png" alt="" title=""/>
+                        <div class="text-container" style="display: flex; flex-direction: column; justify-items: around">
+                            <span class="upper">NATS</span>
+                            <span class="lower">Trung tâm Khoa học Đào tạo và Thẩm mỹ Quốc Gia</span>
+                        </div>
+                    </a>
+                </div><!-- **Logo - End** -->
+                
+                <!-- **Searchform** -->
+                @* <form action="#" id="searchform" method="get">
+                    <fieldset>
+                        <input name="Search" type="text" onblur="this.value=(this.value=='') ? 'Enter Keyword' : this.value;" onfocus="this.value=(this.value=='Enter Keyword') ? '' : this.value;" value="Enter Keyword" alt="Search our site" class="text_input" />
+                        <input name="submit" type="submit" class="button" value="" />
+                    </fieldset>
+                </form> *@
+                <!-- **Searchform - End** -->
+                
+            </div>
+        </div><!-- **Header - End** -->
+        @RenderSection("Breadcrumbs", required: false)
+        @RenderBody()
+    
+        <!-- ** Footer** -->
+        <div id="footer">
+            <div class="main-container">
+            
+                <!-- **Recent Entries** -->
+                <div class="column one-third">
+                    <div class="widget widget_recent_entries">
+                        <h2 class="widgettitle">
+                            <span>Bài viết mới nhất</span>
+                        </h2>
+                        <ul style="padding-left: 3px; ">
+                            <li> 
+                                <a href="blog-single.html" title=""><img src="http://placehold.it/54x54" alt="" title="" /></a>
+                                <b>
+                                    <a href="blog-single.html" title="">Living In Style</a>
+                                </b>
+                                <p>Nulla ullamcorper faucibus tellus sed malesuada.</p>
+                            </li>
+                            <li> 
+                                <a href="blog-single.html" title="">
+                                    <img src="http://placehold.it/54x54" alt="" title="" />
+                                </a>
+                                <b>
+                                    <a href="blog-single.html" title="">Healthy Mind and ...</a>
+                                </b>
+                                <p>In convallis hendrerit velit id vulputat.</p>
+                            </li>
+                            <li> 
+                                <a href="blog-single.html" title="">
+                                    <img src="http://placehold.it/54x54" alt="" title="" />
+                                </a>
+                                <b>
+                                    <a href="blog-single.html" title="">Living In Style</a>
+                                </b>
+                                <p>Duis scelerisque, metus ac adipiscing nvallis.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div><!-- **Recent Entries - End** -->
+                
+                <!-- **Testimonials** -->
+                <div class="column one-third">
+                    <div class="widget">
+                        <h2 class="widgettitle">
+                            <span>Trích dẫn</span>
+                        </h2>
+                        <div class="testimonial-skin-carousel">
+                            <ul class="testimonial-carousel">
+                                <li>
+                                    <blockquote>                                
+                                        Nulla ullamcorper faucibus tellus sed malesuada. In convallis hendrerit velit id vulputate. In hac habitasse platea dictumst. Donec eget consequat urna. Pellentesque ac 
+                                        nibh risus. Duis scelerisque, metus ac adipiscing convallis, nunc lectus commodo leo, a vulputate nisi elit in nisl. 
+                                        <span> - Emmy Rossum </span>
+                                    </blockquote>
+                                </li>
+                                <li>
+                                    <blockquote>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sed sapien ac risus pulvinar consequat. Nulla a urna a nibh consectetur semper quis hendrerit felis. 
+                                        Aliquam sodales, elit sit amet pellentesque dapibus. 
+                                        <span> - Aliquam erat </span>
+                                    </blockquote>
+                                </li>
+                                <li>
+                                    <blockquote>
+                                        Proin magna diam, mollis vel pretium et, mattis ac erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
+                                        Quisque in eros at nisi malesuada porttitor. Aenean blandit ornare urna at hendrerit. 
+                                        <span> - Quisque vehicula </span>
+                                    </blockquote>
+                                </li>
+                                <li>
+                                    <blockquote>
+                                        Nunc arcu magna, egestas non gravida vel, condimentum eu elit. Morbi egestas erat a urna mollis malesuada. Aliquam quis orci sem, ut facilisis massa. Suspendisse varius nisi vitae quam porta convallis. Aliquam ac quam neque, quis feugiat est. Praesent odio diam.
+                                        <span> - Aenean malesuada </span>
+                                    </blockquote>
+                                </li>
+                            </ul> 
+                        </div>
+                        
+                    </div>
+                </div><!-- **Testimonials - End** -->
+                
+                <!-- **Contact Us** -->
+                <div class="column one-third last">
+                    <div class="widget">
+                        <h2 class="widgettitle">
+                            <span>Liên hệ</span>
+                        </h2>
+                        <ul class="contact-details">
+                            <li>
+                                <span class="mail"></span>
+                                <a href="" title="">designthemes@somemail.com</a>
+                            </li>
+                            <li>
+                                <span class="phone"></span>
+                                2145 - 007 - 1566
+                            </li>  
+                            <li>
+                                <span class="address"></span>
+                                No 45, Season Street, Livingstone LA, Inc - 4502
+                            </li>                
+                        </ul>                                      
+                    </div>
+                    <div class="widget social-widget">
+                        <h2>
+                            <span>We're Social</span>
+                        </h2>
+                        <ul>
+                            <li> 
+                                <a href="" title=""> 
+                                    <img src="/images/facebook-hover.png" alt="image" title="" />
+                                    <img src="/images/facebook.png" alt="image" title="" />                                
+                                </a> 
+                            </li>
+                            <li> 
+                                <a href="" title=""> 
+                                    <img src="/images/twitter-hover.png" alt="image" title="" />
+                                    <img src="/images/twitter.png" alt="image" title="" />                                
+                                </a> 
+                            </li>
+                            <li> 
+                                <a href="" title=""> 
+                                    <img src="/images/flickr-hover.png" alt="" title="" />
+                                    <img src="/images/flickr.png" alt="image" title="" />                                
+                                </a> 
+                            </li>
+                            <li> 
+                                <a href="" title=""> 
+                                    <img src="/images/youtube-hover.png" alt="" title="" />
+                                    <img src="/images/youtube.png" alt="image" title="" />                                
+                                </a> 
+                            </li>
+                        </ul>  
+                    </div>
+                </div><!-- **Contact Us - End** -->
+            
+            
+            </div>
+        </div><!-- **Footer - End** -->
+        
+        <!-- **Footer Bottom** -->
+        <div class="footer-bottom"> 
+            <div class="main-container">        
+                <p style="text-align: center"> &copy; NATS - Trung tâm Khoa học Đào tạo và Thẩm mỹ Quốc Gia @DateTime.Now.Year</p>        
+            </div>
+        </div><!-- **Footer Bottom - End** -->
+    </body>
+</html>
