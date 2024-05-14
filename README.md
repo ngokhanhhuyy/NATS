@@ -29,7 +29,7 @@ This is the opening step that help me to step my foot into the front-end world, 
 
 **Libraries and frameworks used**
 - Backend: ASP.NET Core MVC (.NET 7) with Razor engine, Entity Framework Core, FluentValidation, MagickImage, MySQL 8.
-- Frontend: Vanilla JavaScript for user interface reactivity and AJAX requests, ApexCharts for Admin dashboard statistics visualization.
+- Frontend: Bootstrap 5.3, Vanilla JavaScript for user interface reactivity and AJAX requests, ApexCharts for Admin dashboard statistics visualization.
 - Github (source code management).
 - IDE: Visual Studio Code (Frontend), Visual Studio 2022 (Backend and publishing), Rider (partially, for code optimization suggesstion), DataGrip (for direct database interaction and query testing).
 
