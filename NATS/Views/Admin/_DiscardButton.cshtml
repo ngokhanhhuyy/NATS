@@ -1,0 +1,48 @@
+@model string
+
+<!-- Discard button -->
+<button class="btn btn-secondary w-100 shadow-sm" data-toggle="modal"
+        id="discard-confirmation-modal-show-button"
+        data-target="#discard-confirmation-modal">
+    Huỷ
+    <i class="bi bi-x-lg ms-2"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="discard-confirmation-modal" tabindex="-1" role="dialog"
+     aria-labelledby="discard-confirmation-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="discard-confirmation-modal-title">Xác nhận huỷ bỏ</h5>
+            </div>
+            <div class="modal-body row px-4">
+                <div class="col col-auto pe-3">
+                    <i class="bi bi-exclamation-triangle-fill fs-1 text-warning"></i>
+                </div>
+                <div class="col h-100">
+                    Mọi thay đổi chưa được lưu sẽ mất.<br/>
+                    Bạn có chắc chắn muốn huỷ bỏ?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    id="discard-confirmation-modal-cancel-button">
+                    Quay lại
+                </button>
+                <a href="@Model" type="button" class="btn btn-danger">
+                    Chắc chắn
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/admin/discard-modal.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const discardModalController = new DiscardModalController(
+            document.getElementById("discard-confirmation-modal-show-button"));
+    })
+</script>

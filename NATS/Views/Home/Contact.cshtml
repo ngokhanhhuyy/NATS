@@ -1,0 +1,160 @@
+@model ContactViewModel
+@{
+    ViewBag.PageTitle = "Liên hệ";
+    Layout = "_Layout";
+}
+
+<!-- **Main Container** -->
+<div class="main-container" xmlns="http://www.w3.org/1999/html">
+    <!-- **Content Full Width** -->
+    <div class="content content-full-width">
+        <div class="green-border">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1946.110234483311!2d108.0633383046389!3d12.699028422944613!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3171f7c2ed501ea7%3A0xe780f4b5d49f18b0!2zMjEgUGhhbiDEkMSDbmcgTMawdSwgVMOibiBBbiwgVGjDoG5oIHBo4buRIEJ1w7RuIE1hIFRodeG7mXQsIMSQ4bqvayBM4bqvaywgVmlldG5hbQ!5e0!3m2!1sen!2sus!4v1711459933261!5m2!1sen!2sus"
+                    width="930" height="340"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+
+        <div class="hr_invisible"> </div>
+
+        <div class="column one-third">
+            <h1>@Html.DisplayNameFor(model => model.ContactInfo)</h1>
+            <ul class="contact-details">
+                @if (Model.ContactInfo.Address != null)
+                {
+                    <li>
+                        <span class="address"></span>
+                        <p>@Html.Raw(Model.ContactInfo.Address.Replace(Environment.NewLine, "<br/>"))</p>
+                    </li>
+                }
+                @if (Model.ContactInfo.Email != null)
+                {
+                    <li>
+                        <span class="mail"></span>
+                        <p><a href="mailto:@Model.ContactInfo.Email" title="">@Model.ContactInfo.Email</a></p>
+                    </li>
+                }
+                @if (Model.ContactInfo.PhoneNumber != null)
+                {
+                    <li>
+                        <span class="phone"></span>
+                        <p><a href="tel:@Model.ContactInfo.PhoneNumber" title="">@Model.ContactInfo.PhoneNumber</a></p>
+                    </li>
+                }
+                @if (Model.ContactInfo.ZaloNumber != null)
+                {
+                    <li>
+                        <span class="zalo"></span>
+                        <p>
+                            @{
+                                string zaloUrl = "https://zalo.me/" + Model.ContactInfo.ZaloNumber
+                                    .Replace(" ", "")
+                                    .Replace("+84", "0");
+                            }
+                            <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
+                                @Model.ContactInfo.ZaloNumber
+                            </a>
+                        </p>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <div class="column one-third">
+            <h1>@DisplayNames.WorkingHours</h1>
+            <div class="notice">
+                <span class="left">Thứ 2:</span> <span class="right">8h sáng - 17h chiều</span>
+            </div>
+            <div class="notice">
+                <span class="left">Thứ 3:</span> <span class="right">8h sáng - 17h chiều</span>
+            </div>
+            <div class="notice">
+                <span class="left">Thứ 4:</span> <span class="right">8h sáng - 17h chiều</span>
+            </div>
+            <div class="notice">
+                <span class="left">Thứ 5:</span> <span class="right">8h sáng - 17h chiều</span>
+            </div>
+            <div class="notice">
+                <span class="left">Thứ 6:</span> <span class="right">8h sáng - 17h chiều</span>
+            </div>
+            <div class="notice">
+                <span class="left">Thứ 7:</span> <span class="right">8h sáng - 17h chiều</span>
+            </div>
+        </div>
+
+        <div class="column one-third last">
+            <div class="enquiry-form">
+                <h1>Đặt câu hỏi</h1>
+                <div id="ajax_message"></div>
+                <form asp-action="Contact" asp-controller="Home" method="post"
+                      name="frmcontact" id="frmcontact">
+                    <!-- FullName -->
+                    <div class="form-group" style="margin-bottom: 1em">
+                        <label asp-for="Enquiry.FullName">
+                            @Html.DisplayNameFor(model => model.Enquiry.FullName)
+                            <span style="color: red">*</span>
+                        </label>
+                        <input asp-for="Enquiry.FullName" type="text"
+                               placeholder="@Html.DisplayNameFor(model => model.Enquiry.FullName)">
+                        <span asp-validation-for="Enquiry.FullName"
+                              style="color: red; font-size: 0.9em"></span>
+                    </div>
+                    
+                    <!-- PhoneNumber -->
+                    <div class="form-group" style="margin-bottom: 1em">
+                        <label asp-for="Enquiry.PhoneNumber">
+                            @Html.DisplayNameFor(model => model.Enquiry.PhoneNumber)
+                            <span style="color: red">*</span>
+                        </label>
+                        <input asp-for="Enquiry.PhoneNumber" type="text"
+                               placeholder="@Html.DisplayNameFor(model => model.Enquiry.PhoneNumber)">
+                        <span asp-validation-for="Enquiry.PhoneNumber"
+                              style="color: red; font-size: 0.9em"></span>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="form-group" style="margin-bottom: 1em">
+                        <label asp-for="Enquiry.Email">
+                            @Html.DisplayNameFor(model => model.Enquiry.Email)
+                        </label>
+                        <input asp-for="Enquiry.Email" type="email"
+                               placeholder="@Html.DisplayNameFor(model => model.Enquiry.Email)">
+                        <span asp-validation-for="Enquiry.Email"
+                              style="color: red; font-size: 0.9em"></span>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="form-group" style="margin-bottom: 1em">
+                        <label asp-for="Enquiry.Content">
+                            @Html.DisplayNameFor(model => model.Enquiry.Content)
+                            <span style="color: red">*</span>
+                        </label>
+                        <textarea asp-for="Enquiry.Content"
+                                  placeholder="@Html.DisplayNameFor(model => model.Enquiry.Content)"></textarea>
+                        <span asp-validation-for="Enquiry.Content"
+                              style="color: red; font-size: 0.9em"></span>
+                    </div>
+                    
+                    <input name="submit" id="send" type="submit" value="Gửi câu hỏi"/>
+                </form>
+            </div>
+        </div>
+        
+        <div class="hr_invisible"></div>
+
+    </div> <!-- **Content Full Width - End** -->
+</div><!-- **Main Container - End** -->
+    
+
+@section Breadcrumbs {
+    <!-- **Breadcrumb** -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a asp-action="Index" asp-controller="Home" title="">Trang chủ /</a>
+            <span class="current-crumb">@ViewBag.PageTitle</span>
+        </div>  <!-- **Breadcrumb - End** -->           
+    </div>
+}

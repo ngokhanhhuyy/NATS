@@ -1,0 +1,47 @@
+﻿textarea#Summary {
+    min-height: 100px !important;
+}
+
+textarea#Detail {
+    min-height: 250px !important;
+}
+
+.block.block-thumbnail .photo-container,
+.block.block-photos .photo-container {
+    position: relative;
+}
+
+.block.block-thumbnail .photo-container .photo-edit-button,
+.block.block-photos .photo-container .photo-edit-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(30%, -30%);
+    overflow: hidden;
+}
+
+.block.block-thumbnail .photo-container .photo-delete-button,
+.block.block-photos .photo-container .photo-delete-button {
+    position: absolute;
+    overflow: hidden;
+}
+
+.block.block-thumbnail .photo-container .photo-delete-button {
+    bottom: 0;
+    right: 0;
+    transform: translate(30%, 30%);
+}
+
+.block.block-photos .photo-container .photo-delete-button {
+    top: 0;
+    right: 0;
+    transform: translate(30%, -30%);
+}
+
+.block.block-thumbnail .photo-container img,
+.block.block-photos .photo-container img {
+    object-fit: cover;
+    overflow: hidden;
+    aspect-ratio: 1;
+    width: 100vh;
+}

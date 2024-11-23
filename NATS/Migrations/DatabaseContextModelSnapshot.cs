@@ -23,16 +23,20 @@ namespace NATS.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("id");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("claim_type");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("claim_value");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("role_id");
 
                     b.HasKey("Id");
 
@@ -43,16 +47,20 @@ namespace NATS.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("id");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("claim_type");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("claim_value");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -124,6 +132,164 @@ namespace NATS.Migrations
                     b.ToTable("user_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("NATS.Services.Entities.AboutUsIntroduction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AboutUsContent")
+                        .IsRequired()
+                        .HasMaxLength(1500)
+                        .HasColumnType("varchar(1500)")
+                        .HasColumnName("about_us_content");
+
+                    b.Property<string>("MainPhotoUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("main_photo_url");
+
+                    b.Property<string>("MainQuoteContent")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("main_quote_content");
+
+                    b.Property<string>("OurCultureContent")
+                        .IsRequired()
+                        .HasMaxLength(1500)
+                        .HasColumnType("varchar(1500)")
+                        .HasColumnName("our_culture_content");
+
+                    b.Property<string>("OurDifferenceContent")
+                        .IsRequired()
+                        .HasMaxLength(1500)
+                        .HasColumnType("varchar(1500)")
+                        .HasColumnName("our_difference_content");
+
+                    b.Property<string>("WhyChooseUsContent")
+                        .IsRequired()
+                        .HasMaxLength(1500)
+                        .HasColumnType("varchar(1500)")
+                        .HasColumnName("why_choose_us_content");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("about_us_introductions", (string)null);
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.BusinessService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Detail")
+                        .HasMaxLength(5000)
+                        .HasColumnType("varchar(5000)")
+                        .HasColumnName("detail");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Summary")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("summary");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasColumnType("longtext")
+                        .HasColumnName("thumbnail_url");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("business_services", (string)null);
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.BusinessServiceFeature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<int>("BusinessServiceId")
+                        .HasColumnType("int")
+                        .HasColumnName("business_service_id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("content");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BusinessServiceId");
+
+                    b.ToTable("business_service_features", (string)null);
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.BusinessServicePhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<int>("BusinessServiceId")
+                        .HasColumnType("int")
+                        .HasColumnName("business_service_id");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BusinessServiceId");
+
+                    b.ToTable("business_service_photos", (string)null);
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.ContactInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("address");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("phone_number");
+
+                    b.Property<string>("ZaloNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("zalo_number");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("contact_info", (string)null);
+                });
+
             modelBuilder.Entity("NATS.Services.Entities.Course", b =>
                 {
                     b.Property<int>("Id")
@@ -136,9 +302,10 @@ namespace NATS.Migrations
                         .HasColumnType("varchar(5000)")
                         .HasColumnName("detail");
 
-                    b.Property<int>("Name")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("int")
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
                     b.Property<string>("Summary")
@@ -155,7 +322,7 @@ namespace NATS.Migrations
 
                     b.HasIndex("Name")
                         .IsUnique()
-                        .HasDatabaseName("unique_courses_name");
+                        .HasDatabaseName("unique__courses__name");
 
                     b.ToTable("courses", (string)null);
                 });
@@ -211,46 +378,87 @@ namespace NATS.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("ContactInformation")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("int")
+                        .HasColumnName("id");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("content");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("email");
 
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("full_name");
 
                     b.Property<bool>("IsCompleted")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_completed");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)")
+                        .HasColumnName("phone_number");
+
+                    b.Property<DateTime>("ReceivedDateTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("received_datetime");
 
                     b.HasKey("Id");
 
                     b.ToTable("enquiries", (string)null);
                 });
 
-            modelBuilder.Entity("NATS.Services.Entities.HomePageSlideItem", b =>
+            modelBuilder.Entity("NATS.Services.Entities.GeneralSettings", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
 
-                    b.Property<string>("Content")
+                    b.Property<string>("ApplicationName")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
-                        .HasColumnName("content");
+                        .HasColumnName("application_name");
 
-                    b.Property<string>("Index")
+                    b.Property<string>("ApplicationShortName")
                         .IsRequired()
-                        .HasColumnType("longtext")
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)")
+                        .HasColumnName("application_short_name");
+
+                    b.Property<string>("FavIconUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("fav_icon_url");
+
+                    b.Property<bool>("UnderMaintainance")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("under_maintainance");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("general_settings", (string)null);
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.HomePageSliderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int")
                         .HasColumnName("index");
 
                     b.Property<string>("PhotoUrl")
@@ -265,7 +473,11 @@ namespace NATS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("homepage_slide_item", (string)null);
+                    b.HasIndex("Index")
+                        .IsUnique()
+                        .HasDatabaseName("unique__homepage_slider_items__index");
+
+                    b.ToTable("homepage_slider_items", (string)null);
                 });
 
             modelBuilder.Entity("NATS.Services.Entities.IntroductionItem", b =>
@@ -276,13 +488,114 @@ namespace NATS.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasMaxLength(3000)
                         .HasColumnType("varchar(3000)")
                         .HasColumnName("content");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Summary")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("summary");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("thumbnail_url");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("introduction_items", (string)null);
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("varchar(10000)")
+                        .HasColumnName("content");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_datetime");
+
+                    b.Property<bool>("IsPinned")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_pinned");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_published");
+
+                    b.Property<string>("NormalizedTitle")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("normalized_title");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("thumbnail_url");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)")
+                        .HasColumnName("title");
+
+                    b.Property<DateTime?>("UpdatedDateTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_datetime");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("user_id");
+
+                    b.Property<int>("Views")
+                        .HasColumnType("int")
+                        .HasColumnName("views");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedTitle")
+                        .IsUnique()
+                        .HasDatabaseName("unique__post__normalized_name");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("posts", (string)null);
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Detail")
+                        .HasMaxLength(5000)
+                        .HasColumnType("varchar(5000)")
+                        .HasColumnName("detail");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
                     b.Property<string>("Summary")
@@ -295,46 +608,11 @@ namespace NATS.Migrations
                         .HasColumnType("varchar(255)")
                         .HasColumnName("thumbnail_url");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int")
-                        .HasColumnName("type");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("introduction_items", (string)null);
-                });
-
-            modelBuilder.Entity("NATS.Services.Entities.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Detail")
-                        .HasMaxLength(5000)
-                        .HasColumnType("varchar(5000)");
-
-                    b.Property<int>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("int");
-
-                    b.Property<string>("SpecialDescription")
-                        .HasMaxLength(3000)
-                        .HasColumnType("varchar(3000)");
-
-                    b.Property<string>("Summary")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("ThumbnailUrl")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique()
-                        .HasDatabaseName("unique_products_name");
+                        .HasDatabaseName("unique__products__name");
 
                     b.ToTable("products", (string)null);
                 });
@@ -343,15 +621,18 @@ namespace NATS.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("id");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("content");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("product_id");
 
                     b.HasKey("Id");
 
@@ -364,14 +645,17 @@ namespace NATS.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("id");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("product_id");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("url");
 
                     b.HasKey("Id");
 
@@ -384,21 +668,26 @@ namespace NATS.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("id");
 
                     b.Property<int?>("Price")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("price");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("product_id");
 
-                    b.Property<int>("Quatity")
-                        .HasColumnType("int");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int")
+                        .HasColumnName("quantity");
 
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasMaxLength(25)
-                        .HasColumnType("varchar(25)");
+                        .HasColumnType("varchar(25)")
+                        .HasColumnName("unit");
 
                     b.HasKey("Id");
 
@@ -415,7 +704,8 @@ namespace NATS.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("concurrent_stamp");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -435,11 +725,11 @@ namespace NATS.Migrations
 
                     b.HasIndex("DisplayName")
                         .IsUnique()
-                        .HasDatabaseName("unique_roles_display_name");
+                        .HasDatabaseName("unique__roles__display_name");
 
                     b.HasIndex("Name")
                         .IsUnique()
-                        .HasDatabaseName("unique_roles_name");
+                        .HasDatabaseName("unique__roles__name");
 
                     b.ToTable("roles", (string)null);
                 });
@@ -448,30 +738,63 @@ namespace NATS.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("id");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(400)
-                        .HasColumnType("varchar(400)");
+                        .HasColumnType("varchar(400)")
+                        .HasColumnName("description");
 
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("full_name");
 
                     b.Property<string>("PhotoUrl")
                         .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("photo_url");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("role_name");
 
                     b.HasKey("Id");
 
                     b.ToTable("team_members", (string)null);
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.TrafficByDate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<int>("AccessCount")
+                        .HasColumnType("int")
+                        .HasColumnName("access_count");
+
+                    b.Property<int>("GuessCount")
+                        .HasColumnType("int")
+                        .HasColumnName("guess_count");
+
+                    b.Property<DateTime>("RecordedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("recorded_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecordedAt")
+                        .IsUnique()
+                        .HasDatabaseName("unique__traffic_by_date__recorded_at");
+
+                    b.ToTable("traffic_by_date", (string)null);
                 });
 
             modelBuilder.Entity("NATS.Services.Entities.TrafficByHour", b =>
@@ -481,17 +804,29 @@ namespace NATS.Migrations
                         .HasColumnType("int")
                         .HasColumnName("id");
 
-                    b.Property<int>("AccesscCount")
+                    b.Property<int>("AccessCount")
                         .HasColumnType("int")
                         .HasColumnName("access_count");
+
+                    b.Property<int>("GuessCount")
+                        .HasColumnType("int")
+                        .HasColumnName("guess_count");
 
                     b.Property<DateTime>("RecordedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("recorded_at");
 
+                    b.Property<int>("TrafficByDateId")
+                        .HasColumnType("int")
+                        .HasColumnName("traffic_by_date_id");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("RecordedAt");
+                    b.HasIndex("RecordedAt")
+                        .IsUnique()
+                        .HasDatabaseName("unique__traffic_by_hour__recoreded_at");
+
+                    b.HasIndex("TrafficByDateId");
 
                     b.ToTable("traffic_by_hour", (string)null);
                 });
@@ -503,9 +838,23 @@ namespace NATS.Migrations
                         .HasColumnType("int")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("LastAcessAt")
+                    b.Property<int>("AccessCount")
+                        .HasColumnType("int")
+                        .HasColumnName("access_count");
+
+                    b.Property<string>("IPAddress")
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)")
+                        .HasColumnName("ip_address");
+
+                    b.Property<DateTime>("LastAccessAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("last_access_at");
+
+                    b.Property<string>("LastUserAgent")
+                        .HasMaxLength(10000)
+                        .HasColumnType("varchar(10000)")
+                        .HasColumnName("last_user_agent");
 
                     b.Property<int>("TrafficByHourId")
                         .HasColumnType("int")
@@ -513,90 +862,11 @@ namespace NATS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LastAcessAt");
+                    b.HasIndex("LastAccessAt");
 
                     b.HasIndex("TrafficByHourId");
 
                     b.ToTable("traffic_by_hour_ip_address", (string)null);
-                });
-
-            modelBuilder.Entity("NATS.Services.Entities.Treatment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Detail")
-                        .HasMaxLength(5000)
-                        .HasColumnType("varchar(5000)");
-
-                    b.Property<bool>("IsPopular")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("int");
-
-                    b.Property<string>("SpecialDescription")
-                        .HasMaxLength(3000)
-                        .HasColumnType("varchar(3000)");
-
-                    b.Property<string>("Summary")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("ThumbnailUrl")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("unique_treatments_name");
-
-                    b.ToTable("treatments", (string)null);
-                });
-
-            modelBuilder.Entity("NATS.Services.Entities.TreatmentPhoto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("TreatmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TreatmentId");
-
-                    b.ToTable("treatment_photos", (string)null);
-                });
-
-            modelBuilder.Entity("NATS.Services.Entities.TreatmentTarget", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<int>("TreatmentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TreatmentId");
-
-                    b.ToTable("treatment_targets", (string)null);
                 });
 
             modelBuilder.Entity("NATS.Services.Entities.User", b =>
@@ -647,7 +917,8 @@ namespace NATS.Migrations
                         .HasColumnName("phone_number");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("phone_number_confirmed");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext")
@@ -665,9 +936,32 @@ namespace NATS.Migrations
 
                     b.HasIndex("UserName")
                         .IsUnique()
-                        .HasDatabaseName("unique_users_username");
+                        .HasDatabaseName("unique__users__username");
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("NATS.Services.Entity.BusinessCertificate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("photo_url");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("business_certificates", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
@@ -683,6 +977,28 @@ namespace NATS.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.BusinessServiceFeature", b =>
+                {
+                    b.HasOne("NATS.Services.Entities.BusinessService", "BusinessService")
+                        .WithMany("Features")
+                        .HasForeignKey("BusinessServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BusinessService");
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.BusinessServicePhoto", b =>
+                {
+                    b.HasOne("NATS.Services.Entities.BusinessService", "BusinessService")
+                        .WithMany("Photos")
+                        .HasForeignKey("BusinessServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BusinessService");
                 });
 
             modelBuilder.Entity("NATS.Services.Entities.CoursePhoto", b =>
@@ -705,6 +1021,17 @@ namespace NATS.Migrations
                         .IsRequired();
 
                     b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("NATS.Services.Entities.Post", b =>
+                {
+                    b.HasOne("NATS.Services.Entities.User", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("NATS.Services.Entities.ProductFeature", b =>
@@ -740,6 +1067,17 @@ namespace NATS.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("NATS.Services.Entities.TrafficByHour", b =>
+                {
+                    b.HasOne("NATS.Services.Entities.TrafficByDate", "TrafficByDate")
+                        .WithMany("TrafficByHours")
+                        .HasForeignKey("TrafficByDateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TrafficByDate");
+                });
+
             modelBuilder.Entity("NATS.Services.Entities.TrafficByHourIPAddress", b =>
                 {
                     b.HasOne("NATS.Services.Entities.TrafficByHour", "TrafficByHour")
@@ -751,26 +1089,11 @@ namespace NATS.Migrations
                     b.Navigation("TrafficByHour");
                 });
 
-            modelBuilder.Entity("NATS.Services.Entities.TreatmentPhoto", b =>
+            modelBuilder.Entity("NATS.Services.Entities.BusinessService", b =>
                 {
-                    b.HasOne("NATS.Services.Entities.Treatment", "Treatment")
-                        .WithMany("Photos")
-                        .HasForeignKey("TreatmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Features");
 
-                    b.Navigation("Treatment");
-                });
-
-            modelBuilder.Entity("NATS.Services.Entities.TreatmentTarget", b =>
-                {
-                    b.HasOne("NATS.Services.Entities.Treatment", "Treatment")
-                        .WithMany("Targets")
-                        .HasForeignKey("TreatmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Treatment");
+                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("NATS.Services.Entities.Course", b =>
@@ -789,16 +1112,19 @@ namespace NATS.Migrations
                     b.Navigation("Prices");
                 });
 
+            modelBuilder.Entity("NATS.Services.Entities.TrafficByDate", b =>
+                {
+                    b.Navigation("TrafficByHours");
+                });
+
             modelBuilder.Entity("NATS.Services.Entities.TrafficByHour", b =>
                 {
                     b.Navigation("IPAddresses");
                 });
 
-            modelBuilder.Entity("NATS.Services.Entities.Treatment", b =>
+            modelBuilder.Entity("NATS.Services.Entities.User", b =>
                 {
-                    b.Navigation("Photos");
-
-                    b.Navigation("Targets");
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

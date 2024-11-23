@@ -1,0 +1,166 @@
+@model PostDetailViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Posts";
+    const string formId = "upserting-form";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1 justify-content-center">
+        @if (Model.IsForCreating)
+        {
+            <form asp-action="Creating" asp-controller="AdminPost"
+                method="POST" enctype="multipart/form-data"
+                class="p-3 d-none" id="@formId" novalidate
+                submit-button-element-id="@formId-submit-button">
+            </form>
+        }
+        else
+        {
+            <form asp-action="Updating" asp-controller="AdminPost"
+                asp-route-id="@Model.Id"
+                method="POST" enctype="multipart/form-data"
+                class="p-3 d-none" id="@formId" novalidate
+                submit-button-element-id="@formId-submit-button">
+            </form>
+        }
+        
+        <input asp-for="ThumbnailUrl" type="hidden" form="@formId" />
+        <input asp-for="ThumbnailChanged" type="hidden" value="@false" form="@formId" />
+        <input asp-for="ThumbnailFile" type="file" class="d-none" form="@formId"
+               accept="image/png, image/jpeg" />
+        
+               
+        <div class="col col-12">
+            <div class="block block-post-edit rounded p-3 rounded-3 justify-content-center
+                        bg-white border-default shadow-sm">
+                <div class="row justify-content-center mb-3">
+                    <div class="col col-sm-3 col-6 d-flex flex-column h-100vh pt-3 pt-sm-2">
+                        <div class="photo-container">
+                            <img src='@(Model.ThumbnailUrl ?? "/images/front-pages/posts/default.jpg")'
+                                 alt="..." class="img-thumbnail img-aspect-ratio border-default shadow-sm"
+                                 id="photo-thumbnail" ratio-width-to-height="1">
+                            <button class="btn btn-outline-success btn-sm photo-edit-button shadow-sm"
+                                    id="thumbnail-edit-button" file-input-id="ThumbnailFile"
+                                    changed-input-id="ThumbnailChanged"
+                                    hidden-url-input-id="ThumbnailUrl" img-id="photo-thumbnail"
+                                    delete-button-id="thumbnail-delete-button">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm photo-delete-button shadow-sm"
+                                    id="thumbnail-delete-button">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="ThumbnailFile"></span>
+                    </div>
+                    <div class="col col-sm-9 col-12 h-100vh d-flex flex-column">
+                        <div class="form-group mb-3">
+                            <label asp-for="Title" class="form-label text-primary required">
+                                @Html.DisplayNameFor(model => model.Title)
+                            </label>
+                            <input asp-for="Title" type="text" class="form-control"
+                                form="@formId" placeholder="@Html.DisplayNameFor(model => model.Title)" />
+                            <span asp-validation-for="Title"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label text-primary">Ghim và xuất bản</label>
+                            <div class="form-check form-switch">
+                                <input asp-for="IsPinned" type="checkbox"
+                                       form="@formId" class="form-check-input" />
+                                <label asp-for="IsPinned" class="form-check-label"></label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input asp-for="IsPublished" type="checkbox"
+                                       form="@formId" class="form-check-input" />
+                                <label asp-for="IsPublished" class="form-check-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-12">
+                        <div class="form-group">
+                            <label asp-for="Content" class="form-label text-primary requiredz">
+                                @Html.DisplayNameFor(model => model.Content)
+                            </label>
+                            <textarea asp-for="Content" class="form-control"
+                                    form="@formId" placeholder="@Html.DisplayNameFor(model => model.Content)">
+                            </textarea>
+                            <span asp-validation-for="Content"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discard button -->
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <partial name="~/Views/Admin/_DiscardButton.cshtml"
+                     model='@Url.Action("List", "AdminPost", new { page = 1 })!' />
+        </div>
+
+        <!-- Delete button -->
+        @if (!Model.IsForCreating)
+        {
+            <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+                @{
+                    AjaxDeleteViewModel ajaxDeleteViewModel = new AjaxDeleteViewModel
+                    {
+                        ActionUrl = Url.Action("Deleting", "AdminPost", new { id = Model.Id }),
+                        RedirectingUrl = Url.Action("List", "AdminPost")
+                    };
+                }
+                <partial name="~/Views/Admin/_AjaxDeleteButton.cshtml" model="@ajaxDeleteViewModel" />
+            </div>
+        }
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Save button -->
+            @{
+                AjaxSaveViewModel ajaxSaveModel = new AjaxSaveViewModel
+                {
+                    FormId = formId,
+                    RedirectingUrl = Url.Action("List", "AdminPost", new { page = 1 }),
+                    EditableAfterSaving = false
+                };
+            }
+            <partial name="~/Views/Admin/_AjaxSaveButton.cshtml" model="@ajaxSaveModel" />
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    @(Model.IsForCreating ? "Tạo bài viết mới" : "Chỉnh sửa bài viết")
+}
+
+@section Styles {
+    <link href="/css/admin/post.css" rel="stylesheet">
+}
+
+@section Scripts {
+    <script src="/js/admin/photo-file-input.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            // Add user interaction feature for thumbnail
+            let thumbnailEditButton = document.getElementById("thumbnail-edit-button");
+            const thumbnailFileInputButtonPair = new PhotoFileInputButtonPair(
+                thumbnailEditButton,
+                "/images/front-pages/introduction-items/default.jpg");
+        });
+    </script>
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Post, Url.Action("List", "AdminPost", new { page = 1})!),
+                (Model.IsForCreating ? "Tạo mới" : "Chỉnh sửa", null)
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" />
+}

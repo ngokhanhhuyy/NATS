@@ -1,0 +1,207 @@
+@model PostBasicListViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Posts";
+    
+    // Calculate which pagination buttons that should be rendered.
+    const int expectedVisibleButtons = 5;
+    int startingPage;
+    int endingPage;
+    if (Model.PageCount >= expectedVisibleButtons)
+    {
+        if (Model.Page - (int)Math.Floor((decimal)expectedVisibleButtons / 2) <= 1)
+        {
+            startingPage = 1;
+            endingPage = startingPage + (expectedVisibleButtons - 1);
+        }
+        else if (Model.Page + Math.Floor((decimal)expectedVisibleButtons / 2) > Model.PageCount)
+        {
+            endingPage = Model.PageCount;
+            startingPage = endingPage - (expectedVisibleButtons - 1);
+        }
+        else
+        {
+            startingPage = (int)Math.Ceiling(Model.Page - (decimal)expectedVisibleButtons / 2);
+            endingPage = (int)Math.Floor(Model.Page + (decimal)expectedVisibleButtons / 2);
+        }
+    }
+    else
+    {
+        startingPage = 1;
+        endingPage = Model.PageCount;
+    }
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1">
+        <!-- Total post statistics -->
+        <div class="col col-sm-4 col-12">
+            <div class="block block-statistics shadow-sm">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        @Html.DisplayNameFor(model => model.Statistics.TotalPosts)
+                    </span>
+                </div>
+                <div class="p-3 py-1 text-end">
+                    <span class="fs-1 text-end">@Model.Statistics.TotalPosts</span>
+                    <span class="fw-bold"> bài viết</span>
+                </div>
+            </div>
+        </div>
+        <!-- Total views statistics -->
+        <div class="col col-sm-4 col-6">
+            <div class="block block-statistics shadow-sm">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        @Html.DisplayNameFor(model => model.Statistics.TotalViews)
+                    </span>
+                </div>
+                <div class="p-3 py-1 text-end">
+                    <span class="fs-1 text-end">@Model.Statistics.TotalViews</span>
+                    <span class="fw-bold"> lượt xem</span>
+                </div>
+            </div>
+        </div>
+        <!-- Unpublished posts statistics -->
+        <div class="col col-sm-4 col-6">
+            <div class="block block-statistics shadow-sm">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        @Html.DisplayNameFor(model => model.Statistics.UnpublishedPosts)
+                    </span>
+                </div>
+                <div class="p-3 py-1 text-end">
+                    <span class="fs-1 text-end">@Model.Statistics.UnpublishedPosts</span>
+                    <span class="fw-bold"> bài viết</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post list -->
+        <div class="col col-12">
+            <div class="block block-post-list shadow-sm">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        @Html.DisplayNameFor(model => model.Items)
+                    </span>
+                    <a asp-action="Creating" asp-controller="AdminPost"
+                        class="btn btn-primary btn-sm shadow-sm px-3">
+                        Thêm bài viết
+                        <i class="bi bi-plus-lg"></i>
+                    </a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (PostBasicViewModel post in Model.Items)
+                    {
+                        <li class="list-group-item d-flex flex-row">
+                            <div class="photo-container flex-shrink-0 me-2">
+                                <img src='@(post.ThumbnailUrl ?? "/images/front-pages/posts/default.jpg")'
+                                     class="img-thumbnail shadow-sm" alt="@post.Title" />
+                            </div>
+                            <div class="description flex-fill">
+                                <span class="title fw-bold">@post.Title</span>
+                                <span class="content">@post.Content</span>
+                                <div class="status d-flex flex-row">
+                                    <!-- Is published -->
+                                    @if (post.IsPublished)
+                                    {
+                                        <span class="badge bg-success me-1">
+                                            <i class="bi bi-check-lg"></i>
+                                            Đã xuất bản
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger me-1">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            Chưa xuất bản
+                                        </span>
+                                    }
+                                    <!-- Is pinned -->
+                                    @if (post.IsPinned)
+                                    {
+                                        <span class="badge bg-warning text-dark me-1">
+                                            <i class="bi bi-pin"></i>
+                                            Được ghim
+                                        </span>
+                                    }
+                                    <!-- Views -->
+                                    <span class="badge bg-secondary me-1">
+                                        <i class="bi bi-eye"></i>
+                                        @post.Views lượt xem
+                                    </span>
+                                </div>
+                            </div>
+                            <a asp-action="Updating" asp-controller="AdminPost" asp-route-id="@post.Id"
+                               class="btn btn-outline-primary btn-sm shadow-sm ms-3 me-2 align-self-center edit-button">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </li>
+                    }
+                </ul>
+                @if (Model.PageCount > 1)
+                {
+                    <nav class="d-flex p-2 w-100 border-top border-default justify-content-center"
+                         aria-label="Post list pagination">
+                        <ul class="pagination m-0 shadow-sm">
+                            <!-- First page -->
+                            @if (1 < startingPage)
+                            { 
+                                <li class='page-item'>
+                                    <a asp-action="List" asp-controller="AdminPost" asp-route-page="1"
+                                       class="page-link">
+                                        1
+                                    </a>
+                                </li>
+                            }
+                            
+                            @for (int i = startingPage; i <= endingPage; i++)
+                            {
+                                int pageIndex = i;
+                                <li class="page-item">
+                                    <a asp-action="List" asp-controller="AdminPost" asp-route-page="@pageIndex"
+                                       class="page-link @(pageIndex == Model.Page ? "active" : string.Empty)">
+                                        @pageIndex
+                                    </a>
+                                </li>
+                            }
+                            
+                            <!-- Last page -->
+                            @if (Model.PageCount > endingPage)
+                            { 
+                                <li class='page-item'>
+                                    <a asp-action="List" asp-controller="AdminPost" asp-route-page="@Model.PageCount"
+                                       class="page-link">
+                                        @Model.PageCount
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Bài viết
+}
+
+@section Styles {
+    <link href="/css/admin/post-list.css" rel="stylesheet">
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Post, null)
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" />
+}

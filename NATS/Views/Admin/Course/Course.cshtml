@@ -1,0 +1,316 @@
+﻿@model CourseDetailViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Content";
+    string formId = "upserting-form";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1 justify-content-center">
+        @if (Model.IsForCreating)
+        {
+            <form asp-action="Creating" asp-controller="AdminCourse"
+                method="POST" enctype="multipart/form-data"
+                class="p-3 d-none" id="@formId" novalidate
+                was-validated="@Json.Serialize(Model.WasValidated)"
+                submit-button-element-id="@formId-submit-button">
+            </form>
+        }
+        else
+        {
+            <form asp-action="Updating" asp-controller="AdminCourse"
+                asp-route-id="@Model.Id"
+                method="POST" enctype="multipart/form-data"
+                class="p-3 d-none" id="@formId" novalidate
+                was-validated="@Json.Serialize(Model.WasValidated)"
+                submit-button-element-id="@formId-submit-button">
+            </form>
+        }
+        
+        <input asp-for="ThumbnailUrl" type="hidden" form="@formId" />
+        <input asp-for="ThumbnailChanged" type="hidden" value="@false" form="@formId" />
+        <input asp-for="ThumbnailFile" type="file" class="d-none" form="@formId"
+                accept="image/png, image/jpeg" />
+
+        <!-- Thumbnail, name and detail -->
+        <div class="col col-12">
+            <div class="block block-thumbnail rounded p-3 rounded-3 justify-content-center
+                        bg-white border-default shadow-sm">
+                <div class="row justify-content-center mb-3">
+                    <div class="col col-md-4 col-sm-4 col-6 d-flex flex-column justify-content-center
+                                h-100vh pt-3 pt-sm-0">
+                        <div class="photo-container">
+                            <img src='@(Model.ThumbnailUrl ?? "/images/front-pages/introduction-items/default.jpg")'
+                                 alt="..." class="img-thumbnail img-aspect-ratio border-default shadow-sm"
+                                 id="photo-thumbnail" ratio-width-to-height="1">
+                            <button class="btn btn-outline-success btn-sm photo-edit-button shadow-sm"
+                                    id="thumbnail-edit-button" file-input-id="ThumbnailFile"
+                                    changed-input-id="ThumbnailChanged"
+                                    hidden-url-input-id="ThumbnailUrl" img-id="photo-thumbnail"
+                                    delete-button-id="thumbnail-delete-button">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm photo-delete-button shadow-sm"
+                                    id="thumbnail-delete-button">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="ThumbnailFile"></span>
+                    </div>
+                    <div class="col col-md-8 col-sm-8 col-12 h-100vh d-flex flex-column">
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="form-label text-primary required">
+                                @Html.DisplayNameFor(model => model.Name)
+                            </label>
+                            <input asp-for="Name" type="text" class="form-control"
+                                form="@formId" placeholder="Tên khoá học" />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                        <div class="form-group d-flex flex-column flex-fill">
+                            <label asp-for="Summary" class="form-label text-primary">
+                                @Html.DisplayNameFor(model => model.Summary)
+                            </label>
+                            <textarea asp-for="Summary" type="text" class="form-control flex-fill"
+                                    form="@formId" placeholder="Tóm tắt khoá học ..."></textarea>
+                            <span asp-validation-for="Summary"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-12">
+                        <div class="form-group">
+                            <label asp-for="Detail" class="form-label text-primary">
+                                @Html.DisplayNameFor(model => model.Detail)
+                            </label>
+                            <textarea asp-for="Detail" class="form-control"
+                                    form="@formId" placeholder="Chi tiết khoá học">
+                            </textarea>
+                            <span asp-validation-for="Detail"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sections -->
+        <div class="col col-12">
+            <div class="block block-sections block-name-and-content p-3 rounded-3 bg-white border-default shadow-sm">
+                <label class="form-label text-primary">
+                    @Html.DisplayNameFor(model => model.Sections)
+                </label>
+                <div id="section-list-container" add-button-id="section-add-button">
+                    @if (Model.Sections != null) {
+                        for (int i = 0; i < Model.Sections.Count; i++)
+                        {
+                            CourseSectionViewModel courseSection = Model.Sections[i];
+                            <div class="form-group p-0 my-2"
+                                    id-input-element-id="@Html.IdFor(model => model.Sections[i].Id)"
+                                    content-input-element-id="@Html.IdFor(model => model.Sections[i].Content)"
+                                    is-deleted-input-element-id="@Html.IdFor(model => model.Sections[i].IsDeleted)"
+                                    delete-button-element-id='@($"section-{i}-delete-button")'>
+                                <div class="input-group m-0">
+                                    <input asp-for="Sections[i].Content" type="text" class="form-control"
+                                        placeholder="Tên nội dung" form="@formId" />
+                                    <input asp-for="Sections[i].Id" type="hidden" form="@formId" />
+                                    <input asp-for="Sections[i].IsDeleted" type="hidden" form="@formId" />
+                                    <button class="btn btn-outline-danger delete-button"
+                                            id="section-@i-delete-button">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="Sections[i].Content"
+                                    input-id="@Html.IdFor(model => model.Sections[i].Content)"></span>
+                            </div>
+                        }
+                    }
+                </div>
+                <button class="btn btn-outline-primary mt-2 shadow-sm add-button" id="section-add-button">
+                    <i class="bi bi-plus-lg"></i>
+                    Thêm @Html.DisplayNameFor(model => model.Sections).ToLower()
+                </button>
+            </div>
+        </div>
+
+        <!-- Photos -->
+        <div class="col col-12">
+            <div class="block block-photos block-border p-3 rounded-3 bg-white border-default shadow-sm">
+                <label class="form-label text-primary">
+                    @Html.DisplayNameFor(model => model.Photos)
+                </label>
+                <div class="row gx-4 gy-4 pe-2 pt-2" id="course-photos-container"
+                        add-button-element-id="course-photos-add-button">
+                    @if (Model.Photos != null)
+                    {
+                        @for (int i = 0; i < Model.Photos.Count; i++)
+                        {
+                            CoursePhotoViewModel coursePhoto = Model.Photos[i];
+                            <div class="col col-md-2 col-sm-3 col-4" id='@($"photo-{i}-container")'
+                                    id-input-element-id='@Html.IdFor(model => model.Photos[i].Id)'
+                                    file-input-element-id='@Html.IdFor(model => model.Photos[i].File)'
+                                    is-deleted-input-element-id='@Html.IdFor(model => model.Photos[i].IsDeleted)'
+                                    url-input-element-id='@Html.IdFor(model => model.Photos[i].Url)'
+                                    image-element-id='@($"photo-{i}")'
+                                    delete-button-element-id='@($"photo-{i}-delete-button")'>
+                                <div class="photo-container">
+                                    <img src="@coursePhoto.Url" alt="..." id='@($"photo-{i}")'
+                                            class="img-thumbnail border-default shadow-sm">
+                                    <button class="btn btn-outline-danger btn-sm photo-delete-button shadow-sm"
+                                            id="@($"photo-{i}-delete-button")">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                    <input asp-for="Photos[i].Id" type="hidden" form="@formId" />
+                                    <input asp-for="Photos[i].Url" type="hidden" form="@formId" />
+                                    <input asp-for="Photos[i].IsDeleted" type="hidden" value="@false" form="@formId">
+                                    <input asp-for="Photos[i].File" type="file" class="d-none" form="@formId"
+                                        accept=".jpg, .jpeg, .png">
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="row">
+                    <div class="col col-12 mt-4">
+                        <div class="card-body bg-default">
+                            <button class="btn btn-outline-primary add-photo-button w-100 shadow-sm"
+                                    id="course-photos-add-button">
+                                <i class="bi bi-plus-lg"></i>
+                                Thêm ảnh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discard button -->
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Discard button -->
+            <partial name="~/Views/Admin/_DiscardButton.cshtml" model='@Url.Action("List", "AdminCourse")' />
+        </div>
+
+        <!-- Delete button -->
+        @if (!Model.IsForCreating)
+        {
+            <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+                @{
+                    AjaxDeleteViewModel ajaxDeleteViewModel = new AjaxDeleteViewModel
+                    {
+                        ActionUrl = Url.Action("Deleting", "AdminCourse", new { id = Model.Id }),
+                        RedirectingUrl = Url.Action("List", "AdminCourse")
+                    };
+                }
+                <partial name="~/Views/Admin/_AjaxDeleteButton.cshtml" model="@ajaxDeleteViewModel" />
+            </div>
+        }
+
+        <!-- Save button -->
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            @{
+                AjaxSaveViewModel ajaxSaveViewModel = new AjaxSaveViewModel
+                {
+                    FormId = formId,
+                    RedirectingUrl = Url.Action("List", "AdminCourse"),
+                    EditableAfterSaving = false
+                };
+            }
+            <partial name="~/Views/Admin/_AjaxSaveButton.cshtml" model="@ajaxSaveViewModel" />
+        </div>
+    </div>
+</div>
+
+
+@section PageTitle {
+    Khoá học
+}
+
+@section Styles {
+    <link href="/css/admin/course-service-product.css" rel="stylesheet">
+}
+
+@section Scripts {
+    <script src="/js/admin/photo-file-input.js"></script>
+    <script src="/js/admin/image-input-list-interaction.js"></script>
+    <script src="/js/admin/text-input-list-interaction.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const isForCreating = JSON.parse("@Json.Serialize(Model.IsForCreating)");
+            // Add user interaction feature for thumbnail
+            let thumbnailEditButton = document.getElementById("thumbnail-edit-button");
+            const thumbnailFileInputButtonPair = new PhotoFileInputButtonPair(
+                thumbnailEditButton,
+                "/images/front-pages/introduction-items/default.jpg");
+
+            // Add user interaction feature for sections
+            let sectionListContainer = document.getElementById("section-list-container");
+            let sectionInputContainerElementTemplate = `
+                <div class="form-group p-0 my-2"
+                        id-input-element-id="Sections_{index}__Id"
+                        content-input-element-id="Sections_{index}__Content"
+                        is-deleted-input-element-id="Sections_{index}__IsDeleted"
+                        delete-button-element-id="section-{index}-delete-button">
+                    <div class="input-group m-0">
+                        <input id="Sections_{index}__Content" name="Sections[{index}].Content" 
+                                type="text" class="form-control"
+                                placeholder="Tên nội dung" form="@formId" />
+                        <input id="Sections_{index}__Id" name="Sections[{index}].Id"
+                                type="hidden" form="@formId" />
+                        <input id="Sections_{index}__IsDeleted" name="Sections[{index}].IsDeleted"
+                                type="hidden" form="@formId" value="false" />
+                        <button class="btn btn-outline-danger delete-button"
+                                id="section-{index}-delete-button">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Sections[{index}].Content"
+                        input-id="Sections_{index}__Content)"></span>
+                </div>`;
+            const sectionListController = new TextInputListController(
+                sectionListContainer,
+                sectionInputContainerElementTemplate);
+
+            // Add user interaction feature for course photos list
+            const photoListContainer = document.getElementById("course-photos-container");
+            const photoInputContainerElementTemplate = `
+                <div class="col col-md-2 col-sm-3 col-4" id='photo-{index}-container'
+                        id-input-element-id='Photos_{index}__Id'
+                        file-input-element-id='Photos_{index}__File'
+                        is-deleted-input-element-id='Photos_{index}__IsDeleted'
+                        url-input-element-id='Photos_{index}__Url'
+                        image-element-id='photo-{index}'
+                        delete-button-element-id='photo-{index}-delete-button'>
+                    <div class="photo-container">
+                        <img alt="..." id='photo-{index}'
+                                class="img-thumbnail border-default shadow-sm">
+                        <button class="btn btn-outline-danger btn-sm photo-delete-button shadow-sm"
+                                id="photo-{index}-delete-button">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                        <input id="Photos_{index}__Id" name="Photos[{index}].Id" type="hidden" form="@formId" />
+                        <input id="Photos_{index}__Url" name="Photos[{index}].Url" type="hidden" form="@formId" />
+                        <input id="Photos_{index}__IsDeleted" name="Photos[{index}].IsDeleted" type="hidden" value="False" form="@formId">
+                        <input id="Photos_{index}__File" name="Photos[{index}].File" type="file" class="d-none" form="@formId"
+                                accept=".jpg, .jpeg, .png">
+                    </div>
+                </div>`;
+            const photoListController = new ImageInputListController(
+                photoListContainer,
+                photoInputContainerElementTemplate);
+        });
+    </script>
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Content, Url.Action("Content", "Admin")),
+                (DisplayNames.Product, Url.Action("List", "AdminProduct")),
+                (DisplayNames.Detail, null)
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" />
+}

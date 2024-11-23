@@ -1,0 +1,431 @@
+@model ContentViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Content";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1">
+        <!-- Courses, business services, products -->
+        <div class="col col-sm-4 col-12">
+            <div class="card border-0 shadow-sm">
+                <a asp-action="List" asp-controller="AdminCourse"
+                        class="btn btn-outline-primary w-100 py-3 fw-bold">
+                    <i class="bi bi-book me-2"></i>
+                    @DisplayNames.Course
+                </a>
+            </div>
+        </div>
+        <div class="col col-sm-4 col-6">
+            <div class="card border-0 shadow-sm">
+                <a asp-action="List" asp-controller="AdminBusinessService"
+                        class="btn btn-outline-primary w-100 py-3 fw-bold">
+                    <i class="bi bi-magic"></i>
+                    @DisplayNames.BusinessService
+                </a>
+            </div>
+        </div>
+        <div class="col col-sm-4 col-6">
+            <div class="card border-0 shadow-sm">
+                <a asp-action="List" asp-controller="AdminProduct"
+                        class="btn btn-outline-primary w-100 py-3 fw-bold">
+                    <i class="bi bi-archive"></i>
+                    @DisplayNames.Product
+                </a>
+            </div>
+        </div>
+
+        <!-- Home page slider items -->
+        <div class="col col-12">
+            <div class="block block-homepage-slider-items shadow-sm">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        @Html.DisplayNameFor(model => model.HomePageSliderItems)
+                    </span>
+                    <a asp-action="Creating" asp-controller="AdminHomePageSliderItem"
+                            class="btn btn-primary btn-sm d-flex align-items-center
+                                    justify-content-center shadow-sm add-member-button">
+                        Thêm ảnh
+                        <i class="bi bi-plus-lg ms-2"></i>
+                    </a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item carousel-container">
+                        <div id="homepage-slider-items-carousel" class="carousel slide img-thumbnail shadow-sm"
+                                data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                @for (int index = 0; index < Model.HomePageSliderItems.Items.Count; index++)
+                                {
+                                    HomePageSliderItemViewModel item = Model.HomePageSliderItems.Items[index];
+                                    if (index == 0)
+                                    {
+                                        <button type="button" data-bs-target="#homepage-slider-items-carousel"
+                                                data-bs-slide-to="@index" class="active" aria-current="true"
+                                                aria-label='@(item.Title ?? $"Ảnh {item.Id}")'>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" data-bs-target="#homepage-slider-items-carousel"
+                                            data-bs-slide-to="@index"
+                                                aria-label='@(item.Title ?? $"Ảnh {item.Id}")'>
+                                        </button>
+                                    }
+                                }
+                            </div>
+                            <div class="carousel-inner">
+                                @for (int i = 0; i < Model.HomePageSliderItems.Items.Count; i++)
+                                {
+                                    HomePageSliderItemViewModel item = Model.HomePageSliderItems.Items[i];
+                                    <div class='carousel-item @(i == 0 ? "active" : string.Empty)'>
+                                        <img src="@item.PhotoUrl" class=" d-block w-100"
+                                                alt='@(item.Title ?? $"Ảnh {item.Id}")'>
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button"
+                                    data-bs-target="#homepage-slider-items-carousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button"
+                                    data-bs-target="#homepage-slider-items-carousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-default shadow-sm pt-4 pb-3 justify-content-center"
+                            id="homepage-slider-items-thumbnail-container">
+                        <div class="row justify-content-center w-100 me-1">
+                            @for (int index = 0; index < Model.HomePageSliderItems.Items.Count; index++)
+                            {
+                                HomePageSliderItemViewModel item = Model.HomePageSliderItems.Items[index];
+                                <div class="col col-md-2 col-sm-2 col-3">
+                                    <div class="photo-container">
+                                        <img src='@item.PhotoUrl'
+                                                class="img-thumbnail shadow-sm"
+                                                alt='@(item.Title ?? $"Ảnh {item.Id}")'
+                                                image-index="@index">
+                                        <a asp-action="Updating" asp-controller="AdminHomePageSliderItem"
+                                                asp-route-id="@item.Id"
+                                                class="btn btn-outline-primary btn-sm edit-button shadow-sm">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Introduction items -->
+        <div class="col col-12">
+            <div class="block block-introduction-items shadow-sm">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        @Html.DisplayNameFor(model => model.IntroductionItems)
+                    </span>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (IntroductionItemViewModel item in Model.IntroductionItems.Items)
+                    {
+                        <li class="list-group-item border-default shadow-sm">
+                            <img src='@item.ThumbnailUrl'
+                                 class="img-thumbnail shadow-sm rounded-circle" alt="@item.Name">
+                            <div class="name px-3 py-1 h-100 text-default">
+                                <span class="text-default fs-6 fw-bold">@item.Name</span>
+                                <small class="text-default">@item.Summary</small>
+                            </div>
+                            <a asp-action="IntroductionItemUpdating" asp-controller="Admin"
+                               asp-route-id="@item.Id"
+                               class="btn btn-outline-primary btn-sm introduction-item-edit-button shadow-sm">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <!-- About us -->
+        <div class="col col-12">
+            <div class="block block-about-us overflow-visible">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        @Html.DisplayNameFor(model => model.AboutUsIntroduction)
+                    </span>
+                    <a asp-action="AboutUs" asp-controller="Admin" class="btn btn-primary btn-sm shadow-sm">
+                        Chỉnh sửa
+                        <i class="bi bi-pencil-square ms-2"></i>
+                    </a>
+                </div>
+                <div class="accordion accordion-flush" id="about-us-accordion">
+                    <div class="accordion-item text-default collapsed border-default shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed text-default fw-bold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#about-us-collapse-one"
+                                    aria-expanded="false" aria-controls="about-us-collapse-one">
+                                @Html.DisplayNameFor(model => model.AboutUsIntroduction.MainQuoteContent)
+                            </button>
+                        </h2>
+                        <div id="about-us-collapse-one" class="accordion-collapse collapse"
+                            data-bs-parent="#about-us-accordion">
+                            <div class="accordion-body">
+                                <div class="row p-2 pt-0 justify-content-center">
+                                    <div class="col col-sm-4 col-10">
+                                        <img src="@Model.AboutUsIntroduction.MainPhotoUrl"
+                                            class="img-thumbnail mb-2" alt="...">
+                                    </div>
+                                    <div class="col col-sm-8 col-12">
+                                        @Html.Raw(Model.AboutUsIntroduction.MainQuoteContent
+                                            .Replace(Environment.NewLine, "<br/>"))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item text-default border-default">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed text-default fw-bold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#about-us-collapse-two"
+                                    aria-expanded="false" aria-controls="about-us-collapse-two">
+                                @Html.DisplayNameFor(model => model.AboutUsIntroduction.AboutUsContent)
+                            </button>
+                        </h2>
+                        <div id="about-us-collapse-two" class="accordion-collapse collapse"
+                            data-bs-parent="#about-us-accordion">
+                            <div class="accordion-body">
+                                @Html.Raw(Model.AboutUsIntroduction.AboutUsContent
+                                    .Replace(Environment.NewLine, "<br/>"))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item text-default border-default">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed text-default fw-bold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#about-us-collapse-three"
+                                    aria-expanded="false" aria-controls="about-us-collapse-three">
+                                @Html.DisplayNameFor(model => model.AboutUsIntroduction.WhyChooseUsContent)
+                            </button>
+                        </h2>
+                        <div id="about-us-collapse-three" class="accordion-collapse collapse"
+                            data-bs-parent="#about-us-accordion">
+                            <div class="accordion-body">
+                                @Html.Raw(Model.AboutUsIntroduction.WhyChooseUsContent
+                                    .Replace(Environment.NewLine, "<br/>"))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item text-default border-default">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed text-default fw-bold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#about-us-collapse-four"
+                                    aria-expanded="false" aria-controls="about-us-collapse-four">
+                                @Html.DisplayNameFor(model => model.AboutUsIntroduction.OurDifferenceContent)
+                            </button>
+                        </h2>
+                        <div id="about-us-collapse-four" class="accordion-collapse collapse"
+                            data-bs-parent="#about-us-accordion">
+                            <div class="accordion-body">
+                                @Html.Raw(Model.AboutUsIntroduction.OurDifferenceContent
+                                    .Replace(Environment.NewLine, "<br/>"))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item text-default border-default">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed text-default fw-bold rounded-bottom-3"
+                                    type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#about-us-collapse-five"
+                                    aria-expanded="false" aria-controls="about-us-collapse-five">
+                                @Html.DisplayNameFor(model => model.AboutUsIntroduction.OurCultureContent)
+                            </button>
+                        </h2>
+                        <div id="about-us-collapse-five" class="accordion-collapse collapse"
+                            data-bs-parent="#about-us-accordion">
+                            <div class="accordion-body">
+                                @Html.Raw(Model.AboutUsIntroduction.OurCultureContent
+                                    .Replace(Environment.NewLine, "<br/>"))
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team members -->
+        <div class="col col-12">
+            <div class="block block-team-members">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        @Html.DisplayNameFor(model => model.TeamMemberList)
+                    </span>
+                    <a asp-action="TeamMemberCreating" asp-controller="Admin"
+                            class="btn btn-primary btn-sm d-flex align-items-center
+                                    justify-content-center shadow-sm add-member-button">
+                        Thêm thành viên
+                        <i class="bi bi-plus-lg ms-2"></i>
+                    </a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (TeamMemberViewModel member in Model.TeamMemberList.TeamMembers)
+                    {
+                        <li class="list-group-item border-default shadow-sm">
+                            <img src='@(member.PhotoUrl ?? "/images/front-pages/members/default.png")'
+                                    class="img-thumbnail rounded-circle shadow-sm" alt="@member.FullName">
+                            <div class="name-and-role-name px-3 py-1 h-100">
+                                <span class="text-default fs-6 fw-bold">@member.FullName</span>
+                                <small class="text-default">@member.RoleName</small>
+                            </div>
+                            <a asp-action="TeamMemberUpdating" asp-controller="Admin"
+                                asp-route-id="@member.Id"
+                                class="btn btn-outline-primary btn-sm member-edit-button">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <!-- Business certificates -->
+        <div class="col col-12">
+            <div class="block block-business-certificates">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        @Html.DisplayNameFor(model => model.TeamMemberList.BusinessCertificates)
+                    </span>
+                    <a asp-action="BusinessCertificateCreating" asp-controller="Admin"
+                            class="btn btn-primary btn-sm shadow-sm">
+                        Thêm chứng chỉ
+                        <i class="bi bi-plus-lg ms-2"></i>
+                    </a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @for (int i = 0; i < Model.TeamMemberList.BusinessCertificates.Count; i++)
+                    {
+                        BusinessCertificateViewModel certificate;
+                        certificate = Model.TeamMemberList.BusinessCertificates[i];
+
+                        <li class="list-group-item border-default shadow-sm">
+                            <img src='@certificate.PhotoUrl'
+                                    class="img-thumbnail shadow-sm" alt="@certificate.Name">
+                            <div class="name px-3 py-1 h-100 fw-bold text-default">
+                                <span>
+                                    @if (string.IsNullOrEmpty(certificate.Name))
+                                    {
+                                        @(Html.DisplayNameFor(
+                                            model => model.TeamMemberList.BusinessCertificates) + " " + certificate.Id)
+                                    }
+                                    else
+                                    {
+                                        @certificate.Name
+                                    }
+                                </span>
+                            </div>
+                            <a asp-action="BusinessCertificateUpdating" asp-controller="Admin"
+                                asp-route-id="@certificate.Id"
+                                class="btn btn-outline-primary btn-sm certificate-edit-button">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <!-- Contact info -->
+        <div class="col col-12">
+            <div class="block block-contact-info">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        @Html.DisplayNameFor(model => model.ContactInfo)
+                    </span>
+                    <a asp-action="ContactInfoUpdating" asp-controller="Admin"
+                            class="btn btn-primary btn-sm shadow-sm">
+                        Chỉnh sửa
+                        <i class="bi bi-pencil-square ms-2"></i>
+                    </a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <!-- PhoneNumber -->
+                    <li class="list-group-item d-flex flex-row border-default shadow-sm">
+                        <div class="title h-100 fw-bold text-default flex-shrink-0">
+                            @Html.DisplayNameFor(model => model.ContactInfo.PhoneNumber)
+                        </div>
+                        <div class="content h-100 text-default flex-fill text-end ms-3">
+                            @Model.ContactInfo.PhoneNumber
+                        </div>
+                    </li>
+                    <!-- ZaloNumber -->
+                    <li class="list-group-item d-flex flex-row border-default shadow-sm">
+                        <div class="title h-100 fw-bold text-default flex-shrink-0">
+                            @Html.DisplayNameFor(model => model.ContactInfo.ZaloNumber)
+                        </div>
+                        <div class="content h-100 text-default flex-fill text-end ms-3">
+                            @Model.ContactInfo.ZaloNumber
+                        </div>
+                    </li>
+                    <!-- Email -->
+                    <li class="list-group-item d-flex flex-row border-default shadow-sm">
+                        <div class="title h-100 fw-bold text-default flex-shrink-0">
+                            @Html.DisplayNameFor(model => model.ContactInfo.Email)
+                        </div>
+                        <div class="content h-100 text-default flex-fill text-end ms-3">
+                            @Model.ContactInfo.Email
+                        </div>
+                    </li>
+                    <!-- Address -->
+                    <li class="list-group-item d-flex flex-row border-default shadow-sm">
+                        <div class="title h-100 fw-bold text-default flex-shrink-0">
+                            @Html.DisplayNameFor(model => model.ContactInfo.Address)
+                        </div>
+                        <div class="content h-100 text-default flex-fill text-end ms-3">
+                            @Model.ContactInfo.Address
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Nội dung
+}
+
+@section Styles {
+    <link href="~/css/admin/content.css" rel="stylesheet">
+}
+
+@section Scripts {
+    <script src="~/js/admin/carousel-with-image-list.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Add carousel thumbnail autoplay visual effect
+            let carouselElement = document.getElementById("homepage-slider-items-carousel");
+            let carouselThumbnailImageElements = document
+                .querySelectorAll("#homepage-slider-items-thumbnail-container img.img-thumbnail");
+            const carouselController = new CarouselController(
+                carouselElement,
+                carouselThumbnailImageElements);
+        })
+    </script>
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Content, Url.Action("Content", "Admin"))
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" model="@breadcrumbViewModel"/>
+}

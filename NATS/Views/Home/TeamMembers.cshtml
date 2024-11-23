@@ -1,3 +1,4 @@
+@model TeamMemberListViewModel
 @{
     ViewBag.PageTitle = "Đội ngũ";
     Layout = "_Layout";
@@ -12,104 +13,47 @@
             <span>Thành viên</span>
         </h1>
 
-        <div class="column one-fourth">
-            <div class="team">                    
-                <a href="" title="" class="rounded-img border alignleft">
-                    <img src="/images/members/1.png" alt="" title=""/>
-                </a>
-            </div>
-        </div>
-        
-        <div class="column one-fourth">
-            <div class="team">                    
-                <h1>Đỗ Quang Huyền</h1>
-                <span class="role">
-                    <strong>Chức vụ: </strong>
-                    Giám đốc</span>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-                galley of type and scrambled it to make a type specimen book.</p>
-            </div>
-        </div>
-        
-        <div class="column one-fourth">
-            <div class="team">                    
-                <a href="" title="" class="rounded-img border alignleft">
-                    <img src="/images/members/2.png" alt="" title="" />
-                </a>
-            </div>
-        </div>
-        
-        <div class="column one-fourth last">
-            <div class="team">                    
-                <h1>Trang Nguyễn</h1>
-                <span class="role">
-                    <strong>Chức vụ: </strong>
-                    Phó giám đốc / Giảng viên</span>
-                <ul class="flower-bullet green" style="padding-left: 5px;">
-                    <li>Kinh nghiệm 10 năm trong ngành chăm sóc sức khoẻ cộng đồng.</li>
-                    <li>Nhiều năm kinh nghiệm đào tạo về thẩm mỹ.</li>
-                    <li>Giảng viên Thần Số Học, đào tạo mỹ phẩm.</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="hr_invisible"> </div>
-        
-        <div class="column one-fourth">
-            <div class="team">                    
-                <a href="" title="" class="rounded-img border alignleft">
-                    <img src="/images/members/3.png" alt="" title="" />
-                </a>
-            </div>
-        </div>
-        
-        <div class="column one-fourth">
-            <div class="team">
-                <h1>Lan Nguyễn</h1>  
-                <span class="role">
-                    <strong>Chức vụ: </strong>
-                    Phó giám đốc</span>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-                galley of type and scrambled it to make a type specimen book.</p>
-            </div>
-        </div>
+        @for (int i = 0; i < Model.TeamMembers.Count; i++)
+        {
+            TeamMemberViewModel teamMember = Model.TeamMembers[i];
 
-        <div class="column one-fourth">
-            <div class="team">                    
-                <a href="" title="" class="rounded-img border alignleft">
-                    <img src="/images/members/4.png" alt="" title="" />
-                </a>
+            <div class="column one-fourth">
+                <div class="team">                    
+                    <a href="" title="" class="rounded-img border alignleft">
+                        <img src="@teamMember.PhotoUrl" alt="@teamMember.FullName" title="" />
+                    </a>
+                </div>
             </div>
-        </div>
-        
-        <div class="column one-fourth last">
-            <div class="team">           
-                <h1>Trần Kim Khoa</h1>
-                    <strong>Chức vụ: </strong>
-                    Phó giám đốc</span>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-                galley of type and scrambled it to make a type specimen book.</p>
+            <div class='column one-fourth @(i % 2 != 0 ? "last" : string.Empty)'>
+                <div class="team">           
+                    <h1>@teamMember.FullName</h1>
+                    <strong>@teamMember.RoleName</strong>
+                    <br/><br/>
+                    <span>@teamMember.Description</span>
+                </div>
             </div>
-        </div>
-        <div class="hr_invisible"></div>
+            @if (i % 2 != 0 || i == Model.TeamMembers.Count - 1)
+            {
+                <div class="hr_invisible"></div>
+            }
+        }
         
         <h1 class="title" style="text-align: center;">
             <span>Chứng nhận của chúng tôi</span>
         </h1>
-        <div style="margin: 0 20px; 0 10px;">
-            <a href="~/images/members/certificate_1.jpg"
-                style="display: flex; justify-items: center;">
-                <img src="~/images/members/certificate_1.jpg"
-                    style="background: rgb(229, 222, 176); border: 1px solid #cfc89d; padding: 5px; margin: 0 auto;">
-            </a>
+        <div class="clearfix"></div>
+        <br/>
+        <div style="margin: 0 20px 0 10px; text-align: center;">
+            @foreach (BusinessCertificateViewModel certificate in Model.BusinessCertificates)
+            {
+                <a href="@certificate.PhotoUrl" class="dislay: inline-block">
+                    <img src="@certificate.PhotoUrl"
+                        style="background: rgb(229, 222, 176); border: 1px solid #cfc89d; padding: 5px; margin: 0 auto;  max-width: 250px;">
+                </a><br/>
+            }
         </div>
-
-        <div class="hr_invisible"></div>
     </div> <!-- **Content Full Width - End** -->
-    
-    <!-- **Newsletter** -->
-    <partial name="_SubcriberRegister"/>
-    <!-- **Newsletter - End** -->
+    <div class="hr_invisible"></div>
 
 </div><!-- **Main Container - End** -->
 

@@ -16,23 +16,25 @@
     <body>
         <div id="login_box">
             <div class="login_header">
-                <img alt="NATSInternal" src="~/images/login.png">
+                <img alt="NATS" src="~/images/login/login_logo.png">
             </div>
             <div class="login_container">
                 <form asp-action="Login" asp-controller="Authentication" method="post">
                     @Html.AntiForgeryToken()
-                    
-                    <input asp-for="UserName" 
-                            class="form-control mt-2"
-                            placeholder="@Html.DisplayNameFor(model => model.UserName)">
-                    <span asp-validation-for="UserName"></span>
+                    <div class="form-group my-2">
+                        <input asp-for="UserName" class="form-control"
+                                placeholder="@Html.DisplayNameFor(model => model.UserName)">
+                        <span asp-validation-for="UserName"></span>
+                    </div>
 
-                    <input asp-for="Password"
-                            class="form-control mt-2"
-                            placeholder="@Html.DisplayNameFor(model => model.Password)">
-                    <span asp-validation-for="Password"></span>
+                    <div class="form-group mb-2">
+                        <input asp-for="Password"
+                                class="form-control"
+                                placeholder="@Html.DisplayNameFor(model => model.Password)">
+                        <span asp-validation-for="Password"></span>
+                    </div>
 
-                    <input class="btn btn-primary w-100 mt-2" type="submit" value="Đăng nhập"/>
+                    <input class="btn btn-primary w-100 shadow-sm" type="submit" value="Đăng nhập"/>
                 </form>
             </div>
         </div>

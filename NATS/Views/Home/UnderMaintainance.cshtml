@@ -1,0 +1,45 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <title>Đang bảo trì</title>
+        <link href="~/css/admin/style.css" type="text/css" rel="stylesheet"/>
+        <link href="~/css/admin/under-maintainance.css" type="text/css" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+                crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    </head>
+    
+    <body class="vh-100">
+        <div class="container h-100">
+            <div class="row p-4 justify-content-center align-items-center h-100">
+                <div class="col col-xxl-4 col-xl-5 col-lg-6 col-md-8 col-sm-10 col-12 m-sm-0">
+                    <div class="block rounded rounded-3">
+                        <div class="p-5 pb-4 d-flex flex-column justify-content-center align-items-center">
+                            <i class="bi bi-tools p-3 bg-primary text-white
+                                    d-block main-icon rounded-circle shadow mb-3"></i>
+                            <span class="text-primary fs-3 fw-bold mb-2">ĐANG BẢO TRÌ</span>
+                            <div class="text-primary-emphasis text-center">
+                                Trang web đang được bảo trì.<br/>
+                                Xin vui lòng truy cập lại sau.
+                            </div>
+                        </div>
+                        <div class="p-2 border-top border-default text-end">
+                            <a asp-action="Login" asp-controller="Authentication"
+                                    class="btn btn-outline-primary shadow-sm">
+                                Đăng nhập
+                                <i class="bi bi-box-arrow-in-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

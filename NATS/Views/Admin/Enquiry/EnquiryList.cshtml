@@ -1,0 +1,77 @@
+@model EnquiryListViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Enquiries";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1">
+        <!-- Products -->
+        <div class="col col-12">
+            <div class="block block-enquiry-list shadow-sm">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        Danh sách @DisplayNames.Enquiry.ToLower()
+                    </span>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @if (Model.Items.Count > 0)
+                    {
+                        @foreach (EnquiryViewModel enquiry in Model.Items)
+                        {
+                            <li class="list-group-item border-default shadow-sm">
+                                <div class="description h-100 text-default flex-fill">
+                                    <span class="fullname text-default fs-6 fw-bold">@enquiry.FullName</span>
+                                    <small class="content text-default">@enquiry.Content</small>
+                                    <div class="d-flex flex-row">
+                                        <small class="received-datetime text-opacity-50">
+                                            @Html.DisplayFor(model => enquiry.ReceivedDateTime)
+                                        </small>
+                                        @if (!enquiry.IsCompleted)
+                                        {
+                                            <span class="badge bg-danger d-inline-block ms-2">Chưa hoàn thành</span>
+                                        }
+                                    </div>
+                                </div>
+                                <a asp-action="Detail" asp-controller="AdminEnquiry"
+                                        asp-route-id="@enquiry.Id"
+                                        class="btn btn-outline-primary btn-sm edit-button shadow-sm ms-2">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item border-default text-default-translucent shadow-sm
+                                    d-flex justify-content-center">
+                            Không có dữ liệu về @DisplayNames.Enquiry.ToLower()
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Câu hỏi
+}
+
+@section Scripts {
+    <link href="/css/admin/enquiry-list.css" rel="stylesheet">
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Enquiry, null),
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" model="@breadcrumbViewModel" />
+}

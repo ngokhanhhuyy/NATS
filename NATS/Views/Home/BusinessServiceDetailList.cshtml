@@ -1,0 +1,90 @@
+@model BusinessServiceDetailListViewModel
+@{
+    ViewBag.PageTitle = "Chi tiết dịch vụ";
+    Layout = "_Layout";
+}
+
+<!-- **Main Container** -->
+<div class="main-container">
+    @foreach (BusinessServiceDetailViewModel service in Model.Items)
+    {
+        <!-- **Content Full Width** -->
+        <div class="content content-full-width" id="@service.Id">
+
+            <h1 id="@service.Id">@service.Name</h1>
+            <div class="column one-third">
+                @{
+                    string thumbnailUrl;
+                    if (service.ThumbnailUrl == null)
+                    {
+                        thumbnailUrl  = "https://placehold.co/300x260";
+                    }
+                    else
+                    {
+                        thumbnailUrl = service.ThumbnailUrl;
+                    }
+                }
+                <img src="@thumbnailUrl" alt="" title="" />
+                <div class="box-content-with-design">
+                    <h3>Nội dung chính</h3>
+                    <ul class="flower-bullet green">
+                        @foreach (BusinessServiceFeatureViewModel feature in service.Features)
+                        {
+                            <li>@feature.Content</li>
+                        }
+                    </ul>
+                    <h3>Giá tiền</h3>
+                                    
+                    <table border="0" cellpadding="0" cellspacing="0" class="price-table">
+                        <tbody> 
+                            <tr>
+                                <td class="odd"></td>
+                                <td class="even">Liên hệ</td>
+                            </tr>
+                        </tbody>
+                    </table>                    
+                </div>
+            </div>
+        
+            <div class="column two-third last">
+                @if (service.Detail != null)
+                {
+                    string[] paragraphs = service.Detail?.Split(Environment.NewLine);
+                    foreach (string paragraph in paragraphs)
+                    {
+                        <p>@paragraph</p>
+                    }
+                }
+
+                @if (service.Photos != null)
+                {
+                    <div style="width: 100%; text-align: center">
+                        @foreach (BusinessServicePhotoViewModel photo in service.Photos)
+                        {
+                            <a href="@photo.Url" target="_blank" rel="noopener noreferrer">
+                                <img src="@photo.Url"
+                                    style="margin: 5px auto; max-width: 80%;">
+                            </a>
+                        }
+                    </div>
+                } 
+            </div>
+        
+            <div class="hr"></div>
+            <div class="clear"></div>
+        
+        </div> <!-- **Content Full Width - End** -->
+    }
+</div><!-- **Main Container - End** -->
+    
+
+@section Breadcrumbs {
+    <!-- **Breadcrumb** -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a asp-action="Index" asp-controller="Home" title="">Trang chủ /</a>
+            <a asp-action="BusinessServiceList" asp-controller="Home" title="">Dịch vụ /</a>
+            <span class="current-crumb">Chi tiết</span>
+        </div>  <!-- **Breadcrumb - End** -->           
+    </div>
+}

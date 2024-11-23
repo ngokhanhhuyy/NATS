@@ -1,6 +1,6 @@
 namespace NATS.Services.Entities;
 
-public class HomePageSlideItem
+public class HomePageSliderItem
 {
     [Column("id")]
     [Key]
@@ -10,15 +10,11 @@ public class HomePageSlideItem
     [StringLength(100)]
     public string Title { get; set; }
 
-    [Column("content")]
-    [StringLength(100)]
-    public string Content { get; set; }
-
     [Column("photo_url")]
     [StringLength(255)]
     public string PhotoUrl { get; set; }
 
     [Column("index")]
     [Required]
-    public string Index { get; set; }
+    public int Index { get; set; } = 0;
 }

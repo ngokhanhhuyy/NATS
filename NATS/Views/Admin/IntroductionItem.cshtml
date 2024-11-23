@@ -1,0 +1,129 @@
+﻿@model IntroductionItemViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Content";
+    string formId = "updating-form";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1 justify-content-center">
+        <form asp-action="IntroductionItemUpdating" asp-controller="Admin"
+                asp-route-id="@Model.Id"
+                method="POST" enctype="multipart/form-data"
+                class="p-3 d-none" id="@formId" novalidate>
+            <input asp-for="ThumbnailUrl" type="hidden" />
+            <input asp-for="ThumbnailChanged" type="hidden" value="@false" />
+            <input asp-for="ThumbnailFile" type="file" class="d-none"
+                   accept="image/png, image/jpeg">
+        </form>
+
+        <div class="col col-12">
+            <div class="block block-border block-photo rounded p-3 rounded-3
+                        justify-content-center bg-white border-default shadow-sm">
+                <div class="row justify-content-center mb-3">
+                    <!-- Thumbnail -->
+                    <div class="col col-md-4 col-sm-4 col-6 d-flex align-items-center pt-3 pt-sm-0">
+                        <div class="photo-container">
+                            <img src="@Model.ThumbnailUrl" alt="..."
+                                 class="img-thumbnail img-aspect-ratio border-default shadow-sm rounded-circle"
+                                 id="photo-thumbnail" ratio-width-to-height="1">
+                            <button class="btn btn-outline-success photo-edit-button shadow-lg"
+                                    id="photo-edit-button" file-input-id="ThumbnailFile"
+                                    changed-input-id="ThumbnailChanged"
+                                    hidden-url-input-id="ThumbnailUrl" img-id="photo-thumbnail">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Name and summary -->
+                    <div class="col col-md-8 col-sm-8 col-12 d-flex flex-column d-bg-primary">
+                        <div class="form-group d-flex flex-column flex-fill mb-3">
+                            <label asp-for="Name" class="form-label text-primary required">
+                                @Html.DisplayNameFor(model => model.Name)
+                            </label>
+                            <textarea asp-for="Name" type="text" class="form-control"
+                                form="@formId" placeholder="Tên mục giới thiệu"></textarea>
+                            <span asp-validation-for="Name" class="invalid-feedback d-inline"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Summary" class="form-label text-primary required">
+                                @Html.DisplayNameFor(model => model.Summary)
+                            </label>
+                            <textarea asp-for="Summary" type="text" class="form-control flex-fill"
+                                form="@formId" placeholder="Tóm tắt nội dung giới thiệu ..."></textarea>
+                            <span asp-validation-for="Summary" class="invalid-feedback d-inline"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="row">
+                    <div class="col col-12 form-group">
+                        <label asp-for="Content" class="form-label text-primary required">
+                            @Html.DisplayNameFor(model => model.Content)
+                        </label>
+                        <textarea asp-for="Content" class="form-control"
+                                form="@formId" placeholder="Chi tiết nội dung giới thiệu">
+                        </textarea>
+                        <span asp-validation-for="Content" class="invalid-feedback d-inline"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Discard button -->
+            <partial name="~/Views/Admin/_DiscardButton.cshtml"
+                     model='@Url.Action("Content", "Admin")' />
+        </div>
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Save button -->
+            @{
+                AjaxSaveViewModel ajaxSaveModel = new AjaxSaveViewModel
+                {
+                    FormId = formId,
+                    RedirectingUrl = Url.Action("Content", "Admin"),
+                    EditableAfterSaving = false
+                };
+            }
+            <partial name="~/Views/Admin/_AjaxSaveButton.cshtml" model="@ajaxSaveModel" />
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Giới thiệu
+}
+
+@section Styles {
+    <link href="/css/admin/introduction-item.css" rel="stylesheet">
+}
+
+@section Scripts {
+    <script src="/js/admin/photo-file-input.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            let photoEditButton = document.getElementById("photo-edit-button");
+            const photoFileInputButtonPair = new PhotoFileInputButtonPair(
+                photoEditButton,
+                "/images/front-pages/introduction-items/default.jpg");
+        })
+    </script>
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Content, Url.Action("Content", "Admin")),
+                (DisplayNames.IntroductionItem, null)
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" />
+}

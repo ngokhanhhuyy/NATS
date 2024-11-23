@@ -1,0 +1,39 @@
+﻿textarea#Name {
+    min-height: 80px !important;
+}
+
+textarea#Summary {
+    min-height: 150px !important;
+}
+
+textarea#Content {
+    min-height: 600px;
+}
+
+.block.block-photo .photo-container {
+    position: relative;
+}
+
+.block.block-photo .photo-container .photo-edit-button {
+    position: absolute;
+    aspect-ratio: 1;
+    top: 7%;
+    right: 7%;
+    border-radius: 50%;
+}
+
+.block.block-photo .photo-container .photo-delete-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translate(30%, 30%);
+}
+
+.block.block-photo .photo-container img {
+    object-fit: cover;
+    aspect-ratio: 1;
+    max-width: 100%;
+    width: auto;
+    overflow: hidden;
+    margin: 0;
+}

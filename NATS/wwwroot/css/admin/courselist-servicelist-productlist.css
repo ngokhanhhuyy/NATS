@@ -1,0 +1,39 @@
+.block.block-introduction-items ul li,
+.block.block-courses ul li,
+.block.block-products ul li {
+    display: flex;
+    overflow: hidden;
+    align-content: center;
+}
+
+.block.block-introduction-items ul li img,
+.block.block-courses ul li img,
+.block.block-products ul li img {
+    width: auto;
+    height: 60px !important;
+    margin-right: 0.5rem;
+}
+
+.block.block-introduction-items ul li .name,
+.block.block-courses ul li .name,
+.block.block-products ul li .name {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.block.block-introduction-items ul li a.edit-button,
+.block.block-courses a.edit-button,
+.block.block-products a.edit-button {
+    align-self: center;
+    margin: 0 6px;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+}
+
+.block.block-introduction-items ul li a.edit-button:hover,
+.block.block-courses a.edit-button:hover,
+.block.block-products a.edit-button:hover {
+    aspect-ratio: 1;
+}

@@ -1,3 +1,4 @@
+@model AboutUsIntroductionViewModel
 @{
     ViewBag.PageTitle = "Giới thiệu";
     ViewBag.CurrentPageName = "AboutUs";
@@ -12,18 +13,20 @@
     <div class="content content-full-width">
         <!-- Opening message -->
         <h1 class="title">
-            <span>Thông điệp</span>
+            <span>@Html.DisplayNameFor(model => model.MainQuoteContent)</span>
         </h1>
 
         <div class="column one-third">
-            <img src="~/images/about-us/1.jpg"
+            <img src="@Model.MainPhotoUrl"
                 style="background: rgb(229, 222, 176); border: 1px solid #cfc89d; padding: 5px; margin: 10px 0px 10px">
         </div>
         
         <div class="column two-third last">
             <blockquote style="font-weight: bold">
-                <p>Trong cuộc sống hiện đại, nhiều áp lực và lo lắng khiến cho chúng ta càng ngày càng cảm thấy căng thảng, mệt mỏi và có xu hướng tìm các giải pháp để cải thiện sức khỏe và làm chậm quá trình lão hóa.</p>
-                <p>Trung Tâm Khoa Học Đào Tạo và Thẩm Mỹ Quốc Gia (NATS) hướng đến việc xây dựng văn hóa sức khỏe, thẩm mỹ và lan tỏa giá trị tốt đẹp này đến với cộng đồng.</p>
+                @foreach (string paragraph in Model.MainQuoteContent.Split("\n"))
+                {
+                    <p>@paragraph</p>
+                }
             </blockquote>
         </div>
         <div class="hr_invisible"></div>
@@ -32,18 +35,27 @@
         <!-- About us -->
         <div class="column one-half"> 
             <h2 class="title">
-                <span>Về chúng tôi</span>
+                <span>@Html.DisplayNameFor(model => model.AboutUsContent)</span>
             </h2>
-            <p>Trung Tâm Khoa Học Đào Tạo và Thẩm Mỹ Quốc Gia (NATS) là đơn vị trực thuộc Viện Khoa học Giáo dục và Môi trường (IEES), ra đời với sứ mệnh giúp định hướng nghề nghiệp cho thế hệ trẻ.Đào tạo cho họ các kỹ thuật thẩm mỹ không xâm lấn theo phong thủy độc đáo, các kỹ thuật đả thông kinh lạc, các phương pháp thải độc và trẻ hóa tế bào. Chuyển giao quy trình mở spa dưỡng sinh trị liệu.</p>
+            @foreach (string paragraph in Model.AboutUsContent.Split("\n"))
+            {
+                <p>@paragraph</p>
+            }
         </div>
         <!-- END About us -->
 
         <!-- Why choose us -->
         <div class="column one-half last"> 
             <h2 class="title">
-                <span>Vì sao chọn chúng tôi</span>
+                <span>
+                    @Html.DisplayNameFor(model => model.WhyChooseUsContent)
+                </span>
             </h2>
-            <p>Trung Tâm Khoa Học Đào Tạo và Thẩm Mỹ Quốc Gia (NATS) là đơn vị trực thuộc Viện Khoa học Giáo dục và Môi trường (IEES), ra đời với sứ mệnh giúp định hướng nghề nghiệp cho thế hệ trẻ.Đào tạo cho họ các kỹ thuật thẩm mỹ không xâm lấn theo phong thủy độc đáo, các kỹ thuật đả thông kinh lạc, các phương pháp thải độc và trẻ hóa tế bào. Chuyển giao quy trình mở spa dưỡng sinh trị liệu.</p>
+            
+            @foreach (string paragraph in Model.WhyChooseUsContent.Split("\n"))
+            {
+                <p>@paragraph</p>
+            }
         </div>
         <div class="hr_invisible"></div>
         <!-- END Why choose us -->
@@ -51,26 +63,33 @@
         <!-- Our difference -->
         <div class="column one-half"> 
             <h3 class="title">
-                <span>Sự khác biệt của chúng tôi</span>
+                <span>
+                    @Html.DisplayNameFor(model => model.OurDifferenceContent)
+                </span>
             </h3>
-            <p>Tại  Trung Tâm NATS, bạn sẽ không chỉ được trang bị các kỹ năng cần thiết để thành công trong ngành chăm sóc sức khỏe và làm đẹp, mà còn được khuyến khích phát triển bản thân, khám phá tài năng, sự tự tin và vẻ đẹp bên trong của chính mình.</p>
-            <p>Đội ngũ chuyên gia giàu kinh nghiệm trong ngành Thẩm mỹ và Chăm sóc sức khỏe nhiều năm qua tại Việt Nam đã sáng lập Trung Tâm NATS với mong muốn tạo ra những học viên ưu tú, được tôn trọng và công nhận trong ngành. NATS là một cộng đồng học tập thân thiện và tương trợ lẫn nhau, nơi mỗi người có thể khám phá tiềm năng, giá trị và hy vọng của bản thân cho tương lai. Hãy đến với NATS để khám phá sự khác biệt của chúng tôi và trở thành một trong những chuyên gia Thẩm mỹ và Chăm sóc sức khỏe tốt nhất trong ngành!</p>
+            
+            @foreach (string paragraph in Model.OurDifferenceContent.Split("\n"))
+            {
+                <p>@paragraph</p>
+            }
         </div>
         <!-- END Our difference -->
         
         <!-- Our culture -->
         <div class="column one-half last"> 
             <h3 class="title">
-                <span>Văn hoá của chúng tôi</span>
+                <span>
+                    @Html.DisplayNameFor(model => model.OurCultureContent)
+                </span>
             </h3>
-            <p>Với những mục tiêu cao cả trong việc đào tạo những chuyên gia thẩm mỹ không xâm lấn và chăm sóc sức khỏe tốt nhất, tuy nhiên Trung Tâm Khoa Học Đào Tạo và Thẩm Mỹ Quốc Gia (NATS) cũng luôn chú trọng tới văn hoá trong môi trường làm việc của ngành thẩm mỹ và chăm sóc sức khoẻ.</p>
-            <p>Chúng tôi tin rằng văn hoá là một phần không thể thiếu trong sự phát triển bền vững của một tổ chức. Tại NATS, chúng tôi tạo ra một môi trường làm việc tích cực và hỗ trợ cho đội ngũ nhân viên và học viên. Chúng tôi khuyến khích sự sáng tạo và đóng góp ý kiến, và xây dựng một cộng đồng thân thiện và đoàn kết.</p>
+            @foreach (string paragraph in Model.OurCultureContent.Split("\n"))
+            {
+                <p>@paragraph</p>
+            }
         </div>
         <!-- END Our curture -->
         <div class="hr_invisible"></div>
     </div> <!-- **Content Full Width - End** -->
-    
-    <partial name="_SubcriberRegister" />
 </div><!-- **Main Container - End** -->
 
 @section Breadcrumbs {

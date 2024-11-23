@@ -9,7 +9,7 @@ public class Course
     [Column("name")]
     [Required]
     [StringLength(50)]
-    public int Name { get; set; }
+    public string Name { get; set; }
 
     [Column("summary")]
     [StringLength(255)]

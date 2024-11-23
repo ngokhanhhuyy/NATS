@@ -1,0 +1,30 @@
+textarea {
+    min-height: 200px !important;
+}
+
+.block.block-main-quote-photo .photo-container {
+    position: relative;
+}
+
+.block.block-main-quote-photo .photo-container .photo-edit-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: hidden;
+    transform: translate(30%, -30%);
+}
+
+.block.block-main-quote-photo .photo-container .photo-delete-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+    transform: translate(30%, 30%);
+}
+
+.block.block-main-quote-photo .photo-container img {
+    object-fit: cover;
+    overflow: hidden;
+    aspect-ratio: 1;
+    width: 100vh;
+}

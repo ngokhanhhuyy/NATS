@@ -1,0 +1,158 @@
+@model AjaxSaveViewModel
+
+<!-- Save button -->
+<button type="submit" form="@Model.FormId" class="btn btn-primary w-100 shadow-sm"
+        id="@Model.FormId-submit-button">
+    @Model.ButtonText
+    <i class="bi bi-floppy ms-2"></i>
+</button>
+
+<!-- Save success notification modal -->
+<div class="modal fade" id="save-success-modal" tabindex="-1" role="dialog"
+        aria-labelledby="save-success-modal-title" aria-hidden="true" 
+        data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-success" id="save-success-modal-title">
+                    Lưu thành công
+                </h5>
+            </div>
+            <div class="modal-body row px-4">
+                <div class="col col-auto pe-3">
+                    <i class="bi bi-check-circle-fill fs-1 text-success"></i>
+                </div>
+                <div class="col h-100">
+                    @if (Model.EditableAfterSaving)
+                    {
+                        <span>
+                            Dữ liệu đã được lưu thành công.<br/>
+                            Bạn có thể tiếp tục chỉnh sửa hoặc quay lại.
+                        </span>
+                    }
+                    else
+                    {
+                        <span>Dữ liệu đã được lưu thành công.</span><br/>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                @if (Model.EditableAfterSaving)
+                {
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            id="save-success-modal-ok-button">
+                        Tiếp tục sửa
+                    </button>
+                    <a href="@Model.RedirectingUrl" type="button" class="btn btn-primary" data-dismiss="modal"
+                            id="save-success-modal-return-button">
+                        Quay lại
+                    </a>
+                }
+                else
+                {
+                    <a href="@Model.RedirectingUrl" type="button" class="btn btn-primary" data-dismiss="modal"
+                            id="save-success-modal-return-button">
+                        Đồng ý
+                    </a> 
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Validation error notification modal -->
+<div class="modal fade" id="validation-error-modal" tabindex="-1" role="dialog"
+     aria-labelledby="validation-error-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="validation-error-modal-title">
+                    Lưu thất bại
+                </h5>
+            </div>
+            <div class="modal-body row px-4">
+                <div class="col col-auto pe-3">
+                    <i class="bi bi-x-circle-fill fs-1 text-danger"></i>
+                </div>
+                <div class="col h-100">
+                    Dữ liệu không thể lưu thành công.<br/>
+                    Vui lòng kiểm tra lại dữ liệu đã nhập.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        id="validation-error-modal-ok-button">
+                    Kiểm tra lại
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Operation error notification modal -->
+<div class="modal fade" id="operation-error-modal" tabindex="-1" role="dialog"
+     aria-labelledby="operation-error-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="operation-error-modal-title">
+                    Lỗi nghiêm trọng
+                </h5>
+            </div>
+            <div class="modal-body row px-4">
+                <div class="col col-auto pe-3">
+                    <i class="bi bi-x-circle-fill fs-1 text-danger"></i>
+                </div>
+                <div class="col h-100">
+                    Đã xảy ra lỗi nghiêm trọng trong khi xử lý dữ liệu.<br/>
+                    Vui lòng liên hệ với nhà phát triển để khắc phục sớm nhất.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        id="operation-error-modal-ok-button">
+                    Đồng ý
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Connection error notification modal -->
+<div class="modal fade" id="save-connection-error-modal" tabindex="-1" role="dialog"
+     aria-labelledby="save-connection-error-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="save-connection-error-modal-title">
+                    Kết nối thất bại
+                </h5>
+            </div>
+            <div class="modal-body row px-4">
+                <div class="col col-auto pe-3">
+                    <i class="bi bi-x-circle-fill fs-1 text-danger"></i>
+                </div>
+                <div class="col h-100">
+                    Kết nối tới máy chủ thất bại.<br/>
+                    Vui lòng kiểm tra lại kết nối mạng.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        id="save-connection-error-modal-ok-button">
+                    Đồng ý
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin/ajax-save.js"></script>
+<script>
+    // Add ajax save request controller
+    const ajaxSaveFormElement = document.getElementById("@Model.FormId");
+    const ajaxSaveController = new AjaxSaveController(
+        ajaxSaveFormElement,
+        "@Model.RedirectingUrl",
+        JSON.parse(@Json.Serialize(Model.EditableAfterSaving)));
+</script>

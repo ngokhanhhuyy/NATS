@@ -1,0 +1,80 @@
+@model PostDetailViewModel
+@{
+    ViewBag.PageTitle = "Bài viết";
+    Layout = "_Layout";
+}
+
+<!-- **Main Container** -->
+<div class="main-container">
+
+    <!-- **Content Full Width** -->
+    <div class="content content-full-width">  
+        <!-- **Blog Post** -->
+        <div class="blog-post" style="overflow-x: hidden; margin-top: 0px">
+            <div class="post-title">
+                <h2>
+                    <a href="" title="">
+                        @Model.Title
+                    </a>
+                </h2>
+                <span class="arrow"></span>
+            </div>
+            
+            <div class="post-details">   
+                <div class="date">
+                    <span class="day">@Model.CreatedDateTime.Day</span>
+                    <span class="date-group">
+                        <span class="month">Tháng @Model.CreatedDateTime.Month</span>
+                        <span class="year">@Model.CreatedDateTime.Year</span>
+                    </span>
+                    <span class="arrow"></span> 
+                </div>
+            </div>
+            
+            <div class="post-content">
+                <div class="post-thumb" style="width: fit-content; margin-right: 15px;">
+                    <a href="@Model.ThumbnailUrl" title="@Model.Title">
+                        @{
+                            string thumbnailSource = "/images/front-pages/posts/default.jpg";
+                            if (Model.ThumbnailUrl != null)
+                            {
+                                thumbnailSource = Model.ThumbnailUrl;
+                            }
+                        }
+                        <img src="@thumbnailSource" alt="@Model.Title" title="@Model.Title"
+                             style="width: 200px; height: 200px;" />
+                    </a>
+                </div> 
+                @foreach (string paragraph in Model.Content.Split(Environment.NewLine))
+                {
+                    <p>@paragraph</p>
+                }
+                
+                <div class="hr_invisible"></div>
+                
+                <div class="post-tags" style="padding-left: 10px;">
+                    Đăng lúc: @Model.CreatedDateTime.ToString("HH:mm dd/MM/yyyy")
+                </div>
+                
+            </div> 
+            
+        </div><!-- **Blog Post - End** -->
+        <div class="hr_invisible"></div>
+    </div>
+</div><!-- **Main Container - End** -->
+
+@section Scripts { 
+}
+
+@section Breadcrumbs {
+    <!-- **Breadcrumb** -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a asp-action="Index" asp-controller="Home" title="">Trang chủ /</a>
+            <a asp-action="PostList" asp-controller="Home" asp-route-page="1" title="">
+                Danh sách bài viết /
+            </a>
+            <span class="current-crumb">@ViewBag.PageTitle</span>
+        </div>  <!-- **Breadcrumb - End** -->           
+    </div>
+}

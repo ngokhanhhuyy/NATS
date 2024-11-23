@@ -2,7 +2,7 @@ namespace NATS.Services.Enums;
 
 public enum ItemType
 {
-    Education,
+    Courses,
     Services,
     Products
 }

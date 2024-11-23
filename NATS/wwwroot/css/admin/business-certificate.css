@@ -1,0 +1,23 @@
+.block.block-photo-and-names .photo-container {
+    position: relative;
+}
+
+.block.block-photo-and-names .photo-container .photo-edit-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(30%, -30%);
+}
+
+.block.block-photo-and-names .photo-container .photo-delete-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translate(30%, 30%);
+}
+
+@media (max-width: 576px) {
+    .block.block-photo-and-names .photo-column {
+        padding-right: 0 !important;
+    }
+}

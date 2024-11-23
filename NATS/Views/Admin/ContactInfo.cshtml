@@ -1,0 +1,95 @@
+@model ContactInfoViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Content";
+    const string formId = "updating-form";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 justify-content-center">
+        <form asp-action="ContactInfoUpdating" asp-controller="Admin"
+                class="p-3 d-none" id="@formId" novalidate>
+        </form>
+        <div class="col col-12">
+            <div class="block block-general-settings p-3">
+                <!-- PhoneNumber -->
+                <div class="form-group mb-3">
+                    <label asp-for="PhoneNumber" class="form-label text-primary fw-bold m-0">
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </label>
+                    <input asp-for="PhoneNumber" class="form-control" form="@formId" 
+                            placeholder="@Html.DisplayNameFor(model => model.PhoneNumber)" />
+                    <span asp-validation-for="PhoneNumber"></span>
+                </div>
+
+                <!-- ZaloNumber -->
+                <div class="form-group mb-3">
+                    <label asp-for="ZaloNumber" class="form-label text-primary fw-bold m-0">
+                        @Html.DisplayNameFor(model => model.ZaloNumber)
+                    </label>
+                    <input asp-for="ZaloNumber"class="form-control" form="@formId"
+                            placeholder="@Html.DisplayNameFor(model => model.ZaloNumber)" />
+                    <span asp-validation-for="ZaloNumber"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group mb-3">
+                    <label asp-for="Email" class="form-label text-primary fw-bold m-0">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </label>
+                    <input asp-for="Email"class="form-control" form="@formId"
+                            placeholder="@Html.DisplayNameFor(model => model.Email)" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+
+                <!-- Address -->
+                <div class="form-group">
+                    <label asp-for="Address" class="form-label text-primary fw-bold m-0">
+                        @Html.DisplayNameFor(model => model.Address)
+                    </label>
+                    <input asp-for="Address"class="form-control" form="@formId"
+                            placeholder="@Html.DisplayNameFor(model => model.Address)" />
+                    <span asp-validation-for="Address"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discard button -->
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Discard button -->
+            <partial name="~/Views/Admin/_DiscardButton.cshtml" model='@Url.Action("Content", "Admin")' />
+        </div>
+
+        <!-- Save button -->
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            @{
+                AjaxSaveViewModel ajaxSaveViewModel = new AjaxSaveViewModel
+                {
+                    FormId = formId,
+                    RedirectingUrl = Url.Action("Content", "Admin"),
+                    EditableAfterSaving = false
+                };
+            }
+            <partial name="~/Views/Admin/_AjaxSaveButton.cshtml" model="@ajaxSaveViewModel" />
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    @DisplayNames.ContactInfo
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Content, Url.Action("Content", "Admin")),
+                (DisplayNames.ContactInfo, null),
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" model="@breadcrumbViewModel"/>
+}

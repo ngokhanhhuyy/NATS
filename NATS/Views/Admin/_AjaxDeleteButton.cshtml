@@ -1,0 +1,110 @@
+@model AjaxDeleteViewModel
+
+<!-- Delete button -->
+<button class="btn btn-danger w-100 shadow-sm" data-toggle="modal"
+        data-target="#delete-confirmation-modal"
+        id="delete-confirmation-modal-show-button">
+    Xoá
+    <i class="bi bi-trash3 ms-2"></i>
+</button>
+
+<!-- Delete confirmation modal -->
+<div class="modal fade" id="delete-confirmation-modal" tabindex="-1" role="dialog"
+     aria-labelledby="delete-confirmation-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="delete-confirmation-modal-title">Xác nhận xoá bỏ</h5>
+            </div>
+            <div class="modal-body row px-4">
+                <div class="col col-auto pe-3">
+                    <i class="bi bi-exclamation-triangle-fill fs-1 text-warning"></i>
+                </div>
+                <div class="col h-100">
+                    Mọi dữ liệu sau khi xoá sẽ không thể khôi phục lại.<br/>
+                    Bạn có chắc chắn muốn xoá bỏ?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    id="delete-confirmation-modal-cancel-button">
+                    Quay lại
+                </button>
+
+                <!-- Executing form, to send deleting request to an action -->
+                <form action="@Model.ActionUrl" method="POST" id="deleting-form" class="d-none">
+                    @Html.AntiForgeryToken()
+                </form>
+                <button id="delete-confirmation-modal-ok-button" class="btn btn-danger">
+                    Chắc chắn
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete success modal -->
+<div class="modal fade" id="delete-success-notification-modal" tabindex="-1" role="dialog"
+        aria-labelledby="delete-success-notification-modal-title" aria-hidden="true" 
+        data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-success" id="delete-success-notification-modal-title">
+                    Xoá thành công
+                </h5>
+            </div>
+            <div class="modal-body row px-4">
+                <div class="col col-auto pe-3">
+                    <i class="bi bi-check-circle-fill fs-1 text-success"></i>
+                </div>
+                <div class="col h-100">
+                    <span>Dữ liệu đã được xoá thành công.</span><br/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="@Model.RedirectingUrl" type="button" class="btn btn-primary" data-dismiss="modal"
+                        id="delete-success-notification-modal-redirect-button">
+                    Điều hướng
+                </a> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete connection error notification modal -->
+<div class="modal fade" id="delete-connection-error-modal" tabindex="-1" role="dialog"
+     aria-labelledby="delete-connection-error-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="delete-connection-error-modal-title">
+                    Kết nối thất bại
+                </h5>
+            </div>
+            <div class="modal-body row px-4">
+                <div class="col col-auto pe-3">
+                    <i class="bi bi-x-circle-fill fs-1 text-danger"></i>
+                </div>
+                <div class="col h-100">
+                    Kết nối tới máy chủ thất bại.<br/>
+                    Vui lòng kiểm tra lại kết nối mạng.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        id="delete-connection-error-modal-ok-button">
+                    Đồng ý
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin/ajax-delete.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const deleteModalsController = new AjaxDeleteController(
+            document.getElementById("delete-confirmation-modal-show-button"));
+    })
+</script>

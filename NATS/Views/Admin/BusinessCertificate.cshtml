@@ -1,0 +1,142 @@
+@model BusinessCertificateViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Content";
+    string formId = "upserting-form";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1 justify-content-center">
+        @if (Model.IsForCreating)
+        {
+            <form asp-action='BusinessCertificateCreating' asp-controller="Admin"
+                    method="POST" enctype="multipart/form-data"
+                    class="p-3 d-none" id="@formId" novalidate>
+            </form>
+        }
+        else
+        {
+            <form asp-action='BusinessCertificateUpdating' asp-controller="Admin"
+                    asp-id-route="@Model.Id" method="POST" enctype="multipart/form-data"
+                    class="p-3 d-none" id="@formId" novalidate>
+            </form> 
+        }
+        <input type="hidden" asp-for="PhotoUrl" form="@formId"/>
+        <input type="hidden" asp-for="PhotoChanged" form="@formId" value="@false"/>
+        <input asp-for="PhotoFile" type="file" form="@formId" class="d-none"
+                accept="image/png, image/jpeg">
+
+        <!-- Main content and photo -->
+        <div class="col col-12">
+            <div class="block block-border block-photo-and-names rounded p-3 rounded-3 border-default bg-white shadow-sm">
+                <label class="form-label text-primary required">
+                    @Html.DisplayNameFor(model => model.PhotoUrl)
+                </label>
+                <div class="row m-0 justify-content-center">
+                    <div class="col col-sm-6 col-8 photo-column">
+                        <div class="photo-container">
+                            <img src='@(Model.PhotoUrl ?? "/images/front-pages/certificates/default.jpg")'
+                                 alt="..." class="img-thumbnail img-aspect-ratio border-default shadow-sm"
+                                 id="photo-thumbnail" ratio-width-to-height="1">
+                            <button class="btn btn-outline-success btn-sm photo-edit-button shadow-sm"
+                                    id="photo-edit-button" file-input-id="PhotoFile"
+                                    changed-input-id="PhotoChanged"
+                                    hidden-url-input-id="PhotoUrl" img-id="photo-thumbnail">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <partial name="_MaintainingFeatureNotificationModal"/>
+                        </div>
+                        <span asp-validation-for="PhotoFile" class="invalid-feedback d-inline"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content and photo -->
+        <div class="col col-12">
+            <div class="block block-border block-photo-and-names rounded p-3 rounded-3 border-default bg-white shadow-sm">
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label text-primary">
+                        Tên chứng chỉ
+                    </label>
+                    <input asp-for="Name" type="text" class="form-control"
+                            form="@formId" placeholder="Chứng chỉ A"/>
+                    <span asp-validation-for="Name" class="invalid-feedback d-inline"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Discard buttons -->
+            <partial name="~/Views/Admin/_DiscardButton.cshtml" model='@Url.Action("Content", "Admin")'/>
+        </div>
+        @if (!Model.IsForCreating)
+        {
+            <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+                <!-- Delete button -->
+                @{
+                    AjaxDeleteViewModel ajaxDeleteModel = new AjaxDeleteViewModel
+                    {
+                        ActionUrl = Url.Action("BusinessCertificateDeleting", "Admin", new { id = Model.Id }),
+                        RedirectingUrl = Url.Action("Content", "Admin")
+                    };
+                }
+                <partial name="~/Views/Admin/_AjaxDeleteButton.cshtml" model="@ajaxDeleteModel" />
+            </div>
+        }
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Save button -->
+            @{
+                AjaxSaveViewModel ajaxSaveModel = new AjaxSaveViewModel
+                {
+                    FormId = @formId,
+                    RedirectingUrl = Url.Action("Content", "Admin"),
+                    EditableAfterSaving = false
+                };
+                <partial name="~/Views/Admin/_AjaxSaveButton.cshtml" model="@ajaxSaveModel" />
+            }
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    @if (Model.IsForCreating)
+    {
+        @("Tạo chứng chỉ")
+    }
+    else
+    {
+        @($"chứng chỉ {Model.Name}")
+    }
+}
+
+@section Scripts {
+    <script src="/js/admin/photo-file-input.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            let photoEditButton = document.getElementById("photo-edit-button");
+            const photoFileInputButtonPair = new PhotoFileInputButtonPair(
+                photoEditButton,
+                "/images/front-pages/certificates/default.jpg");
+        })
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/admin/business-certificate.css">
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Content, Url.Action("Content", "Admin")),
+                (DisplayNames.BusinessCertificates, null)
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" model="@breadcrumbViewModel"/>
+}

@@ -1,4 +1,4 @@
-namespace HCManagement.Services;
+namespace NATS.Services;
 
 public class UserService : IUserService
 {
@@ -59,7 +59,7 @@ public class UserService : IUserService
 			));
 		}
 
-		Microsoft.IdentityModel.Tokens.SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+		SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
 		var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
 		Claim[] claims = 
@@ -124,7 +124,6 @@ public class UserService : IUserService
 		{
 			Id = userId
 		});
-
 	}
 
 	public async Task<ServiceResult<bool>> LogoutAsync()
@@ -164,6 +163,12 @@ public class UserService : IUserService
 				UserName = u.UserName,
 			}).ToListAsync();
 		return ServiceResult<UserListResponseDto>.Success(responseDto);
+	}
+	
+	public async Task<ServiceResult<int>> GetCountAsync()
+	{
+		int userCount = await _context.Users.CountAsync();
+		return ServiceResult<int>.Success(userCount);
 	}
 
 	public async Task SetCurrentUserId(int id)

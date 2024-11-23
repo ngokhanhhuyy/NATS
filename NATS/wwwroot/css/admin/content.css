@@ -1,0 +1,98 @@
+.block.block-about-us .accordion .accordion-item:last-child {
+    background: transparent !important;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.block.block-about-us .accordion .accordion-item:last-child .accordion-header button:not(:active, :focus) {
+    background: transparent !important;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.block.block-about-us .accordion .accordion-item:last-child .accordion-header button {
+    background-color: var(--bs-primary-bg-subtle) !important;
+    border-radius: 0px !important;
+}
+
+.block.block-introduction-items li,
+.block.block-team-members ul li,
+.block.block-business-certificates ul li,
+.block.block-homepage-slider-items ul li:not(.carousel-container) {
+    display: flex;
+    overflow: hidden;
+    align-content: center;
+}
+
+.block-introduction-items ul li img,
+.block.block-team-members ul li img,
+.block.block-business-certificates ul li img {
+    width: 60px !important;
+    height: 60px !important;
+    object-fit: cover;
+    object-position: 50% 50%;
+}
+
+.block.block-homepage-slider-items ul li.carousel-container .carousel-inner img  {
+    width: 100vh;
+    aspect-ratio: 1200 / 550;
+    object-fit: cover;
+    object-position: 50% 50%;
+}
+
+.block.block-homepage-slider-items ul li .photo-container {
+    position: relative;
+}
+
+.block.block-homepage-slider-items ul li .photo-container img.img-thumbnail {
+    width: 100vh;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: 50% 50%;
+    transition-duration: 0.5s;
+    cursor: pointer;
+}
+
+.block.block-homepage-slider-items ul li .photo-container img.img-thumbnail:hover {
+    border-color: var(--bs-primary);
+    box-shadow: var(--bs-box-shadow) !important;
+}
+
+.block.block-homepage-slider-items ul li .photo-container a.edit-button {
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    transform: translate(30%, -30%);
+    overflow: hidden;
+}
+
+.block.block-introduction-items ul li .name,
+.block.block-team-members ul li .name-and-role-name,
+.block.block-business-certificates ul li .name {
+    overflow: hidden;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    flex-basis: auto;
+    justify-content: center;
+    align-content: start;
+}
+
+.block.block-introduction-items ul li .name > span,
+.block.block-introduction-items ul li .name > small,
+.block.block-team-members .name-and-role-name > span,
+.block.block-team-members .name-and-role-name > small,
+.block.block-business-certificates ul li .name > span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.block.block-introduction-items ul li a.introduction-item-edit-button,
+.block.block-team-members ul li a.member-edit-button,
+.block.block-business-certificates a.certificate-edit-button {
+    align-self: center;
+    margin: 0 6px;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+}

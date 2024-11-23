@@ -1,0 +1,87 @@
+﻿@model GeneralSettingsViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "GeneralSettings";
+    string formId = "updating-form";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 justify-content-center">
+        <form asp-action="GeneralSettings" asp-controller="Admin"
+                class="p-3 d-none" id="@formId" novalidate>
+        </form>
+        <div class="col col-12">
+            <div class="block block-general-settings p-3">
+                <!-- Application name -->
+                <div class="form-group mb-3">
+                    <label asp-for="ApplicationName" class="form-label text-primary fw-bold required">
+                        @Html.DisplayNameFor(model => model.ApplicationName)
+                    </label>
+                    <input asp-for="ApplicationName" class="form-control" form="@formId" 
+                            placeholder="@Html.DisplayNameFor(model => model.ApplicationName)" />
+                    <span asp-validation-for="ApplicationName"></span>
+                </div>
+
+                <!-- Application short name -->
+                <div class="form-group mb-3">
+                    <label asp-for="ApplicationShortName" class="form-label text-primary fw-bold required">
+                        @Html.DisplayNameFor(model => model.ApplicationShortName)
+                    </label>
+                    <input asp-for="ApplicationShortName"class="form-control" form="@formId"
+                            placeholder="@Html.DisplayNameFor(model => model.ApplicationShortName)" />
+                    <span asp-validation-for="ApplicationShortName"></span>
+                </div>
+
+                <!-- UnderMaintainance -->
+                <div class="form-group">
+                    <label asp-for="UnderMaintainance" class="form-label text-primary fw-bold required">
+                        @Html.DisplayNameFor(model => model.UnderMaintainance)
+                    </label>
+                    <select asp-for="UnderMaintainance" asp-items="@Model.UnderMaintainanceOptions"
+                            form="@formId" class="form-select">
+                    </select>
+                    @{
+                        Console.WriteLine(Model.UnderMaintainance);
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Discard button -->
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Discard button -->
+            <partial name="~/Views/Admin/_DiscardButton.cshtml" model='@Url.Action("Dashboard", "Admin")' />
+        </div>
+
+        <!-- Save button -->
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            @{
+                AjaxSaveViewModel ajaxSaveViewModel = new AjaxSaveViewModel
+                {
+                    FormId = formId,
+                    RedirectingUrl = Url.Action("Dashboard", "Admin"),
+                    EditableAfterSaving = false
+                };
+            }
+            <partial name="~/Views/Admin/_AjaxSaveButton.cshtml" model="@ajaxSaveViewModel" />
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Cài đặt chung
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.GeneralSettings, Url.Action("GeneralSettings", "Admin"))
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" model="@breadcrumbViewModel"/>
+}

@@ -1,0 +1,80 @@
+﻿@model CourseBasicListViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Content";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1">
+
+        <!-- Courses -->
+        <div class="col col-12">
+            <div class="block block-courses shadow-sm">
+                <div class="header">
+                    <span class="px-2 py-1">
+                        Danh sách @DisplayNames.Course.ToLower()
+                    </span>
+                    <a asp-action="Creating" asp-controller="AdminCourse"
+                            class="btn btn-primary btn-sm shadow-sm px-3">
+                        Thêm khoá học
+                        <i class="bi bi-plus-lg"></i>
+                    </a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @if (Model.Items.Count > 0)
+                    {
+                        @foreach (CourseBasicViewModel course in Model.Items)
+                        {
+                            <li class="list-group-item border-default shadow-sm">
+                                @{
+                                    string defaultThumbnailSource;
+                                    defaultThumbnailSource = "/images/front-pages/introduction-items/default.jpg";
+                                }
+                                <img src='@(course.ThumbnailUrl ?? defaultThumbnailSource)'
+                                        class="img-thumbnail shadow-sm" alt="@course.Name">
+                                <div class="name px-3 py-1 h-100 text-default">
+                                    <span class="text-default fs-6 fw-bold">@course.Name</span><br />
+                                    <small class="text-default">@course.Summary</small>
+                                </div>
+                                <a asp-action="Updating" asp-controller="AdminCourse" asp-route-id="@course.Id"
+                                        class="btn btn-outline-primary btn-sm edit-button shadow-sm">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item border-default text-default-translucent shadow-sm
+                                    d-flex justify-content-center">
+                            Không có dữ liệu về @DisplayNames.Course.ToLower()
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Khoá học
+}
+
+@section Scripts {
+    <link href="/css/admin/courselist-servicelist-productlist.css" rel="stylesheet">
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Content, Url.Action("Content", "Admin")),
+                (DisplayNames.Course, Url.Action("List", "AdminCourse"))
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" />
+}

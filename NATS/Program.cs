@@ -3,14 +3,24 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews()
-    .AddRazorRuntimeCompilation();
+string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+if (environment == Environments.Development)
+{
+    builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+}
+else
+{
+    builder.Services.AddControllersWithViews()
+        .AddRazorRuntimeCompilation();
+}
 
 // Add signalR
 builder.Services.AddSignalR();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 string connectionString = builder.Configuration.GetConnectionString("MySQL");
+Console.WriteLine(connectionString);
+// connectionString = "Server=MYSQL8003.site4now.net;Database=db_aa5821_nats;Uid=aa5821_nats;Password=Huyy47b1";
 builder.Services.AddDbContext<DatabaseContext>(options => options
     .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
     .AddInterceptors(new VietnamTimeInterceptor()));
@@ -28,11 +38,24 @@ builder.Services.Configure<IdentityOptions>(options => {
 });
 builder.Services.ConfigureApplicationCookie(options => {
     options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
     options.LoginPath = "/Login";
     options.LogoutPath = "/Logout";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.SlidingExpiration = true;
+    options.Events.OnSignedIn = async context =>
+    {
+        IUserService userService = context.HttpContext.RequestServices.GetService<IUserService>();
+        bool parsable = int.TryParse(
+            context.Principal!.FindFirstValue(ClaimTypes.NameIdentifier),
+            out int userId);
+        if (!parsable)
+        {
+            throw new InvalidOperationException();
+        }
+        await userService.SetCurrentUserId(userId);
+        await Task.CompletedTask;
+    };
 });
 
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
@@ -64,18 +87,38 @@ builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
     });
 
 // FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
 ValidatorOptions.Global.LanguageManager.Enabled = true;
 ValidatorOptions.Global.LanguageManager = new ValidatorLanguageManager {
     Culture = new CultureInfo("vi")
 };
-ValidatorOptions.Global.PropertyNameResolver = (_, b, _) => b.Name.First().ToString().ToLower() + b.Name[1..];
 
 // Dependency injection
 builder.Services.AddScoped<SignInManager<User>>();
 builder.Services.AddScoped<RoleManager<Role>>();
 builder.Services.AddScoped<DatabaseContext>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGeneralSettingsService, GeneralSettingsService>();
+builder.Services.AddScoped<IAboutUsIntroductionService, AboutUsIntroductionService>();
+builder.Services.AddScoped<ITeamMembersService, TeamMembersService>();
+builder.Services.AddScoped<IBusinessCertificateService, BusinessCertificateService>();
+builder.Services.AddScoped<IIntroductionItemService, IntroductionItemService>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<IIntroductionItemService, IntroductionItemService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IBusinessServiceService, BusinessServiceService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IHomePageSliderItemService, HomePageSliderItemService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IEnquiryService, EnquiryService>();
+builder.Services.AddScoped<IContactInfoService, ContactInfoService>();
+builder.Services.AddScoped<ITrafficService, TrafficService>();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
+DataInitializer dataInitializer;
+dataInitializer = new DataInitializer();
+dataInitializer.InitializeData(app);
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -87,8 +130,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseMiddleware<TrafficMiddleware>();
+app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}");
+app.UseMiddleware<UnderMaintainanceMiddleware>();
+app.UseMiddleware<CurrentUserMiddleware>();
+app.MapControllerRoute("default", "{controller=Home}/{action=Index}");
 app.Run();

@@ -1,0 +1,90 @@
+@model CourseDetailListViewModel
+@{
+    ViewBag.PageTitle = "Khoá học";
+    Layout = "_Layout";
+}
+
+<!-- **Main Container** -->
+<div class="main-container">
+    @foreach (CourseDetailViewModel course in Model.Items)
+    {
+        <!-- **Content Full Width** -->
+        <div class="content content-full-width">
+
+            <h1 id="@course.Id">@course.Name</h1>
+        
+            <div class="column one-third">
+                @{
+                    string thumbnailUrl;
+                    if (course.ThumbnailUrl == null)
+                    {
+                        thumbnailUrl  = "https://placehold.co/300x260";
+                    }
+                    else
+                    {
+                        thumbnailUrl = course.ThumbnailUrl;
+                    }
+                }
+                <img src="@thumbnailUrl" alt="" title="" />
+                <div class="box-content-with-design">
+                    <h3>Nội dung chính</h3>
+                    <ul class="flower-bullet green">
+                        @foreach (CourseSectionViewModel courseSection in course.Sections)
+                        {
+                            <li>@courseSection.Content</li>
+                        }
+                    </ul>
+                    <h3>Học phí</h3>
+                                    
+                    <table border="0" cellpadding="0" cellspacing="0" class="price-table">
+                        <tbody> 
+                            <tr>
+                                <td class="odd"></td>
+                                <td class="even">Liên hệ</td>
+                            </tr>
+                        </tbody>
+                    </table>                    
+                </div>
+            </div>
+        
+            <div class="column two-third last">
+                @if (course.Detail != null)
+                {
+                    string[] paragraphs = course.Detail?.Split(Environment.NewLine);
+                    foreach (string paragraph in paragraphs)
+                    {
+                        <p>@paragraph</p>
+                    }
+                }
+
+                @if (course.Photos != null)
+                {
+                    <div style="width: 100%; text-align: center">
+                        @foreach (CoursePhotoViewModel photo in course.Photos)
+                        {
+                            <a href="@photo.Url" target="_blank" rel="noopener noreferrer">
+                                <img src="@photo.Url"
+                                    style="margin: 5px auto; max-width: 80%;">
+                            </a>
+                        }
+                    </div>
+                }      
+            </div>
+            <div class="hr"></div>
+            <div class="clear"></div>
+        
+        </div> <!-- **Content Full Width - End** -->
+    }
+</div><!-- **Main Container - End** -->
+    
+
+@section Breadcrumbs {
+    <!-- **Breadcrumb** -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a asp-action="Index" asp-controller="Home" title="">Trang chủ /</a>
+            <a asp-action="CourseList" asp-controller="Home" title="">Đào tạo /</a>
+            <span class="current-crumb">@ViewBag.PageTitle</span>
+        </div>  <!-- **Breadcrumb - End** -->           
+    </div>
+}

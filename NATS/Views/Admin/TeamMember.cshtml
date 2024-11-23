@@ -1,0 +1,157 @@
+@model TeamMemberViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Content";
+    string formId = "upserting-form";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1 justify-content-center">
+        <form asp-action='@(Model.IsForCreating ? "TeamMemberCreating" : "TeamMemberUpdating")'
+                asp-controller="Admin" asp-route-id="@Model.Id"
+                method="POST" enctype="multipart/form-data"
+                class="p-3 d-none" id="@formId" novalidate>
+            <input type="hidden" asp-for="PhotoUrl"/>
+            <input type="hidden" asp-for="PhotoChanged" value="@false"/>
+            <input asp-for="PhotoFile" type="file" class="d-none"
+                    accept="image/png, image/jpeg">
+        </form>
+
+        <!-- Main content and photo -->
+        <div class="col col-12">
+            <div class="block block-photo rounded p-3 rounded-3 justify-content-center bg-white border-default shadow-sm">
+                <div class="row justify-content-center">
+                    <div class="col col-md-3 col-sm-3 col-6 d-flex flex-column justify-content-center
+                                h-100vh pt-3 pt-sm-0 mb-3">
+                        <div class="photo-container">
+                            <img src='@(Model.PhotoUrl ?? "/images/front-pages/members/default.jpg")'
+                                 alt="..." class="img-thumbnail img-aspect-ratio border-default shadow-sm"
+                                    id="photo-thumbnail" ratio-width-to-height="1">
+                            <button class="btn btn-outline-success btn-sm photo-edit-button"
+                                    id="photo-edit-button" file-input-id="PhotoFile"
+                                    changed-input-id="PhotoChanged"
+                                    hidden-url-input-id="PhotoUrl" img-id="photo-thumbnail"
+                                    delete-button-id="photo-delete-button">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm photo-delete-button shadow-sm"
+                                    id="photo-delete-button">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Name and role name -->
+                    <div class="col col-md-9 col-sm-9 col-12">
+                        <div class="form-group mb-3">
+                            <label asp-for="FullName" class="form-label text-primary required">
+                                @Html.DisplayNameFor(model => model.FullName)
+                            </label>
+                            <input asp-for="FullName" type="text" class="form-control"
+                                    form="@formId" placeholder="Nguyễn Văn A"/>
+                            <span asp-validation-for="FullName" class="invalid-feedback d-inline"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="RoleName" class="form-label text-primary required">
+                                @Html.DisplayNameFor(model => model.RoleName)
+                            </label>
+                            <input asp-for="RoleName" type="text" class="form-control"
+                                    form="@formId" placeholder="Nhân viên, Giám đốc, ..."/>
+                            <span asp-validation-for="RoleName" class="invalid-feedback d-inline"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Description -->
+                    <div class="col col-12">
+                        <div class="form-group">
+                            <label asp-for="Description" class="form-label text-primary required">
+                                @Html.DisplayNameFor(model => model.Description)
+                            </label>
+                            <textarea asp-for="Description" class="form-control border-default"
+                                    form="@formId" placeholder="Mô tả, tiểu sử, ...">
+                            </textarea>
+                            <span asp-validation-for="Description" class="invalid-feedback d-inline"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Discard button -->
+            <partial name="~/Views/Admin/_DiscardButton.cshtml" model='@Url.Action("Content", "Admin")'/>
+        </div>
+        @if (!Model.IsForCreating)
+        {
+            <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+                <!-- Delete button -->
+                @{
+                    AjaxDeleteViewModel ajaxDeleteModel = new AjaxDeleteViewModel
+                    {
+                        ActionUrl = Url.Action("TeamMemberDeleting", "Admin", new { id = Model.Id }),
+                        RedirectingUrl = Url.Action("Content", "Admin")
+                    };
+                    <partial name="~/Views/Admin/_AjaxDeleteButton.cshtml" model="@ajaxDeleteModel" />
+                }
+            </div>
+        }
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Save button -->
+            @{
+                AjaxSaveViewModel ajaxSaveModel = new AjaxSaveViewModel
+                {
+                    FormId = formId,
+                    RedirectingUrl = Url.Action("Content", "Admin"),
+                    EditableAfterSaving = false
+                };
+                <partial name="~/Views/Admin/_AjaxSaveButton.cshtml" model="@ajaxSaveModel" />
+            }
+        </div>
+    </div>
+</div>
+
+
+@section PageTitle {
+    @if (Model.IsForCreating)
+    {
+        @("Tạo thành viên")
+    }
+    else
+    {
+        @($"Thành viên {Model.FullName}")
+    }
+}
+
+@section Scripts {
+    <script src="/js/admin/photo-file-input.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            let photoEditButton = document.getElementById("photo-edit-button");
+            const photoFileInputButtonPair = new PhotoFileInputButtonPair(
+                photoEditButton,
+                "/images/front-pages/members/default.jpg");
+        })
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/admin/team-member.css">
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Content, Url.Action("Content", "Admin")),
+                (DisplayNames.TeamMembers, null)
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" model="@breadcrumbViewModel"/>
+}

@@ -1,0 +1,26 @@
+@model UserBasicViewModel
+
+<div id="user-account">
+    <img src="/images/profile_pictures/default.png">
+    <span class="username">@("@" + Model.UserName)</span>
+    @{
+        string roleClassName = string.Empty;
+        switch (Model.Role.Name)
+        {
+            case "Developer":
+                roleClassName = "badge bg-danger";
+                break;
+            case "Manager":
+                roleClassName = "badge bg-primary";
+                break;
+            case "Staff":
+                roleClassName = "badge bg-secondary";
+                break;
+        }
+    }
+    <span class="role @(Model.Role.Name.ToLower())">@Model.Role.DisplayName</span>
+
+    @* <div class="preview-container">
+        <iframe src='@Url.Action("Index", "Home")' id="home-page-review"></iframe>
+    </div> *@
+</div>

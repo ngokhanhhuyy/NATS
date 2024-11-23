@@ -1,0 +1,140 @@
+@model HomePageSliderItemViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Content";
+    string formId = "upserting-form";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1 justify-content-center">
+        @if (Model.IsForCreating)
+        {
+            <form asp-action="Creating" asp-controller="AdminHomePageSliderItem"
+                method="POST" enctype="multipart/form-data"
+                class="p-3 d-none" id="@formId" novalidate
+                submit-button-element-id="@formId-submit-button">
+            </form>
+        }
+        else
+        {
+            <form asp-action="Updating" asp-controller="AdminHomePageSliderItem"
+                asp-route-id="@Model.Id"
+                method="POST" enctype="multipart/form-data"
+                class="p-3 d-none" id="@formId" novalidate
+                submit-button-element-id="@formId-submit-button">
+            </form>
+        }
+        
+        <input asp-for="PhotoUrl" type="hidden" form="@formId" />
+        <input asp-for="PhotoChanged" type="hidden" value="@false" form="@formId" />
+        <input asp-for="PhotoFile" type="file" class="d-none" form="@formId"
+                accept="image/png, image/jpeg" />
+
+        <!-- Thumbnail, name and detail -->
+        <div class="col col-12">
+            <div class="block block-thumbnail rounded p-3 rounded-3 justify-content-center
+                        bg-white border-default shadow-sm p-3">
+                <div class="form-group mb-3 pt-2 pe-2">
+                    <div class="photo-container">
+                        <img src='@(Model.PhotoUrl ?? "/images/front-pages/homepage-slider-items/default.jpeg")'
+                                alt="..." class="img-thumbnail img-aspect-ratio border-default shadow-sm"
+                                id="photo-thumbnail" ratio-width-to-height="1">
+                        <button class="btn btn-outline-success btn-sm photo-edit-button shadow-sm"
+                                id="thumbnail-edit-button" file-input-id="PhotoFile"
+                                changed-input-id="PhotoChanged"
+                                hidden-url-input-id="PhotoUrl" img-id="photo-thumbnail"
+                                delete-button-id="photo-delete-button">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm photo-delete-button shadow-sm"
+                                id="photo-delete-button">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="PhotoFile"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Title" class="form-label text-primary">
+                        @Html.DisplayNameFor(model => model.Title)
+                    </label>
+                    <input asp-for="Title" type="text"
+                            class="form-control" form="@formId"
+                            placeholder="@Html.DisplayNameFor(model => model.Title)" />
+                    <span asp-validation-for="Title"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discard button -->
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            <!-- Discard button -->
+            <partial name="~/Views/Admin/_DiscardButton.cshtml" model='@Url.Action("Content", "Admin")' />
+        </div>
+
+        <!-- Delete button -->
+        @if (!Model.IsForCreating)
+        {
+            <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+                @{
+                    AjaxDeleteViewModel ajaxDeleteViewModel = new AjaxDeleteViewModel
+                    {
+                        ActionUrl = Url.Action("Deleting", "AdminHomePageSliderItem", new { id = Model.Id }),
+                        RedirectingUrl = Url.Action("Content", "Admin")
+                    };
+                }
+                <partial name="~/Views/Admin/_AjaxDeleteButton.cshtml" model="@ajaxDeleteViewModel" />
+            </div>
+        }
+
+        <!-- Save button -->
+        <div class="col col-lg-3 col-md-3 col-sm-4 col-4">
+            @{
+                AjaxSaveViewModel ajaxSaveViewModel = new AjaxSaveViewModel
+                {
+                    FormId = formId,
+                    RedirectingUrl = Url.Action("Content", "Admin"),
+                    EditableAfterSaving = false
+                };
+            }
+            <partial name="~/Views/Admin/_AjaxSaveButton.cshtml" model="@ajaxSaveViewModel" />
+        </div>
+    </div>
+</div>
+
+
+@section PageTitle {
+    Trình chiếu ảnh
+}
+
+@section Styles {
+    <link href="/css/admin/homepage-slider-items.css" rel="stylesheet">
+}
+
+@section Scripts {
+    <script src="/js/admin/photo-file-input.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const isForCreating = JSON.parse("@Json.Serialize(Model.IsForCreating)");
+            // Add user interaction feature for thumbnail
+            let thumbnailEditButton = document.getElementById("thumbnail-edit-button");
+            const thumbnailFileInputButtonPair = new PhotoFileInputButtonPair(
+                thumbnailEditButton,
+                "/images/front-pages/homepage-slider-items/default.jpeg");
+        });
+    </script>
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Content, Url.Action("Content", "Admin")),
+                (DisplayNames.HomePageSliderItem, null)
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" />
+}

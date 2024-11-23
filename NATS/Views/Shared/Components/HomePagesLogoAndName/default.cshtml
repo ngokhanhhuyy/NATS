@@ -1,0 +1,16 @@
+@model GeneralSettingsViewModel
+
+<div id="logo">
+    <a asp-action="Index" asp-controller="Home" title="" style="display: flex; align-items: center">
+        <img src="/images/nats-logo.png" alt="" title=""/>
+        <div class="text-container"
+                style="display: flex; flex-direction: column; justify-items: start; align-items: start">
+            <span class="upper">@Model.ApplicationShortName</span>
+            <span class="lower">@Model.ApplicationName</span>
+        </div>
+    </a>
+</div>
+
+<script>
+    document.title = `${@Json.Serialize(ViewBag.PageTitle)} - ${@Json.Serialize(Model.ApplicationName)}`;
+</script>

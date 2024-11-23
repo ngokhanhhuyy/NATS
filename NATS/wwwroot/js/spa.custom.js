@@ -1,4 +1,4 @@
-WebFontConfig = { google: { families: [ 'Niconne', 'Norican', 'Oswald::latin' ] } };
+﻿WebFontConfig = { google: { families: [ 'Niconne', 'Norican', 'Oswald::latin' ] } };
 function mainmenu(){
 	$("ul.menu ul").css({display: "none"}); // Opera Fix
 	$("ul.menu li").hover(function(){
@@ -230,43 +230,44 @@ $(document).ready(function(){
 	
 	// Responsive Menu
 	//var $mainNav    = $('.menu-main-menu-container').children('ul'),
-	var $mainNav    = $('ul.menu'),
-	optionsList = '<option value="" selected>Navigate...</option>';
+	//var $mainNav    = $('ul.menu'),
+	//optionsList = '<option value="" selected>Điều hướng...</option>';
 	
-		// Regular nav
-		$mainNav.on('mouseenter', 'li', function() {
-			var $this    = $(this),
-				$subMenu = $this.children('ul');
-			if( $subMenu.length ) $this.addClass('hover');
-			$subMenu.hide().stop(true, true).fadeIn(200);
-		}).on('mouseleave', 'li', function() {
-			$(this).removeClass('hover').children('ul').stop(true, true).fadeOut(50);
-		});
+	//	// Regular nav
+	//	$mainNav.on('mouseenter', 'li', function() {
+	//		var $this    = $(this),
+	//			$subMenu = $this.children('ul');
+	//		if( $subMenu.length ) $this.addClass('hover');
+	//		$subMenu.hide().stop(true, true).fadeIn(200);
+	//	}).on('mouseleave', 'li', function() {
+	//		$(this).removeClass('hover').children('ul').stop(true, true).fadeOut(50);
+	//	});
 
-		// Responsive nav
-		$mainNav.find('li').each(function() {
-			var $this   = $(this),
-				$anchor = $this.children('a'),
-				depth   = $this.parents('ul').length - 1,
-				indent  = '',
-				text = $anchor.html();
-				text = text.replace(/<span>.*<\/span>/g, '');
+	//	// Responsive nav
+	//	$mainNav.find('li').each(function() {
+	//		var $this   = $(this),
+	//			$anchor = $this.children('a'),
+	//			depth   = $this.parents('ul').length - 1,
+	//			indent  = '',
+	//			text = $anchor.html();
+	//			text = text.replaceAll(/<span>.*<\/span>/g, '');
 
-			if( depth ) {
-				while( depth > 0 ) {
-					indent += '--';
-					depth--;
-				}
-			}
+	//		if( depth ) {
+	//			while( depth > 0 ) {
+	//				indent += '--';
+	//				depth--;
+	//			}
+	//		}
+	//		console.log(text);
 			
-			var s = ( $anchor.attr('href') == window.location.href ) ? "selected = 'selected'" : "" ;
-			optionsList += '<option '+ s +' value="' + $anchor.attr('href') + '">' + indent + ' ' + text + '</option>';
-		}).end()
-		  .after('<select class="responsive-nav">' + optionsList + '</select>');
+	//		var s = ( $anchor.attr('href') == window.location.href ) ? "selected = 'selected'" : "" ;
+	//		optionsList += '<option '+ s +' value="' + $anchor.attr('href') + '">' + indent + ' ' + text + '</option>';
+	//	}).end()
+	//	  .after('<select class="responsive-nav">' + optionsList + '</select>');
 
-		$('.responsive-nav').on('change', function() {
-			window.location = $(this).val();
-		});
+	//	$('.responsive-nav').on('change', function() {
+	//		window.location = $(this).val();
+	//	});
 	//Responsive menu end	
 	
 	//Footer Sociallinks

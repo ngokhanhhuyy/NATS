@@ -16,7 +16,7 @@ public class AuthenticationController : Controller
     {
         if (User.Identity.IsAuthenticated)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Dashboard", "Admin");
         }
 
         LoginViewModel model = new LoginViewModel();
@@ -30,7 +30,7 @@ public class AuthenticationController : Controller
     {
         if (User.Identity.IsAuthenticated)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Dashboard", "Admin");
         }
 
         ServiceResult<LoginResponseDto> serviceResult;
@@ -51,7 +51,7 @@ public class AuthenticationController : Controller
         {
             return Redirect(returningUrl);
         }
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Dashboard", "Admin");
     }
 
     [HttpGet("Logout")]

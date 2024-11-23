@@ -1,0 +1,140 @@
+@model PostBasicListViewModel
+@{
+    ViewBag.PageTitle = "Bài viết";
+    Layout = "_Layout";
+}
+
+<!-- **Main Container** -->
+<div class="main-container">
+    <!-- **Content Full Width** -->
+    <div class="content content-full-width">
+        <!-- **Blog Post** -->
+        @foreach (PostBasicViewModel post in Model.Items)
+        {
+            <div class="blog-post" style="margin-top: 0; padding-bottom: 15px; overflow-x: visible">
+                <div class="post-title" style="padding-right: 10px;">
+                    <h2>
+                        <a asp-action="Post" asp-controller="Home"
+                           asp-route-normalizedTitle="@post.NormalizedTitle"
+                           title="@post.Title">@post.Title</a>
+                    </h2>
+                    <a href="#" class="tooltip-top readmore" title="Đọc thêm"> </a>
+                    <span class="arrow"> </span>
+                </div>
+                
+                <div class="post-details">
+                    <div class="date">
+                        <span class="day">@post.CreatedDateTime.Day</span>
+                        <span class="date-group">
+                            <span class="month">Tháng @post.CreatedDateTime.Month</span>
+                            <span class="year">@post.CreatedDateTime.Year</span>
+                        </span>
+                        <span class="arrow"></span> 
+                    </div>    
+                </div>
+                
+                <div class="post-content">
+                    <div class="post-thumb" style="width: fit-content; margin-right: 15px; margin-bottom: 0">
+                        <a asp-action="Post" asp-controller="Home"
+                           asp-route-normalizedTitle="@post.NormalizedTitle"
+                           title="@post.Title">
+                            <img src='@(post.ThumbnailUrl ?? "/images/front-pages/posts/default.jpg")'
+                                 alt="" title="@post.Title"/>
+                        </a>
+                    </div> 
+                    
+                    @{
+                        string content = post.Content;
+                        if (content.Length > 500)
+                        {
+                            content = content[..500];
+                        }
+                        for (int i = content.Length - 1; i >= 1; i--)
+                        {
+                            if (content[i] == ' ' && content[i - 1] != ' ')
+                            {
+                                content = content[..i] + "...";
+                                break;
+                            }
+                        }
+                    }
+                    <p>@content</p>
+                </div> 
+            </div><!-- **Blog Post - End** -->
+        }
+        
+        <!-- **Pagination** -->
+        @{
+            // Calculate which pagination buttons that should be rendered.
+            const int expectedVisibleButtons = 5;
+            int startingPage;
+            int endingPage;
+            if (Model.PageCount >= expectedVisibleButtons) {
+                if (Model.Page - (int)Math.Floor((decimal)expectedVisibleButtons / 2) <= 1) {
+                    startingPage = 1;
+                    endingPage = startingPage + (expectedVisibleButtons - 1);
+                } else if (Model.Page + Math.Floor((decimal)expectedVisibleButtons / 2) > Model.PageCount) {
+                    endingPage = Model.PageCount;
+                    startingPage = endingPage - (expectedVisibleButtons - 1);
+                } else {
+                    startingPage = (int)Math.Ceiling(Model.Page - (decimal)expectedVisibleButtons / 2);
+                    endingPage = (int)Math.Floor(Model.Page + (decimal)expectedVisibleButtons / 2);
+                }
+            } else {
+                startingPage = 1;
+                endingPage = Model.PageCount;
+            }
+        }
+        <div class="pagination">
+            @if (Model.Page != 1)
+            {
+                <a asp-action="PostList" asp-controller="Home" asp-route-page="1"
+                   title="" class="prev-post">
+                    <span>Trang đầu</span>
+                </a>
+            }
+            @if (Model.Page != Model.PageCount)
+            { 
+                <a asp-action="PostList" asp-controller="Home" asp-route-page="@Model.PageCount"
+                   title="" class="next-post">
+                    <span>Trang cuối</span>
+                </a>
+            }
+
+            <ul>
+                @for (int i = startingPage; i < endingPage + 1; i++)
+                {
+                    if (Model.Page == i)
+                    {
+                        <li class="active-page">@i</li>
+                    } else
+                    {
+                        <li>
+                            @{
+                                int pageIndex = i;
+                            }
+                            <a asp-action="PostList" asp-controller="Home" asp-route-page="@pageIndex" title="">
+                                @pageIndex
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div><!-- **Pagination - End** -->
+    </div> <!-- **Content Full Width - End** -->
+</div>
+
+@section Scripts { 
+    <script src="/js/animatedcollapse.js" type="text/javascript"></script>
+    <script src="/js/jquery.tipTip.minified.js" type="text/javascript"></script>
+}
+
+@section Breadcrumbs {
+    <!-- **Breadcrumb** -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a asp-action="Index" asp-controller="Home" title="">Trang chủ /</a>
+            <span class="current-crumb">@ViewBag.PageTitle</span>
+        </div>  <!-- **Breadcrumb - End** -->           
+    </div>
+}

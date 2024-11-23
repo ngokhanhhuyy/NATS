@@ -42,6 +42,7 @@
 		.box-content .readmore.tooltip-top { width:30px; height:30px; background-size:76%; }
 		
 		.post-title { width:860px; }
+		.post-title h2 { width:85%; }
 		
 		/*----*****---- << Book Now >> ----*****----*/
 		
@@ -52,7 +53,6 @@
 		.booknow-form select { min-width:130px; }
 		
 		iframe { width:100% !important; }
-		.post-thumb img { height:auto !important; }
 		
 		/*----*****---- << Footer >> ----*****----*/		
 		.testimonial-skin-carousel .jcarousel-container { width:205px; }
@@ -109,7 +109,7 @@
 		/*----*****---- << Container >> ----*****----*/
 		.container { width:728px; margin:0 auto; }
 		.slider-container { width:728px; margin:0 auto; }
-		.slider-wrapper { width:728px; height:337px; }
+		.slider-wrapper { width:728px; height:fit-content; }
 		.main-container { width:708px; margin:0 auto; }	
 		
 		.nivo-caption { top:60px !important; }
@@ -136,7 +136,7 @@
 		ul.menu li ul li a { width:135px; padding:2px 10px; font-size:11px; }	
 		ul.menu li ul ul { left:155px; }	
 		
-		#logo { width:50%; }
+		#logo { width:100%; }
 		
 		/*----*****---- << Newsletter >> ----*****----*/
 		#newsletter { width:718px; height:93px; padding:20px 5px 0px 0px; margin-bottom:30px; background-size:728px; }
@@ -173,8 +173,7 @@
 		.categories-list ul li a { width:85%; }
 		
 		.post-title { width:688px; }	
-		
-		.post-thumb img { height:auto !important; }	
+		.post-title h2 { width: 90% }
 		
 		.box-content .readmore.tooltip-top { width:30px; height:30px; background-size:76%; }
 		
@@ -256,9 +255,9 @@
 		
 		/*----*****---- << Container >> ----*****----*/
 		.container { width:410px; margin:0 auto; }
-		.slider-container { width:410px; margin:0 auto; }
-		.slider-wrapper { width:410px; height:190px; }
-		.main-container { width:410px; margin:0 auto; }	
+		.slider-container { width:95%; margin:0 auto; }
+		.slider-wrapper { width:95%; height:fit-content; }
+		.main-container { width:90%; margin:0 auto; }	
 		
 		/*----*****---- << Columns >> ----*****----*/
 		.column { margin-bottom:10px; margin-right:0px; }
@@ -291,7 +290,7 @@
 		.breadcrumb .current-crumb { font-size:17px; }
 		
 		/*----*****---- << Blog >> ----*****----*/
-		.post-content { width:300px; }
+		.post-content { width:calc(100% - 90px); }
 		ul.related-posts li {  width:385px; }
 		.jcarousel-skin-tango .jcarousel-item { width:280px; }
 		ul.related-posts li img { max-width:100%; }
@@ -302,8 +301,8 @@
 		.categories-list ul li { width:43%; }
 		.categories-list ul li a { width:85%; }
 		
-		.post-title { width:370px; padding-bottom:10px; }
-		.post-title h2 { font-size:18px; line-height:normal; width:60%; padding-top:6px; }	
+		.post-title { width: calc(100% - 30px); padding-bottom:10px; }
+		.post-title h2 { font-size:18px; line-height:normal; width:90%; }	
 		.sticky .post-title .featured { font-size:16px; }
 		.readmore { width:40px; height:40px; }
 		
@@ -316,7 +315,7 @@
 		.shortcodes .button.big { margin-right:2px; }
 		
 		/*----*****---- << Header >> ----*****----*/		
-		#logo { width:100%; text-align:center; margin:20px 0px 10px; }
+		#logo { width:90%; text-align:center; padding :20px 0px 10px; }
 		#logo img { max-width:300px; }
 		
 		#top-menu { height:auto; }
@@ -415,14 +414,14 @@
 	@media only screen and (max-width: 479px) {
 		
 		#top-menu ul.menu { display:none; }
-		.responsive-nav { display:block; }	
+		.responsive-nav { display:block; }
 		
 		/*----*****---- << Container >> ----*****----*/
-		.container { width:260px; margin:0 auto; }
-		.slider-container { width:260px; margin:0 auto; }
-		.main-container { width:250px; margin:0 auto; }	
+		.container { width: 90%; margin:0 auto; }
+		.slider-container { width:95%; margin:0 auto; }
+		.main-container { width:90%; margin:0 auto; }	
 		
-		.slider-wrapper { width:260px; height:115px; }
+		.slider-wrapper { width:95%; height:fit-content; }
 		
 		/*----*****---- << Columns >> ----*****----*/
 		.column { margin-bottom:10px; margin-right:0px; }
@@ -441,7 +440,8 @@
 		
 		.sidebar .widget, .sidebar .widget h2 { width:100%; }
 		
-		.breadcrumb { line-height:normal; padding:5px 0px; }
+		.breadcrumb { line-height:normal; padding:5px 0px; height: 30px; }
+		.breadcrumb .container { text-align: center }
 		.breadcrumb .arrow { margin:8px 6px 0px 3px; }
 		.breadcrumb a { font-size:14px; }
 		.breadcrumb h1.current-crumb { font-size:16px; margin-top:13px; margin:0px; line-height:35px; }		
@@ -464,7 +464,7 @@
 		.post-details .day, .post-comments .count { font-size:25px; }
 		.post-details .date-group .month { font-size:16px; }
 		
-		.post-content { width:170px; }
+		.post-content { width: calc(95% - 55px); }
 		
 		.pagination a { top:30px; }
 		.pagination ul { margin-top:0; }
@@ -475,7 +475,7 @@
 		.categories-list ul li a { width:85%; }
 		
 		.sticky .post-title .featured { display:none; }
-		.post-title { width:222px; }
+		.post-title { width: calc(100% - 30px); }
 		.post-title h2 { font-size:16px; line-height:normal; width:75%; }	
 		.readmore { width:40px; height:40px; }
 		
@@ -492,15 +492,17 @@
 		.gravatar { position:inherit; margin-bottom:15px; }
 		ul.commentlist li { margin-left:0px; }
 		
-		.content-with-sidebar .post-content { width:66%; }
+		.content-with-sidebar .post-content { width:auto; }
 		
 		/*----*****---- << Buttons >> ----*****----*/
 		.big-ico-button { margin-bottom:10px; }
 		.shortcodes .button.medium { margin-right:3px; }
 		
 		/*----*****---- << Header >> ----*****----*/		
-		#logo { width:100%; text-align:center; margin:20px 0px 10px; }
+		#logo { width:100%; text-align:center; margin:5px 0px 10px; padding: 0 }
 		#logo img { max-width:240px; }
+		#logo a .text-container .upper { font-size: 1.75rem; margin-bottom: 7px; }
+		#logo a .text-container .lower { font-size: 1.2rem; line-height: 1.2rem; }
 		
 		#top-menu { height:auto; background:none; }
 		ul.menu li a span { display:none; }

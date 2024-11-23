@@ -1,0 +1,35 @@
+.block.block-post-edit .photo-container {
+    position: relative;
+}
+
+.block.block-post-edit .photo-container img {
+    width: 100vh;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: 50% 50%;
+    overflow: hidden;
+}
+
+.block.block-post-edit .photo-container .photo-edit-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(30%, -30%);
+    overflow: hidden;
+}
+
+.block.block-post-edit .photo-container .photo-delete-button {
+    position: absolute;
+    overflow: hidden;
+}
+
+.block.block-post-edit .photo-container .photo-delete-button {
+    bottom: 0;
+    right: 0;
+    transform: translate(30%, 30%);
+}
+
+.block.block-post-edit textarea#Content {
+    min-height: 550px;
+}

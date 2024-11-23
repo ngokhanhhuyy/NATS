@@ -1,4 +1,5 @@
-﻿@{
+﻿@model HomePageViewModel
+@{
     ViewBag.PageTitle = "Trang chủ";
     Layout = "_Layout";
 }
@@ -8,9 +9,13 @@
     <div class="slider-container">
         <div class="slider-wrapper theme-default">    
             <div id="slider" class="nivoSlider">
-                <img src="https://wedesignthemes.com/html/spa-treats/images/post-images/slider-image.jpg" alt="" title="#htmlcaption1" />
-                <img src="/images/massage-1.jpg" alt="" title="" />
-                <img src="/images/slide-item.png" alt="" title="#htmlcaption1" />
+                @for (int i = 0; i < Model.HomePageSliderItems.Items.Count; i++)
+                {
+                    HomePageSliderItemViewModel sliderItem;
+                    sliderItem = Model.HomePageSliderItems.Items[i];
+                    <img src="@sliderItem.PhotoUrl" alt="@sliderItem.Title"
+                         title='@(i == 0 ? "#htmlcaption1" : string.Empty)' />
+                }
             </div>
             <div id="htmlcaption1" class="nivo-html-caption">
                 <h2>Trung tâm Khoa học Đào tạo<br/>và Thẩm mỹ Quốc Gia</h2>
@@ -26,176 +31,152 @@
     <div class="main-container">
         <!-- **Content Full Width** -->
         <div class="content content-full-width">
-            <!-- **Traning** -->
+            <!-- **Introduction items** -->
             <h1 class="title">
-                <a href="#" style="color: unset"><span>Đào tạo</span></a>
-            </h1>              
-
-            <div class="column one-fourth">
-                <div class="content-center-aligned">   
-                    <a href="services.html" title="">
-                        <span class="arctext-no-curve" data-radius="200">Thẩm mỹ<br/>cột sống</span>
-                        <span class="rounded-img border">
-                            <img src="/images/home-1-column-image.png" alt="" title="" />
-                        </span>
-                    </a>
-                    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In in massa urna, vitae vestibulum orci. Maecenas quis est 
-                    sed mauris gravida mollis.</p>
-                </div>
-            </div>
-            <div class="column one-fourth">
-                <div class="content-center-aligned">   
-                    <a href="services.html" title="">
-                        <span class="arctext-no-curve" data-radius="" id="da-thong-kinh-lac">Đả thông<br/>kinh lạc</span>
-                        <span class="rounded-img border">
-                            <img src="/images/home-2-column-image.jpg" alt="" title="" />
-                        </span>
-                    </a>
-                    <p> Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In in massa urna, vitae vestibulum orci. Maecenas quis est sed 
-                    mauris gravida mollis.</p>
-                </div>
-            </div>
-            <div class="column one-fourth">
-                <div class="content-center-aligned">   
-                    <a href="services.html" title="">
-                        <span class="arctext-no-curve" data-radius="150">Thải độc<br/>tế bào</span>
-                        <span class="rounded-img border">
-                            <img src="https://wedesignthemes.com/html/spa-treats/images/post-images/services-detox.jpg" alt="" title="" />
-                        </span>
-                    </a>
-                    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In in massa urna, vitae vestibulum orci. Maecenas quis est sed 
-                    mauris gravida mollis.</p>
-                </div>
-            </div>
-            <div class="column one-fourth last">
-                <div class="content-center-aligned">   
-                    <a href="services.html" title="">
-                        <span class="arctext-no-curve" data-radius="200">Nhân số học & Thiền</span>
-                        <span class="rounded-img border">
-                            <img src="/images/home-4-column-image.jpg" alt="" title="" />
-                        </span>
-                    </a>
-                    <p> Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In in massa urna, vitae vestibulum orci. Maecenas quis est sed 
-                    mauris gravida mollis.  </p>
-                </div>
-            </div>
-            <!-- **Traning - End** -->
-            
-            <div class="hr_invisible"></div>
-            
-            <div class="column one-half">
-                <div class="box-content">
-                    <a href="popular-procedures.html" title="">
-                        <img src="http://placehold.it/220x240" alt="" title="" class="alignleft" />
-                    </a>
-                    <h2>Ayurveda Spa</h2>
-                    <p> Nulla ullamcorper faucibus tellus sed malesuada. In convallis hendrerit velit id vulputate. In hac habitasse platea dictumst. Donec eget consequat urna. Pellentesque ac nibh risus. Duis scelerisque, metus ac adipiscing. </p>
-                    <a href="popular-procedures.html" title="Read More" class="tooltip-top readmore"></a> 
-                </div>
-            </div>
-            
-            <div class="column one-half last">
-                <div class="box-content">
-                    <a href="popular-procedures.html" title=""><img src="http://placehold.it/220x240" alt="" title="" class="alignleft" /></a>
-                    <h2>Thermal Spa</h2>
-                    <p> Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In in massa urna, vitae vestibulum orci. Maecenas quis est sed mauris gravida mollis. Suspendisse potenti. Pellentesque nisl nec elit. </p>
-                    <a href="popular-procedures.html" title="Read More" class="tooltip-top readmore"></a> 
-                </div>
-            </div>
-            <div class="hr_invisible"></div>
-            <!-- **Education - End** -->
-            
-            <!-- **Services** -->
-            <h1 class="title">
-                <a href="#" style="color: unset"><span>DỊCH VỤ</span></a>
-            </h1>
-
-            <div class="column one-half">
-                <div class="box-content">
-                    <a href="popular-procedures.html" title="">
-                        <img src="http://placehold.it/220x240" alt="" title="" class="alignleft" />
-                    </a>
-                    <h2>Ayurveda Spa</h2>
-                    <p> Nulla ullamcorper faucibus tellus sed malesuada. In convallis hendrerit velit id vulputate. In hac habitasse platea dictumst. Donec eget consequat urna. Pellentesque ac nibh risus. Duis scelerisque, metus ac adipiscing. </p>
-                    <a href="popular-procedures.html" title="Read More" class="tooltip-top readmore"></a> 
-                </div>
-            </div>
-            
-            <div class="column one-half last">
-                <div class="box-content">
-                    <a href="popular-procedures.html" title=""><img src="http://placehold.it/220x240" alt="" title="" class="alignleft" /></a>
-                    <h2>Thermal Spa</h2>
-                    <p> Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In in massa urna, vitae vestibulum orci. Maecenas quis est sed mauris gravida mollis. Suspendisse potenti. Pellentesque nisl nec elit. </p>
-                    <a href="popular-procedures.html" title="Read More" class="tooltip-top readmore"></a> 
-                </div>
-            </div>
-            <div class="hr_invisible"></div>
-            <!-- **Services - End** -->
-            
-            <!-- **Services** -->
-            <h1 class="title">
-                <a href="#" style="color: unset"><span>SẢN PHẨM</span></a>
-            </h1>
-
-            <div class="column one-half">
-                <div class="box-content">
-                    <a href="popular-procedures.html" title="">
-                        <img src="http://placehold.it/220x240" alt="" title="" class="alignleft" />
-                    </a>
-                    <h2>Ayurveda Spa</h2>
-                    <p> Nulla ullamcorper faucibus tellus sed malesuada. In convallis hendrerit velit id vulputate. In hac habitasse platea dictumst. Donec eget consequat urna. Pellentesque ac nibh risus. Duis scelerisque, metus ac adipiscing. </p>
-                    <a href="popular-procedures.html" title="Read More" class="tooltip-top readmore"></a> 
-                </div>
-            </div>
-            
-            <div class="column one-half last">
-                <div class="box-content">
-                    <a href="popular-procedures.html" title=""><img src="http://placehold.it/220x240" alt="" title="" class="alignleft" /></a>
-                    <h2>Thermal Spa</h2>
-                    <p> Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In in massa urna, vitae vestibulum orci. Maecenas quis est sed mauris gravida mollis. Suspendisse potenti. Pellentesque nisl nec elit. </p>
-                    <a href="popular-procedures.html" title="Read More" class="tooltip-top readmore"></a> 
-                </div>
-            </div>
-            <div class="hr_invisible"></div>
-            <!-- **Services - End** -->
-            
-            
-            <!-- **Three Column** -->
-            <div class="column one-third">
-                <h4 class="title"><span>Top Spa  Tips</span></h4>
-                <ul class="flower-bullet green">
-                    <li><a href="" title="">Top 20 Tips for Glowing Skin</a></li>
-                    <li><a href="" title="">10 Tips to Reduce Pimples</a></li>
-                    <li><a href="" title="">10 Tips to Cure Dark Circles Undereyes</a></li>
-                    <li><a href="" title="">Top 20 Tips for Curing Acne</a></li>
-                    <li><a href="" title="">Top Ten Cures for Black Spots</a></li>
-                    <li><a href="" title="">Top Diet Facts</a></li>
-                </ul>
-            </div>
-            <div class="column one-third">
-                <h4 class="title"><span>Tặng quà cho người thân</span></h4>
-                <a href="" title="">
-                    <img src="images/gift-card.png" alt="" title="" />
+                <a asp-action="CourseList" asp-controller="Home"
+                        style="color: unset">
+                    <span>Giới thiệu</span>
                 </a>
-            </div>
-            <div class="column one-third last">
-                <h4 class="title">
-                    <span>Thời gian hoạt động</span>
-                </h4>
-                <div class="notice">
-                    <span class="left">Thứ 2 - Thứ 6: </span><span class="right">07:00 ~ 17:00</span>
-                </div>
-                <p>
-                    <strong>Note: </strong>
-                    Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In in massa urna, vitae vestibulum orci.
-                </p>
-            </div>
-            <!-- **Three Column - End** -->
+            </h1>
             
-        </div> <!-- **Content Full Width - End** -->   	
-        
-        <!-- **Newsletter** -->
-        <partial name="_SubcriberRegister">
+            @for (int i = 0; i < Model.IntroductionItems.Items.Count; i++)
+            {
+                IntroductionItemViewModel introductionItem = Model.IntroductionItems.Items[i];
+                bool isLastColumn = i == Model.IntroductionItems.Items.Count - 1;
+                string thumbnailUrl = introductionItem.ThumbnailUrl
+                    ?? "/images/front-pages/introduction-items/default.jpg";
+
+                <div class='column one-fourth @(isLastColumn ? "last" : string.Empty)'>
+                    <div class="content-center-aligned">
+                        <a href='@(Url.Action("IntroductionList", "Home") + $"#{introductionItem.Id}")'>
+                            <span class="arctext-no-curve" data-radius="200">
+                                @Html.Raw(introductionItem.Name.Replace(Environment.NewLine, "<br/>"))
+                            </span>
+                            <span class="rounded-img border">
+                                <img src='@thumbnailUrl' alt="" title="" />
+                            </span>
+                        </a>
+                        <p>
+                            @introductionItem.Summary
+                        </p>
+                    </div>
+                </div>
+            }
+            <!-- **Course introduction items - End** -->
+            <div class="hr_invisible"></div>
+            
+            <h1 class="title">
+                <a asp-action="CourseList" asp-controller="Home"
+                        style="color: unset">
+                    <span>Khoá học</span>
+                </a>
+            </h1>
+            <!-- **Course list** -->
+            @for (int i = 0; i < Model.Courses.Items.Count; i++)
+            {
+                CourseBasicViewModel course = Model.Courses.Items[i];
+                string columnClassName = "column one-half";
+                if (i % 2 != 0)
+                {
+                    columnClassName += " last";
+                }
+                string thumbnailUrl = course.ThumbnailUrl
+                    ?? "/images/front-pages/courses/default.jpg";
+
+                <div class="@columnClassName" style="margin-bottom: 20px;">
+                    <div class="box-content">
+                        <a href='@(Url.Action("CourseList", "Home") + $"#{course.Id}")'
+                                title="@course.Name">
+                            <img src="@thumbnailUrl" alt="" title="" class="alignleft"
+                                style="width: 200px; height: 200px; object-fit: cover; object-position: 50% 50%;"/>
+                        </a>
+                        <h2>@course.Name</h2>
+                        <p>
+                            @course.Summary
+                        </p>
+                        <a href='@(Url.Action("CourseList", "Home") + $"#{course.Id}")'
+                                title="Chi tiết" class="tooltip-top readmore"></a> 
+                    </div>
+                </div>
+            }
+            <!-- **Course list - End** -->
+
+            <div class="hr_invisible"></div>
+
+            <!-- **Service list** -->
+            <h1 class="title">
+                <a asp-action="BusinessServiceList" asp-controller="Home" style="color: unset">
+                    <span>@Html.DisplayNameFor(model => model.BusinessServices)</span>
+                </a>
+            </h1>
+            @for (int i = 0; i < Model.BusinessServices.Items.Count; i++)
+            {
+                BusinessServiceBasicViewModel service = Model.BusinessServices.Items[i];
+                string columnClassName = "column one-half";
+                if (i % 2 != 0)
+                {
+                    columnClassName += " last";
+                }
+                string thumbnailUrl = service.ThumbnailUrl
+                    ?? "/images/front-pages/services/default.jpg";
+
+                <div class="@columnClassName" style="margin-bottom: 20px;">
+                    <div class="box-content">
+                        <a href='@(Url.Action("BusinessServiceList", "Home") + $"#{service.Id}")'
+                                title="@service.Name">
+                            <img src="@thumbnailUrl" alt="" title="" class="alignleft"
+                                style="width: 200px; height: 200px; object-fit: cover; object-position: 50% 50%;"/>
+                        </a>
+                        <h2>@service.Name</h2>
+                        <p>
+                            @service.Summary
+                        </p>
+                        <a href='@(Url.Action("BusinessServiceList", "Home") + $"#{service.Id}")'
+                                title="Chi tiết" class="tooltip-top readmore"></a> 
+                    </div>
+                </div>
+            }
+            <!-- **Service list - End** -->
+            
+            <div class="hr_invisible"></div>
+            
+            <!-- **Product list** -->
+            <h1 class="title">
+                <a asp-action="ProductList" asp-controller="Home" style="color: unset">
+                    <span>@Html.DisplayNameFor(model => model.Products)</span>
+                </a>
+            </h1>
+            @for (int i = 0; i < Model.Products.Items.Count; i++)
+            {
+                ProductBasicViewModel product = Model.Products.Items[i];
+                string columnClassName = "column one-half";
+                if (i % 2 != 0)
+                {
+                    columnClassName += " last";
+                }
+                string thumbnailUrl = product.ThumbnailUrl
+                    ?? "/images/front-pages/products/default.jpg";
+
+                <div class="@columnClassName" style="margin-bottom: 20px;">
+                    <div class="box-content">
+                        <a href='@(Url.Action("ProductList", "Home") + $"#{product.Id}")'
+                                title="@product.Name">
+                            <img src="@thumbnailUrl" alt="" title="" class="alignleft"
+                                style="width: 200px; height: 200px; object-fit: cover; object-position: 50% 50%;"/>
+                        </a>
+                        <h2>@product.Name</h2>
+                        <p>
+                            @product.Summary
+                        </p>
+                        <a href='@(Url.Action("ProductList", "Home") + $"#{product.Id}")'
+                                title="Chi tiết" class="tooltip-top readmore"></a> 
+                    </div>
+                </div>
+            }
+            <div class="hr_invisible"></div>
+            <!-- **Product list - End** -->
+            
+        </div> <!-- **Content Full Width - End** -->
         
     </div><!-- **Main Container - End** -->
 </div>
@@ -206,7 +187,6 @@
 
 @section Scripts {
     <!-- **jQuery** -->
-    <script type="text/javascript" src="/js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="/js/jquery-migrate-1.2.1.js"></script>
     <script type="text/javascript" src="/js/jquery.arctext.js"></script>
     <script type="text/javascript" src="/js/jquery.jcarousel.min.js"></script>
@@ -221,5 +201,4 @@
 
     <script type="text/javascript" src="/js/jquery.nivo.slider.js"></script>
     <script type="text/javascript" src="/js/jquery.tipTip.minified.js"></script>
-    <script type='text/javascript' src="/js/spa.custom.js"></script>
 }

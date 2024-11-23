@@ -1,0 +1,21 @@
+.block.statistics {
+    flex-direction: row;
+}
+
+.block.block.statistics > .description > .header {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.block.statistics i {
+    font-size: 25px;
+    line-height: 25px;
+    display: table-cell;
+    width: 55px;
+    padding: 15px 15px;
+    border-radius: 5px;
+}
+
+.block.statistics .description {
+    flex-direction: column;
+}

@@ -6,6 +6,7 @@ public class User : IdentityUser<int>
 {
     // Navigation properties
     public virtual List<Role> Roles { get; set; }
+    public virtual List<Post> Posts { get; set; }
 
     //Navigation properties for convinience
     [NotMapped]

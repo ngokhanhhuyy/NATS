@@ -1,0 +1,28 @@
+.block.block-post-list ul li {
+    overflow: hidden;
+}
+
+.block.block-post-list ul li img {
+    height: 65px;
+    aspect-ratio: 1;
+}
+
+.block.block-post-list ul li .description {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.block.block-post-list ul li .description .title,
+.block.block-post-list ul li .description .content {
+    width: auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.block.block-post-list ul li .edit-button {
+    aspect-ratio: 1;
+    height: fit-content;
+    flex-shrink: 0;
+}

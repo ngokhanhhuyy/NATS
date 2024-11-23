@@ -48,8 +48,6 @@ public static class DateTimeExtensions
     {
         if (futureDateTime < dateTime)
         {
-            Console.WriteLine(futureDateTime);
-            Console.WriteLine(dateTime);
             throw new ArgumentException(
                 "Value for futureDateTime parameter cannot be earlier" +
                 "than current DateTime value."

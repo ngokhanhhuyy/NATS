@@ -1,0 +1,153 @@
+@model AboutUsIntroductionViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Content";
+    string formId = "updating-form";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1 justify-content-center">
+        <form asp-action="AboutUs" asp-controller="Admin" method="post"
+                class="p-3 d-none" id="@formId" novalidate>
+            <input asp-for="MainPhotoUrl" type="hidden" />
+            <input asp-for="MainPhotoChanged" type="hidden" />
+            <input asp-for="MainPhotoFile" type="file" class="d-none" />
+        </form>
+
+        <!-- Main quote content -->
+        <div class="col col-12">
+            <div class="block block-main-quote-photo rounded p-3 rounded-3 bg-white border-default shadow-sm">
+                <div class="row justify-content-center">
+                    <div class="col col-md-4 col-sm-4 col-6 d-flex flex-column justify-content-center
+                                h-100vh pt-3 pt-sm-0 mb-3">
+                        <div class="photo-container">
+                            <img src='@(Model.MainPhotoUrl ?? "/images/front-pages/about-us/default.jpg")'
+                                    alt="..." class="img-thumbnail border-default shadow-sm"
+                                    id="photo-thumbnail" ratio-width-to-height="1">
+                            <button class="btn btn-outline-success btn-sm photo-edit-button"
+                                    id="main-photo-edit-button"
+                                    file-input-id="@Html.IdFor(model => model.MainPhotoFile)"
+                                    changed-input-id="@Html.IdFor(model => model.MainPhotoChanged)"
+                                    hidden-url-input-id="@Html.IdFor(model => model.MainPhotoUrl)"
+                                    img-id="photo-thumbnail"
+                                    delete-button-id="photo-delete-button">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm photo-delete-button shadow-sm"
+                                    id="photo-delete-button">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col col-md-8 col-sm-8 col-12 h-100vh d-flex flex-column">
+                        <div class="form-group d-flex flex-column flex-fill">
+                            <label asp-for="MainQuoteContent" class="form-label text-primary fw-bold required">
+                                @Html.DisplayNameFor(model => model.MainQuoteContent)
+                            </label>
+                            <textarea asp-for="MainQuoteContent" class="form-control flex-fill"
+                                    form="@formId"></textarea>
+                            <span asp-validation-for="MainQuoteContent" class="invalid-feedback d-inline"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About us content -->
+        <div class="col col-12">
+            <div class="block block-about-us rounded p-3 rounded-3 bg-white border-default shadow-sm">
+                <label asp-for="AboutUsContent" class="form-label text-primary fw-bold required">
+                    @Html.DisplayNameFor(model => model.AboutUsContent)
+                </label>
+                <textarea asp-for="AboutUsContent" class="form-control" form="@formId"></textarea>
+                <span asp-validation-for="AboutUsContent" class="invalid-feedback d-inline"></span>
+            </div>
+        </div>
+
+        <!-- Why choose us content -->
+        <div class="col col-12">
+            <div class="block block-why-choose-us rounded p-3 rounded-3 bg-white border-default shadow-sm">
+                <label asp-for="WhyChooseUsContent" class="form-label text-primary fw-bold required">
+                    @Html.DisplayNameFor(model => model.WhyChooseUsContent)
+                </label>
+                <textarea asp-for="WhyChooseUsContent" class="form-control" form="@formId"></textarea>
+                <span asp-validation-for="WhyChooseUsContent" class="invalid-feedback d-inline"></span>
+            </div>
+        </div>
+
+        <!-- Our difference content -->
+        <div class="col col-12">
+            <div class="block block-our-difference rounded p-3 rounded-3 bg-white border-default shadow-sm">
+                <label asp-for="OurDifferenceContent" class="form-label text-primary fw-bold required">
+                    @Html.DisplayNameFor(model => model.OurDifferenceContent)
+                </label>
+                <textarea asp-for="OurDifferenceContent" class="form-control" form="@formId"></textarea>
+                <span asp-validation-for="OurDifferenceContent" class="invalid-feedback d-inline"></span>
+            </div>
+        </div>
+
+        <!-- Our culture content -->
+        <div class="col col-12">
+            <div class="block block-our-culture rounded p-3 rounded-3 bg-white border-default shadow-sm">
+                <label asp-for="OurCultureContent" class="form-label text-primary fw-bold required">
+                    @Html.DisplayNameFor(model => model.OurCultureContent)
+                </label>
+                <textarea asp-for="OurCultureContent" class="form-control" form="@formId"></textarea>
+                <span asp-validation-for="OurCultureContent" class="invalid-feedback d-inline"></span>
+            </div>
+        </div>
+
+        <!-- Discard buttons -->
+        <div class="col col-lg-3 col-md-4 col-sm-5 col-5">
+            <partial name="~/Views/Admin/_DiscardButton.cshtml" model='@Url.Action("Content", "Admin")' />
+        </div>
+
+        <!-- Save button -->
+        <div class="col col-lg-3 col-md-3 col-sm-5 col-5">
+            @{
+                AjaxSaveViewModel ajaxSaveModel = new AjaxSaveViewModel
+                {
+                    FormId = formId,
+                    RedirectingUrl = Url.Action("Content", "Admin"),
+                    EditableAfterSaving = false
+                };
+                <partial name="~/Views/Admin/_AjaxSaveButton.cshtml" model="@ajaxSaveModel" />
+            }
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Về chúng tôi
+}
+
+@section Scripts {
+    <script src="/js/admin/photo-file-input.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            let photoEditButton = document.getElementById("main-photo-edit-button");
+            const photoFileInputButtonPair = new PhotoFileInputButtonPair(
+                photoEditButton,
+                "/images/front-pages/about-us/default.jpg");
+        })
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/admin/about-us.css">
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Content, Url.Action("Content", "Admin")),
+                (DisplayNames.AboutUs, null)
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" model="@breadcrumbViewModel"/>
+}

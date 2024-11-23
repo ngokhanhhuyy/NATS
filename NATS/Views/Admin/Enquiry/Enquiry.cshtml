@@ -1,0 +1,182 @@
+@model EnquiryViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.CurrentPageName = "Enquiries";
+    const string formId = "upserting-form";
+}
+
+<div class="container-fluid d-flex flex-column">
+    <div class="row g-4 p-3 flex-grow-1 justify-content-center">
+        <!-- Detail -->
+        <div class="col col-12">
+            <div class="block block-detail rounded p-3 rounded-3 justify-content-center
+                        bg-white border-default shadow-sm">
+                <!-- FullName -->
+                <div class="row mb-3">
+                    <div class="col col-sm-3 col-12">
+                        <span class="text-primary fw-bold">
+                            @Html.DisplayNameFor(model => model.FullName)
+                        </span>
+                    </div>
+                    <div class="col col-sm-9 col-12">
+                        <span>@Html.DisplayFor(model => model.FullName)</span>
+                    </div>
+                </div>
+                
+                <!-- PhoneNumber -->
+                <div class="row mb-3">
+                    <div class="col col-sm-3 col-12">
+                        <span class="text-primary fw-bold">
+                            @Html.DisplayNameFor(model => model.PhoneNumber)
+                        </span>
+                    </div>
+                    <div class="col col-sm-9 col-12">
+                        <a href="tel:@Model.PhoneNumber" class="text-default">
+                            @Model.PhoneNumber
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Email -->
+                <div class="row">
+                    <div class="col col-sm-3 col-12">
+                        <span class="text-primary fw-bold">
+                            @Html.DisplayNameFor(model => model.Email)
+                        </span>
+                    </div>
+                    <div class="col col-sm-9 col-12">
+                        @if (Model.Email != null)
+                        {
+                            <a href="mailto:@Model.Email" class="text-default">
+                                @Model.Email
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-opacity-25">Không có</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col col-12">
+            <div class="block block-detail rounded p-3 rounded-3 justify-content-center
+                        bg-white border-default shadow-sm">
+                <div class="row">
+                    <div class="col col-sm-3 col-12">
+                        <span class="text-primary fw-bold">
+                            @Html.DisplayNameFor(model => model.Content)
+                        </span>
+                    </div>
+                    <div class="col col-sm-9 col-12">
+                        <span>@Model.Content</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Received datetime and completed status -->
+        <div class="col col-12">
+            <div class="block block-detail rounded p-3 rounded-3 justify-content-center
+                        bg-white border-default shadow-sm">
+                <!-- ReceivedDateTime -->
+                <div class="row mb-3">
+                    <div class="col col-sm-3 col-12">
+                        <span class="text-primary fw-bold">
+                            @Html.DisplayNameFor(model => model.ReceivedDateTime)
+                        </span>
+                    </div>
+                    <div class="col col-sm-9 col-12">
+                        <span>
+                            @Html.DisplayFor(model => model.ReceivedDateTime)
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- IsCompleted -->
+                <div class="row">
+                    <div class="col col-sm-3 col-12">
+                        <span class="text-primary fw-bold">
+                            @Html.DisplayNameFor(model => model.IsCompleted)
+                        </span>
+                    </div>
+                    <div class="col col-sm-9 col-12">
+                        <span class="text-primary">
+                        @if (Model.IsCompleted)
+                        {
+                            <span class="badge bg-success">Đã hoàn thành</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Chưa hoàn thành</span>
+                        }
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.IsCompleted)
+        {
+            <!-- Discard button -->
+            <div class="col col-sm-4 col-6">
+                <a asp-action="List" asp-controller="AdminEnquiry" class="btn btn-secondary w-100">
+                    Quay lại
+                    <i class="bi bi-x-lg ms-2"></i>
+                </a>
+            </div>
+        }
+        else
+        {
+            <!-- Discard button -->
+            <div class="col col-sm-4 col-6">
+                <!-- Discard button -->
+                <partial name="~/Views/Admin/_DiscardButton.cshtml" model='@Url.Action("List", "AdminEnquiry")!' />
+            </div>
+            
+            <!-- Mark as completed button -->
+            <div class="col col-sm-4 col-6">
+                <form asp-action="MarkingAsCompleted" asp-controller="AdminEnquiry" asp-route-id="@Model.Id"
+                      method="POST"
+                      class="p-3 d-none" id="@formId"
+                      submit-button-element-id="@formId-submit-button">
+                </form>
+                @{
+                    AjaxSaveViewModel ajaxSaveViewModel = new AjaxSaveViewModel
+                    {
+                        FormId = formId,
+                        RedirectingUrl = Url.Action("List", "AdminEnquiry"),
+                        EditableAfterSaving = false,
+                        ButtonText = "Đánh dấu đã đọc"
+                    };
+                }
+                <partial name="~/Views/Admin/_AjaxSaveButton.cshtml" model="@ajaxSaveViewModel" />
+            </div>
+        }
+    </div>
+</div>
+
+
+@section PageTitle {
+    Sản phẩm
+}
+
+@section Styles {
+}
+
+@section Breadcrumb {
+    @{
+        BreadcrumbViewModel breadcrumbViewModel = new BreadcrumbViewModel
+        {
+            Items = new List<(string DisplayName, string Url)>
+            {
+                (DisplayNames.Dashboard, Url.Action("Dashboard", "Admin")),
+                (DisplayNames.Enquiry, Url.Action("List", "AdminEnquiry")),
+                (DisplayNames.Detail, null)
+            }
+        };
+    }
+    <partial name="~/Views/Admin/_Breadcrumb.cshtml" model="@breadcrumbViewModel" />
+}

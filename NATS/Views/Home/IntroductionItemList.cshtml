@@ -1,0 +1,93 @@
+@model IntroductionItemListViewModel
+@{
+    ViewBag.PageTitle = DisplayNames.Introduction;
+    Layout = "_Layout";
+}
+        
+<!-- **Main Container** -->
+<div class="main-container">
+
+    <!-- **Content Full Width** -->
+    <div class="content content-full-width">
+        @for (int i = 0; i < Model.Items.Count; i++)
+        {
+            IntroductionItemViewModel item = Model.Items[i];
+            if (i % 2 == 0)
+            {
+                <div class="column one-fourth" id="@item.Id">
+                    <a href="" title="" class="rounded-img border alignleft">
+                        <img src='@(item.ThumbnailUrl ?? "https://placehold.co/204x204")'
+                            alt="@item.Name" title="" />
+                    </a>
+                </div>
+                <div class="column three-fourth last">
+                    <h1>@item.Name</h1>
+                    @foreach (string paragraph in item.Content.Split("\n"))
+                    {
+                        <p>@paragraph</p>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="column three-fourth">
+                    <h1>@item.Name</h1>
+                    @foreach (string paragraph in item.Content.Split("\n"))
+                    {
+                        <p>@paragraph</p>
+                    }
+                </div>
+                <div class="column one-fourth last" id="@item.Id">
+                    <a href="" title="" class="rounded-img border alignleft">
+                        <img src='@(item.ThumbnailUrl ?? "https://placehold.co/204x204")'
+                            alt="@item.Name" title="" />
+                    </a>
+                </div>
+            }
+
+            @if (i != Model.Items.Count - 1)
+            {
+                <div class="hr"></div>
+            }
+        }
+
+        <div class="hr_invisible"></div>
+
+    </div> <!-- **Content Full Width - End** -->
+    
+</div><!-- **Main Container - End** -->
+
+@section Breadcrumbs {
+    <!-- **Breadcrumb** -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a asp-action="Index" asp-controller="Home" title="">Trang chủ /</a>
+            @{
+                (string Name, string DisplayName) parentAction;
+                switch (Model.ItemType)
+                {
+                    case ItemType.Courses:
+                    {
+                        parentAction = ("CourseList", DisplayNames.Education);
+                        break;
+                    }
+                    case ItemType.Services:
+                    {
+                        parentAction = ("BusinessServiceList", DisplayNames.BusinessService);
+                        break;
+                    }
+                    default:
+                    case ItemType.Products:
+                    {
+                        parentAction = ("ProductList", DisplayNames.Product);
+                        break;
+                    }
+                }
+            }
+            <a asp-action="@parentAction.Name" asp-controller="Home" title="">
+                @parentAction.DisplayName /
+            </a>
+            <span class="current-crumb">@ViewBag.PageTitle</span>
+        </div>  <!-- **Breadcrumb - End** -->           
+    </div>
+}

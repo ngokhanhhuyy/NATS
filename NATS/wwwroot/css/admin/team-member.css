@@ -1,0 +1,35 @@
+textarea {
+    min-height: 200px !important;
+}
+
+.block.block-photo .photo-container {
+    position: relative;
+}
+
+.block.block-photo .photo-container .photo-edit-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(30%, -30%);
+}
+
+.block.block-photo .photo-container .photo-delete-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translate(30%, 30%);
+}
+
+.block.block-photo .photo-container img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    height: auto;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+@media (max-width: 576px) {
+    .block.block-photo .photo-column {
+        padding-right: 0 !important;
+    }
+}

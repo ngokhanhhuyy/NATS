@@ -1,0 +1,90 @@
+@model ProductDetailListViewModel
+@{
+    ViewBag.PageTitle = "Chi tiết sản phẩm";
+    Layout = "_Layout";
+}
+
+<!-- **Main Container** -->
+<div class="main-container">
+    @foreach (ProductDetailViewModel product in Model.Items)
+    {
+        <!-- **Content Full Width** -->
+        <div class="content content-full-width" id="@product.Id">
+
+            <h1 id="@product.Id">@product.Name</h1>
+            <div class="column one-third">
+                @{
+                    string thumbnailUrl;
+                    if (product.ThumbnailUrl == null)
+                    {
+                        thumbnailUrl  = "https://placehold.co/300x260";
+                    }
+                    else
+                    {
+                        thumbnailUrl = product.ThumbnailUrl;
+                    }
+                }
+                <img src="@thumbnailUrl" alt="" title="" />
+                <div class="box-content-with-design">
+                    <h3>Nội dung chính</h3>
+                    <ul class="flower-bullet green">
+                        @foreach (ProductFeatureViewModel feature in product.Features)
+                        {
+                            <li>@feature.Content</li>
+                        }
+                    </ul>
+                    <h3>Giá tiền</h3>
+                                    
+                    <table class="price-table">
+                        <tbody> 
+                            <tr>
+                                <td class="odd"></td>
+                                <td class="even">Liên hệ</td>
+                            </tr>
+                        </tbody>
+                    </table>                    
+                </div>
+            </div>
+        
+            <div class="column two-third last">
+                @if (product.Detail != null)
+                {
+                    string[] paragraphs = product.Detail.Split(Environment.NewLine);
+                    foreach (string paragraph in paragraphs)
+                    {
+                        <p>@paragraph</p>
+                    }
+                }
+
+                @if (product.Photos != null)
+                {
+                    <div style="width: 100%; text-align: center">
+                        @foreach (ProductPhotoViewModel photo in product.Photos)
+                        {
+                            <a href="@photo.Url" target="_blank" rel="noopener noreferrer">
+                                <img src="@photo.Url"
+                                    style="margin: 5px auto; max-width: 80%;">
+                            </a>
+                        }
+                    </div>
+                }  
+            </div>
+        
+            <div class="hr"></div>
+            <div class="clear"></div>
+        
+        </div> <!-- **Content Full Width - End** -->
+    }
+</div><!-- **Main Container - End** -->
+    
+
+@section Breadcrumbs {
+    <!-- **Breadcrumb** -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a asp-action="Index" asp-controller="Home" title="">Trang chủ /</a>
+            <a asp-action="ProductList" asp-controller="Home" title="">Sản phẩm /</a>
+            <span class="current-crumb">Chi tiết</span>
+        </div>  <!-- **Breadcrumb - End** -->           
+    </div>
+}

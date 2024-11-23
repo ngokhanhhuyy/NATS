@@ -58,7 +58,7 @@ public sealed partial class ServiceError
             ErrorType = ServiceErrorType.OperationError,
             PropertyName = propertyName,
             ErrorMessage = ErrorMessages.Incorrect
-                .Replace("{ProperyName}", DisplayNames.Get(key))
+                .Replace("{PropertyName}", DisplayNames.Get(key))
         };
     }
 

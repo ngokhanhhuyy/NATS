@@ -1,0 +1,37 @@
+@model (string Title, string Content, string RedirectUrl)
+@{
+    ViewBag.PageTitle = "Liên hệ";
+    ViewBag.HideFooter = true;
+    Layout = "_Layout";
+}
+
+<!-- **Main Container** -->
+<div class="main-container" xmlns="http://www.w3.org/1999/html">
+    <!-- **Content Full Width** -->
+    <div class="content content-full-width" style="text-align: center;" >
+        
+        <!-- Title -->
+        <h1 class="title">
+            <span>@Model.Title</span>
+        </h1>
+        
+        <!-- Content -->
+        <p>@Html.Raw(Model.Content.Replace(Environment.NewLine, "<br/>"))</p>
+        <br/>
+        <span>Bạn sẽ được chuyển về trang chủ.</span><br/>
+        <span>
+            Bấm vào <a href="@Model.RedirectUrl" style="font-weight: bold">ĐÂY</a> nếu trình duyệt không tự động chuyển.
+        </span>
+        <div class="hr_invisible"></div>
+    </div> <!-- **Content Full Width - End** -->
+</div><!-- **Main Container - End** -->
+
+@section Scripts {
+    <script>
+        // document.addEventListener("DOMContentLoaded", () => {
+        //     setTimeout(() => {
+        //         window.location.href = '@Model.RedirectUrl';
+        //     }, 3000);
+        // });
+    </script>
+}
