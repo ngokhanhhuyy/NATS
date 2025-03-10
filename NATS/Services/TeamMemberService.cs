@@ -1,12 +1,13 @@
 namespace NATS.Services;
 
-public class TeamMembersService : ITeamMembersService
+/// <inheritdoc/>
+public class ITeamMemberService : ITeamMemberService
 {
     private readonly DatabaseContext _context;
     private readonly IValidator<TeamMemberRequestDto> _validator;
     private readonly IPhotoService _photoService;
 
-    public TeamMembersService(
+    public ITeamMemberService(
             DatabaseContext context,
             IValidator<TeamMemberRequestDto> validator,
             IPhotoService photoService)

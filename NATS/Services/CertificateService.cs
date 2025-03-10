@@ -2,13 +2,13 @@ using NATS.Services.Entity;
 
 namespace NATS.Services;
 
-public class BusinessCertificateService : IBusinessCertificateService
+public class CertificateService : IBusinessCertificateService
 {
     private readonly DatabaseContext _context;
     private readonly IValidator<BusinessCertificateRequestDto> _validator;
     private readonly IPhotoService _photoService;
 
-    public BusinessCertificateService(
+    public CertificateService(
             DatabaseContext context,
             IValidator<BusinessCertificateRequestDto> validator,
             IPhotoService photoService)

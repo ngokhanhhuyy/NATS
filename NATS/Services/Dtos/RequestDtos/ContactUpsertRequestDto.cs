@@ -1,13 +1,13 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class ContactInfoRequestDto : IRequestDto<ContactInfoRequestDto>
+public class ContactUpsertRequestDto : IRequestDto<ContactUpsertRequestDto>
 {
     public string PhoneNumber { get; set; }
     public string ZaloNumber { get; set; }
     public string Email { get; set; }
     public string Address { get; set; }
 
-    public ContactInfoRequestDto TransformValues()
+    public ContactUpsertRequestDto TransformValues()
     {
         PhoneNumber = PhoneNumber.ToNullIfEmpty();
         ZaloNumber = ZaloNumber.ToNullIfEmpty();
