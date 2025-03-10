@@ -22,7 +22,6 @@ global using NATS.Services.Entities;
 global using NATS.Services.Extensions;
 global using NATS.Services.Exceptions;
 global using NATS.Services.Localization;
-global using NATS.Services.Results;
 global using NATS.Services.Interfaces;
 global using NATS.Services.Handlers;
 global using NATS.Services.Options;

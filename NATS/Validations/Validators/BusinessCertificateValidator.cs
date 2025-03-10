@@ -1,6 +1,6 @@
 namespace NATS.Services.Validation.Validators;
 
-public class BusinessCertificateValidator : Validator<BusinessCertificateRequestDto>
+public class BusinessCertificateValidator : Validator<CertificateUpsertRequestDto>
 {
     public BusinessCertificateValidator()
     {

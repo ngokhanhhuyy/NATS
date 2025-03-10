@@ -1,9 +1,15 @@
 namespace NATS.Services.Dtos.ResponseDtos;
 
-public class ContactInfoResponseDto
+public class ContactResponseDto
 {
-    public string PhoneNumber { get; set; }
-    public string ZaloNumber { get; set; }
-    public string Email { get; set; }
-    public string Address { get; set; }
+    public int Id { get; set; }
+    public ContactType Type { get; set; }
+    public string Content { get; set; }
+
+    public ContactResponseDto(Contact contact)
+    {
+        Id = contact.Id;
+        Type = contact.Type;
+        Content = contact.Content;
+    }
 }

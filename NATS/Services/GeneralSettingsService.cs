@@ -1,9 +1,9 @@
 ﻿namespace NATS.Services;
 
+/// <inheritdoc />
 public class GeneralSettingsService : IGeneralSettingsService
 {
     private readonly DatabaseContext _context;
-    private readonly IValidator<GeneralSettingsRequestDto> _validator;
 
     public GeneralSettingsService(
             DatabaseContext context,
@@ -13,7 +13,7 @@ public class GeneralSettingsService : IGeneralSettingsService
         _validator = validator;
     }
 
-    public async Task<ServiceResult<GeneralSettingsResponseDto>> GetAsync()
+    public async Task<GeneralSettingsResponseDto> GetAsync()
     {
         GeneralSettingsResponseDto responseDto = await _context.GeneralSettings
             .Select(gs => new GeneralSettingsResponseDto
@@ -23,7 +23,7 @@ public class GeneralSettingsService : IGeneralSettingsService
                 FavIconUrl = gs.FavIconUrl,
                 UnderMaintainance = gs.UnderMaintainance
             }).SingleAsync();
-        return ServiceResult<GeneralSettingsResponseDto>.Success(responseDto);
+        return<GeneralSettingsResponseDto>.Success(responseDto);
     }
 
     public async Task<ServiceResult<GeneralSettingsResponseDto>> UpdateAsync(

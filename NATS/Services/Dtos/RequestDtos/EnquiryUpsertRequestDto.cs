@@ -1,13 +1,13 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class EnquiryRequestDto : IRequestDto<EnquiryRequestDto>
+public class EnquiryUpsertRequestDto : IRequestDto<EnquiryUpsertRequestDto>
 {
     public string FullName { get; set; }
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
     public string Content { get; set; }
     
-    public EnquiryRequestDto TransformValues()
+    public EnquiryUpsertRequestDto TransformValues()
     {
         FullName = FullName.ToNullIfEmpty();
         PhoneNumber = PhoneNumber.ToNullIfEmpty();

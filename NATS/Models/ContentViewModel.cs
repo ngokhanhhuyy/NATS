@@ -15,5 +15,5 @@ public class ContentViewModel
     public IntroductionItemListViewModel IntroductionItems { get; set; }
 
     [Display(Name = DisplayNames.ContactInfo)]
-    public ContactInfoViewModel ContactInfo { get; set; }
+    public ContactModel ContactInfo { get; set; }
 }

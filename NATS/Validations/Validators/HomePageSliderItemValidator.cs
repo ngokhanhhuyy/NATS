@@ -1,6 +1,6 @@
 namespace NATS.Services.Validation.Validators;
 
-public class HomePageSliderItemValidator : Validator<HomePageSliderItemRequestDto>
+public class HomePageSliderItemValidator : Validator<HomePageSliderItemUpsertRequestDto>
 {
     public HomePageSliderItemValidator()
     {

@@ -1,6 +1,7 @@
 namespace NATS.Services;
 
-public class ContactService : IContactInfoService
+/// <inheritdoc />
+public class ContactService : IContactService
 {
     private readonly DatabaseContext _context;
     
@@ -9,6 +10,7 @@ public class ContactService : IContactInfoService
         _context = context;
     }
     
+    /// <inheritdoc />
     public async Task<List<ContactResponseDto>> GetListAsync()
     {
         // Fetch a list of all entities from the database.
@@ -17,35 +19,19 @@ public class ContactService : IContactInfoService
             .ToListAsync();
     }
 
-    public async Task<ServiceResult<ContactResponseDto>> UpdateAsync(ContactUpsertRequestDto requestDto)
+    /// <inheritdoc />
+    public async Task UpdateAsync(int id, ContactUpsertRequestDto requestDto)
     {
-        // Validate data from the request.
-        ValidationResult result = _validator.Validate(requestDto.TransformValues());
-        if (!result.IsValid)
-        {
-            return ServiceResult<ContactResponseDto>.Failed(result.Errors);
-        }
-
-        // Fetch the entity from the database.
-        Contact contactInfo = await _context.Contacts.SingleAsync();
+        // Fetch the entity from the database and ensure it exists.
+        Contact contact = await _context.Contacts
+            .SingleOrDefaultAsync(contact => contact.Id == id)
+            ?? throw new ResourceNotFoundException(nameof(Contact), nameof(id), id.ToString());
 
         // Perform update operation.
-        contactInfo.PhoneNumber = requestDto.PhoneNumber;
-        contactInfo.ZaloNumber = requestDto.ZaloNumber;
-        contactInfo.Email = requestDto.Email;
-        contactInfo.Address = requestDto.Address;
+        contact.Type = requestDto.Type;
+        contact.Content = requestDto.Content;
 
-        // Save changes
+        // Save changes.
         await _context.SaveChangesAsync();
-
-        // Return the data of the updated entity to the response dto.
-        ContactResponseDto responseDto = new ContactResponseDto
-        {
-            PhoneNumber = contactInfo.PhoneNumber,
-            ZaloNumber = contactInfo.ZaloNumber,
-            Email = contactInfo.Email,
-            Address = contactInfo.Address
-        };
-        return ServiceResult<ContactResponseDto>.Success(responseDto);
     }
 }

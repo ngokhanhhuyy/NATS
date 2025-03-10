@@ -23,20 +23,20 @@ public class DatabaseContext
     public DbSet<TrafficByHour> TrafficByHours { get; set; }
     public DbSet<TrafficByHourIpAddress> TrafficByHourIpAddresses { get; set; }
     public DbSet<GeneralSettings> GeneralSettings { get; set; }
-    public DbSet<HomePageSliderItem> HomePageSliderItems { get; set; }
+    public DbSet<SliderItem> SliderItems { get; set; }
     public DbSet<Contact> Contacts { get; set; }
 
     public DatabaseContext(DbContextOptions options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<HomePageSliderItem>(e =>
+        builder.Entity<SliderItem>(e =>
         {
-            e.ToTable("homepage_slider_items");
+            e.ToTable("slider_items");
             e.HasKey(si => si.Id);
             e.HasIndex(i => i.Index)
                 .IsUnique()
-                .HasDatabaseName("unique__homepage_slider_items__index");
+                .HasDatabaseName("unique__slider_items__index");
         });
         builder.Entity<SummaryItem>(e =>
         {

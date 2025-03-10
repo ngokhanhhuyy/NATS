@@ -4,16 +4,16 @@ public class HomePagesFooter : ViewComponent
 {
     private readonly IGeneralSettingsService _generalSettingsService;
     private readonly IPostService _postService;
-    private readonly IContactInfoService _contactInfoService;
+    private readonly IContactService _iContactService;
 
     public HomePagesFooter(
             IGeneralSettingsService generalSettingsService,
             IPostService postService,
-            IContactInfoService contactInfoService)
+            IContactService iContactService)
     {
         _generalSettingsService = generalSettingsService;
         _postService = postService;
-        _contactInfoService = contactInfoService;
+        _iContactService = iContactService;
     }
 
     public async Task<IViewComponentResult> InvokeAsync()
@@ -27,8 +27,8 @@ public class HomePagesFooter : ViewComponent
         postServiceResult = await _postService.GetLastestBasicListAsync(3);
 
         // Get the contact info.
-        ServiceResult<ContactInfoResponseDto> contactInfoServiceResult;
-        contactInfoServiceResult = await _contactInfoService.GetAsync();
+        ServiceResult<ContactResponseDto> contactInfoServiceResult;
+        contactInfoServiceResult = await _iContactService.GetListAsync();
 
 
 
@@ -55,7 +55,7 @@ public class HomePagesFooter : ViewComponent
                         Views = p.Views
                     }).ToList()
             },
-            ContactInfo = new ContactInfoViewModel
+            ContactInfo = new ContactModel
             {
                 PhoneNumber = contactInfoServiceResult.ResponseDto.PhoneNumber,
                 ZaloNumber = contactInfoServiceResult.ResponseDto.ZaloNumber,

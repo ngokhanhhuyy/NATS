@@ -25,4 +25,12 @@
     <Content Update="wwwroot\images\front-pages\**" Watch="false" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\repos\NATS\NATS\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\repos\NATS\NATS\.editorconfig" />
+  </ItemGroup>
+
 </Project>

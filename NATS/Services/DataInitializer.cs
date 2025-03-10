@@ -1,5 +1,3 @@
-using NATS.Services.Entity;
-
 namespace NATS.Services;
 
 public sealed class DataInitializer
@@ -524,7 +522,7 @@ public sealed class DataInitializer
 
     private void InitializeHomePageSliderItems()
     {
-        if (!_context.HomePageSliderItems.Any())
+        if (!_context.SliderItems.Any())
         {
             string[] photoUrls = new string[]
             {
@@ -535,12 +533,12 @@ public sealed class DataInitializer
 
             for (int i = 0; i < photoUrls.Count(); i++)
             {
-                HomePageSliderItem item = new HomePageSliderItem
+                SliderItem item = new SliderItem
                 {
                     PhotoUrl = photoUrls[i],
                     Index = i
                 };
-                _context.HomePageSliderItems.Add(item);
+                _context.SliderItems.Add(item);
             }
             _context.SaveChanges();
         }

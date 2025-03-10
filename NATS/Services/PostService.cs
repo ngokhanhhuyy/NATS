@@ -23,7 +23,7 @@ public class PostService : IPostService
     /// Get a list of all posts' with basic information.
     /// </summary>
     /// <returns>A list of objects containing all posts' basic information.</returns>
-    public async Task<ServiceResult<PostBasicListResponseDto>> GetBasicListAsync(int page)
+    public async Task<PostBasicListResponseDto> GetBasicListAsync(int page)
     {
         const int resultPerPage = 15;
         // Determine the page count.

@@ -1,93 +1,62 @@
 namespace NATS.Services;
 
 /// <inheritdoc/>
-public class ITeamMemberService : ITeamMemberService
+public class TeamMemberService : ITeamMemberService
 {
     private readonly DatabaseContext _context;
-    private readonly IValidator<TeamMemberRequestDto> _validator;
     private readonly IPhotoService _photoService;
 
-    public ITeamMemberService(
-            DatabaseContext context,
-            IValidator<TeamMemberRequestDto> validator,
-            IPhotoService photoService)
+    public TeamMemberService(DatabaseContext context, IPhotoService photoService)
     {
         _context = context;
         _photoService = photoService;
-        _validator = validator;
     }
 
-    public async Task<ServiceResult<List<TeamMemberResponseDto>>> GetListAsync()
+    /// <inheritdoc/>
+    public async Task<List<TeamMemberResponseDto>> GetListAsync()
     {
-        List<TeamMemberResponseDto> responseDtos = await _context.TeamMembers
-            .OrderBy(tm => tm.Id)
-            .Select(tm => new TeamMemberResponseDto
-            {
-                Id = tm.Id,
-                FullName = tm.FullName,
-                RoleName = tm.RoleName,
-                Description = tm.Description,
-                PhotoUrl = tm.PhotoUrl
-            }).ToListAsync();
-        return ServiceResult<List<TeamMemberResponseDto>>.Success(responseDtos);
+        return await _context.TeamMembers
+            .OrderBy(teamMember => teamMember.Id)
+            .Select(teamMember => new TeamMemberResponseDto(teamMember))
+            .ToListAsync();
     }
 
-    public async Task<ServiceResult<TeamMemberResponseDto>> GetAsync(int id)
+    /// <inheritdoc/>
+    public async Task<TeamMemberResponseDto> GetSingleAsync(int id)
     {
-        // Fetch for the entity
-        TeamMember member = await _context.TeamMembers.SingleOrDefaultAsync(tm => tm.Id == id);
-        if (member == null)
-        {
-            return ServiceResult<TeamMemberResponseDto>.Failed(
-                ServiceError.NotFoundByProperty(
-                    nameof(TeamMember),
-                    nameof(id),
-                    id.ToString()
-                ));
-        }
+        // Fetch the entity from the database and ensure it exists.
+        return await _context.TeamMembers
+            .Select(teamMember => new TeamMemberResponseDto(teamMember))
+            .SingleOrDefaultAsync(tm => tm.Id == id)
+            ?? throw new ResourceNotFoundException(
+                nameof(TeamMember),
+                nameof(id),
+                id.ToString());
+    }
 
-        // Return data
-        TeamMemberResponseDto responseDto = new TeamMemberResponseDto
+    public async Task<int> CreateAsync(TeamMemberUpsertRequestDto upsertRequestDto)
+    {
+        // Initialize a new entity.
+        TeamMember member = new TeamMember
         {
-            Id = member.Id,
-            FullName = member.FullName,
-            RoleName = member.RoleName,
-            Description = member.Description,
-            PhotoUrl = member.PhotoUrl
+            FullName = upsertRequestDto.FullName,
+            RoleName = upsertRequestDto.RoleName,
+            Description = upsertRequestDto.Description,
+            PhotoUrl = photoUrl
         };
-        return ServiceResult<TeamMemberResponseDto>.Success(responseDto);
-    }
-
-    public async Task<ServiceResult<TeamMemberResponseDto>> CreateAsync(TeamMemberRequestDto requestDto)
-    {
-        // Validate data from request
-        ValidationResult result = _validator.Validate(requestDto.TransformValues());
-        if (!result.IsValid)
-        {
-            return ServiceResult<TeamMemberResponseDto>.Failed(result.Errors);
-        }
-
-        // Save the photo if exist
+        
+        _context.TeamMembers.Add(member);
+        // Save the photo if exist.
         string photoUrl = null;
-        if (requestDto.PhotoFile != null)
+        if (upsertRequestDto.PhotoFile != null)
         {
             ServiceResult<string> photoServiceResult;
             photoServiceResult = await _photoService.CreateAsync(
-                requestDto.PhotoFile,
+                upsertRequestDto.PhotoFile,
                 "members",
                 true);
             photoUrl = photoServiceResult.ResponseDto;
         }
-
-        // Initialize team member entity
-        TeamMember member = new TeamMember
-        {
-            FullName = requestDto.FullName,
-            RoleName = requestDto.RoleName,
-            Description = requestDto.Description,
-            PhotoUrl = photoUrl
-        };
-        _context.TeamMembers.Add(member);
         await _context.SaveChangesAsync();
 
         return ServiceResult<TeamMemberResponseDto>.Success(new TeamMemberResponseDto
@@ -102,10 +71,10 @@ public class ITeamMemberService : ITeamMemberService
 
     public async Task<ServiceResult<TeamMemberResponseDto>> UpdateAsync(
             int id,
-            TeamMemberRequestDto requestDto)
+            TeamMemberUpsertRequestDto upsertRequestDto)
     {
         // Validate data from request
-        ValidationResult result = _validator.Validate(requestDto.TransformValues());
+        ValidationResult result = _validator.Validate(upsertRequestDto.TransformValues());
         if (!result.IsValid)
         {
             return ServiceResult<TeamMemberResponseDto>.Failed(result.Errors);
@@ -124,7 +93,7 @@ public class ITeamMemberService : ITeamMemberService
         }
 
         // Update photo
-        if (requestDto.PhotoChanged)
+        if (upsertRequestDto.PhotoChanged)
         {
             ServiceResult<string> photoServiceResult;
             // Delete old photo if exists
@@ -134,17 +103,17 @@ public class ITeamMemberService : ITeamMemberService
                 member.PhotoUrl = null;
             }
             // Create new photo if it's data is included in the request
-            if (requestDto.PhotoFile != null)
+            if (upsertRequestDto.PhotoFile != null)
             {
-                photoServiceResult = await _photoService.CreateAsync(requestDto.PhotoFile, "members", true);
+                photoServiceResult = await _photoService.CreateAsync(upsertRequestDto.PhotoFile, "members", true);
                 member.PhotoUrl = photoServiceResult.ResponseDto;
             }
         }
 
         // Update team member entity's columns
-        member.FullName = requestDto.FullName;
-        member.RoleName = requestDto.RoleName;
-        member.Description = requestDto.Description;
+        member.FullName = upsertRequestDto.FullName;
+        member.RoleName = upsertRequestDto.RoleName;
+        member.Description = upsertRequestDto.Description;
 
         // Save changes
         await _context.SaveChangesAsync();

@@ -108,6 +108,12 @@ public class PhotoService : IPhotoService
     /// An instance of the <see cref="MagickImage"/> class loaded from a byte array which is to
     /// be checked and resized.
     /// </param>
+    /// <param name="maxWidth">
+    /// The maximum width that the image will be resized to if exceeding.
+    /// </param>
+    /// <param name="maxHeight">
+    /// The maximum height that the image will be resized to if exceeding.
+    /// </param>
     private static void ResizeImageIfTooLarge(
             MagickImage image,
             uint maxWidth = 1024,

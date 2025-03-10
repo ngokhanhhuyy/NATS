@@ -1,6 +1,6 @@
 namespace NATS.Services.Validation.Validators;
 
-public class TeamMemberValidator : Validator<TeamMemberRequestDto>
+public class TeamMemberValidator : Validator<TeamMemberUpsertRequestDto>
 {
     public TeamMemberValidator()
     {

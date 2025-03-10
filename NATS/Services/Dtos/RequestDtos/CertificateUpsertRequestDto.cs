@@ -1,6 +1,6 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class BusinessCertificateRequestDto : IRequestDto<BusinessCertificateRequestDto>
+public class CertificateUpsertRequestDto : IRequestDto<CertificateUpsertRequestDto>
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -8,7 +8,7 @@ public class BusinessCertificateRequestDto : IRequestDto<BusinessCertificateRequ
     public byte[] PhotoFile { get; set; }
     public bool PhotoChanged = false;
 
-    public BusinessCertificateRequestDto TransformValues()
+    public CertificateUpsertRequestDto TransformValues()
     {
         Name = Name.ToNullIfEmpty();
         return this;

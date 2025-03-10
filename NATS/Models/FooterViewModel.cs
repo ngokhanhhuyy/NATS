@@ -9,5 +9,5 @@ public class FooterViewModel
     public PostBasicListViewModel Posts { get; set; }
 
     [Display(Name = DisplayNames.ContactInfo)]
-    public ContactInfoViewModel ContactInfo { get; set; }
+    public ContactModel ContactInfo { get; set; }
 }

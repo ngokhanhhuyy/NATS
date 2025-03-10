@@ -1,6 +1,6 @@
 namespace NATS.Services.Entities;
 
-public class HomePageSliderItem
+public class SliderItem
 {
     [Column("id")]
     [Key]

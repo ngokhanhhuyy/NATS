@@ -7,4 +7,13 @@ public class TeamMemberResponseDto
     public string RoleName { get; set; }
     public string Description { get; set; }
     public string PhotoUrl { get; set; }
+
+    public TeamMemberResponseDto(TeamMember teamMember)
+    {
+        Id = teamMember.Id;
+        FullName = teamMember.FullName;
+        RoleName = teamMember.RoleName;
+        Description = teamMember.Description;
+        PhotoUrl = teamMember.PhotoUrl;
+    }
 }

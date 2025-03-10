@@ -1,6 +1,6 @@
 namespace NATS.Services.Validation.Validators;
 
-public class ContactInfoValidator : Validator<ContactInfoRequestDto>
+public class ContactInfoValidator : Validator<ContactUpsertRequestDto>
 {
     private const string phoneNumberRegex = @"^[^\-+\s][\d\-+\s]+$";
     private const string emailRegex = @"^\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b$";

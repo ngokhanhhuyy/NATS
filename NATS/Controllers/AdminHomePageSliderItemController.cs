@@ -33,7 +33,7 @@ public class AdminHomePageSliderItemController : Controller
         }
         
         // Map request data to request dto
-        HomePageSliderItemRequestDto requestDto = new HomePageSliderItemRequestDto
+        SliderItem upsertRequestDto = new SliderItem
         {
             Title = model.Title,
             PhotoFile = photoFile,
@@ -41,8 +41,8 @@ public class AdminHomePageSliderItemController : Controller
         };
 
         // Perform creating operation
-        ServiceResult<HomePageSliderItemResponseDto> serviceResult;
-        serviceResult = await _service.CreateAsync(requestDto);
+        ServiceResult<SliderItemResponseDto> serviceResult;
+        serviceResult = await _service.CreateAsync(upsertRequestDto);
         if (!serviceResult.Succeeded)
         {
             ModelState.AddModelErrorsFromServiceErrors(serviceResult.Errors);
@@ -54,8 +54,8 @@ public class AdminHomePageSliderItemController : Controller
     [HttpGet("{id:int}/cap-nhat")]
     public async Task<IActionResult> Updating(int id)
     {
-        ServiceResult<HomePageSliderItemResponseDto> serviceResult;
-        serviceResult = await _service.GetAsync(id);
+        ServiceResult<SliderItemResponseDto> serviceResult;
+        serviceResult = await _service.GetSingleAsync(id);
         if (!serviceResult.Succeeded)
         {
             return NotFound();
@@ -84,7 +84,7 @@ public class AdminHomePageSliderItemController : Controller
         }
         
         // Map request data to request dto
-        HomePageSliderItemRequestDto requestDto = new HomePageSliderItemRequestDto
+        SliderItem upsertRequestDto = new SliderItem
         {
             Title = model.Title,
             PhotoFile = photoFile,
@@ -92,8 +92,8 @@ public class AdminHomePageSliderItemController : Controller
         };
 
         // Perform updating operation
-        ServiceResult<HomePageSliderItemResponseDto> serviceResult;
-        serviceResult = await _service.UpdateAsync(id, requestDto);
+        ServiceResult<SliderItemResponseDto> serviceResult;
+        serviceResult = await _service.UpdateAsync(id, upsertRequestDto);
         if (!serviceResult.Succeeded)
         {
             if (serviceResult.HasNotFoundError)

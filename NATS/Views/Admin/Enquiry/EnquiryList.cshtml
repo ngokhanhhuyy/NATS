@@ -1,4 +1,4 @@
-@model EnquiryListViewModel
+@model List<EnquiryModel>
 @{
     Layout = "_AdminLayout";
     ViewBag.CurrentPageName = "Enquiries";
@@ -15,9 +15,9 @@
                     </span>
                 </div>
                 <ul class="list-group list-group-flush">
-                    @if (Model.Items.Count > 0)
+                    @if (Model.Count > 0)
                     {
-                        @foreach (EnquiryViewModel enquiry in Model.Items)
+                        @foreach (EnquiryModel enquiry in Model)
                         {
                             <li class="list-group-item border-default shadow-sm">
                                 <div class="description h-100 text-default flex-fill">

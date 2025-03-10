@@ -5,39 +5,39 @@ namespace NATS.Controllers;
 public class AdminController : Controller
 {
     private readonly IAboutUsIntroductionService _aboutUsIntroductionService;
-    private readonly ITeamMembersService _teamMembersService;
-    private readonly IBusinessCertificateService _businessCertificateService;
+    private readonly ITeamMemberService _iTeamMemberService;
+    private readonly ICertificateService _iCertificateService;
     private readonly IGeneralSettingsService _generalSettingsService;
     private readonly IHomePageSliderItemService _homePageSliderItemService;
     private readonly IIntroductionItemService _introductionItemService;
     private readonly IPostService _postService;
     private readonly IEnquiryService _enquiryService;
-    private readonly IContactInfoService _contactInfoService;
+    private readonly IContactService _iContactService;
     private readonly ITrafficService _trafficService;
     private readonly IUserService _userService;
 
     public AdminController(
             IAboutUsIntroductionService aboutUsIntroductionService,
-            ITeamMembersService teamMembersService,
-            IBusinessCertificateService businessCertificateService,
+            ITeamMemberService iTeamMemberService,
+            ICertificateService iCertificateService,
             IGeneralSettingsService generalSettingsService,
             IHomePageSliderItemService homePageSliderItemService,
             IIntroductionItemService introductionItemService,
             IPostService postService,
             IEnquiryService enquiryService,
-            IContactInfoService contactInfoService,
+            IContactService iContactService,
             ITrafficService trafficService,
             IUserService userService)
     {
         _aboutUsIntroductionService = aboutUsIntroductionService;
-        _teamMembersService = teamMembersService;
-        _businessCertificateService = businessCertificateService;
+        _iTeamMemberService = iTeamMemberService;
+        _iCertificateService = iCertificateService;
         _generalSettingsService = generalSettingsService;
         _homePageSliderItemService = homePageSliderItemService;
         _introductionItemService = introductionItemService;
         _postService = postService;
         _enquiryService = enquiryService;
-        _contactInfoService = contactInfoService;
+        _iContactService = iContactService;
         _trafficService = trafficService;
         _userService = userService;
     }
@@ -153,19 +153,19 @@ public class AdminController : Controller
         aboutUsIntroductionServiceResult = await _aboutUsIntroductionService.GetAsync();
 
         ServiceResult<List<TeamMemberResponseDto>> teamMemberServiceResult;
-        teamMemberServiceResult = await _teamMembersService.GetListAsync();
+        teamMemberServiceResult = await _iTeamMemberService.GetListAsync();
 
-        ServiceResult<List<BusinessCertificateResponseDto>> businessCertificateServiceResult;
-        businessCertificateServiceResult = await _businessCertificateService.GetListAsync();
+        ServiceResult<List<CertificateResponseDto>> businessCertificateServiceResult;
+        businessCertificateServiceResult = await _iCertificateService.GetListAsync();
 
-        ServiceResult<List<HomePageSliderItemResponseDto>> homePageSliderItemServiceResult;
+        ServiceResult<List<SliderItemResponseDto>> homePageSliderItemServiceResult;
         homePageSliderItemServiceResult = await _homePageSliderItemService.GetListAsync();
 
         ServiceResult<List<IntroductionItemResponseDto>> introductionItemServiceResult;
         introductionItemServiceResult = await _introductionItemService.GetListAsync();
 
-        ServiceResult<ContactInfoResponseDto> contactInfoServiceResult;
-        contactInfoServiceResult = await _contactInfoService.GetAsync();
+        ServiceResult<ContactResponseDto> contactInfoServiceResult;
+        contactInfoServiceResult = await _iContactService.GetListAsync();
 
         ContentViewModel model = new ContentViewModel
         {
@@ -219,7 +219,7 @@ public class AdminController : Controller
                         ThumbnailUrl = ii.ThumbnailUrl
                     }).ToList()
             },
-            ContactInfo = new ContactInfoViewModel
+            ContactInfo = new ContactModel
             {
                 PhoneNumber = contactInfoServiceResult.ResponseDto.PhoneNumber,
                 ZaloNumber = contactInfoServiceResult.ResponseDto.ZaloNumber,
@@ -305,7 +305,7 @@ public class AdminController : Controller
             await model.PhotoFile.CopyToAsync(stream);
             photoFile = stream.ToArray();
         }
-        TeamMemberRequestDto requestDto = new TeamMemberRequestDto {
+        TeamMemberUpsertRequestDto upsertRequestDto = new TeamMemberUpsertRequestDto {
             PhotoFile = photoFile,
             FullName = model.FullName,
             RoleName = model.RoleName,
@@ -314,7 +314,7 @@ public class AdminController : Controller
         };
 
         ServiceResult<TeamMemberResponseDto> serviceResult;
-        serviceResult = await _teamMembersService.CreateAsync(requestDto);
+        serviceResult = await _iTeamMemberService.CreateAsync(upsertRequestDto);
         if (!serviceResult.Succeeded)
         {
             ModelState.AddModelErrorsFromServiceErrors(serviceResult.Errors);
@@ -328,7 +328,7 @@ public class AdminController : Controller
     public async Task<IActionResult> TeamMemberUpdating(int id)
     {
         ServiceResult<TeamMemberResponseDto> serviceResult;
-        serviceResult = await _teamMembersService.GetAsync(id);
+        serviceResult = await _iTeamMemberService.GetAsync(id);
         if (!serviceResult.Succeeded)
         {
             return NotFound();
@@ -357,7 +357,7 @@ public class AdminController : Controller
             await model.PhotoFile.CopyToAsync(stream);
             photoFile = stream.ToArray();
         }
-        TeamMemberRequestDto requestDto = new TeamMemberRequestDto {
+        TeamMemberUpsertRequestDto upsertRequestDto = new TeamMemberUpsertRequestDto {
             PhotoFile = photoFile,
             FullName = model.FullName,
             RoleName = model.RoleName,
@@ -366,7 +366,7 @@ public class AdminController : Controller
         };
 
         ServiceResult<TeamMemberResponseDto> serviceResult;
-        serviceResult = await _teamMembersService.UpdateAsync(id, requestDto);
+        serviceResult = await _iTeamMemberService.UpdateAsync(id, upsertRequestDto);
         if (!serviceResult.Succeeded)
         {
             if (serviceResult.HasNotFoundError)
@@ -384,7 +384,7 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> TeamMemberDeleting(int id)
     {
-        ServiceResult<int> serviceResult = await _teamMembersService.DeleteAsync(id);
+        ServiceResult<int> serviceResult = await _iTeamMemberService.DeleteAsync(id);
         if (!serviceResult.Succeeded)
         {
             return NotFound();
@@ -414,14 +414,14 @@ public class AdminController : Controller
             await model.PhotoFile.CopyToAsync(stream);
             photoFile = stream.ToArray();
         }
-        BusinessCertificateRequestDto requestDto = new BusinessCertificateRequestDto
+        CertificateUpsertRequestDto upsertRequestDto = new CertificateUpsertRequestDto
         {
             PhotoFile = photoFile,
             Name = model.Name,
             PhotoChanged = model.PhotoChanged
         };
-        ServiceResult<BusinessCertificateResponseDto> serviceResult;
-        serviceResult = await _businessCertificateService.CreateAsync(requestDto);
+        ServiceResult<CertificateResponseDto> serviceResult;
+        serviceResult = await _iCertificateService.CreateAsync(upsertRequestDto);
         if (!serviceResult.Succeeded)
         {
             ModelState.AddModelErrorsFromServiceErrors(serviceResult.Errors);
@@ -434,8 +434,8 @@ public class AdminController : Controller
     [HttpGet("noi-dung/chung-chi/{id:int}/cap-nhat")]
     public async Task<IActionResult> BusinessCertificateUpdating(int id)
     {
-        ServiceResult<BusinessCertificateResponseDto> serviceResult;
-        serviceResult = await _businessCertificateService.GetAsync(id);
+        ServiceResult<CertificateResponseDto> serviceResult;
+        serviceResult = await _iCertificateService.GetSingleAsync(id);
         if (!serviceResult.Succeeded)
         {
             return NotFound();
@@ -462,14 +462,14 @@ public class AdminController : Controller
             await model.PhotoFile.CopyToAsync(stream);
             photoFile = stream.ToArray();
         }
-        BusinessCertificateRequestDto requestDto = new BusinessCertificateRequestDto
+        CertificateUpsertRequestDto upsertRequestDto = new CertificateUpsertRequestDto
         {
             PhotoFile = photoFile,
             Name = model.Name,
             PhotoChanged = model.PhotoChanged
         };
-        ServiceResult<BusinessCertificateResponseDto> serviceResult;
-        serviceResult = await _businessCertificateService.UpdateAsync(id, requestDto);
+        ServiceResult<CertificateResponseDto> serviceResult;
+        serviceResult = await _iCertificateService.UpdateAsync(id, upsertRequestDto);
         if (!serviceResult.Succeeded)
         {
             if (serviceResult.HasNotFoundError)
@@ -488,7 +488,7 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> BusinessCertificateDeleting(int id)
     {
-        ServiceResult<int> serviceResult = await _businessCertificateService.DeleteAsync(id);
+        ServiceResult<int> serviceResult = await _iCertificateService.DeleteAsync(id);
         if (!serviceResult.Succeeded)
         {
             if (serviceResult.HasNotFoundError)
@@ -560,10 +560,10 @@ public class AdminController : Controller
     [HttpGet("thong-tin-lien-he/cap-nhat")]
     public async Task<IActionResult> ContactInfoUpdating()
     {
-        ServiceResult<ContactInfoResponseDto> serviceResult;
-        serviceResult = await _contactInfoService.GetAsync();
+        ServiceResult<ContactResponseDto> serviceResult;
+        serviceResult = await _iContactService.GetListAsync();
 
-        ContactInfoViewModel model = new ContactInfoViewModel
+        ContactModel model = new ContactModel
         {
             PhoneNumber = serviceResult.ResponseDto.PhoneNumber,
             ZaloNumber = serviceResult.ResponseDto.ZaloNumber,
@@ -576,9 +576,9 @@ public class AdminController : Controller
 
     [HttpPost("thong-tin-lien-he/cap-nhat")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ContactInfoUpdating(ContactInfoViewModel model)
+    public async Task<IActionResult> ContactInfoUpdating(ContactModel model)
     {
-        ContactInfoRequestDto requestDto = new ContactInfoRequestDto
+        ContactUpsertRequestDto requestDto = new ContactUpsertRequestDto
         {
             PhoneNumber = model.PhoneNumber,
             ZaloNumber = model.ZaloNumber,
@@ -586,8 +586,8 @@ public class AdminController : Controller
             Address = model.Address
         };
 
-        ServiceResult<ContactInfoResponseDto> serviceResult;
-        serviceResult = await _contactInfoService.UpdateAsync(requestDto);
+        ServiceResult<ContactResponseDto> serviceResult;
+        serviceResult = await _iContactService.UpdateAsync(requestDto);
         if (!serviceResult.Succeeded)
         {
             ModelState.AddModelErrorsFromServiceErrors(serviceResult.Errors);

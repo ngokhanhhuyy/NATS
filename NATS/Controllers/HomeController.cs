@@ -5,47 +5,47 @@ public class HomeController : Controller
 {
     private readonly IHomePageSliderItemService _homePageSliderItemService;
     private readonly IAboutUsIntroductionService _aboutUsIntroductionService;
-    private readonly ITeamMembersService _teamMembersService;
-    private readonly IBusinessCertificateService _businessCertificateService;
+    private readonly ITeamMemberService _iTeamMemberService;
+    private readonly ICertificateService _iCertificateService;
     private readonly IIntroductionItemService _introductionItemService;
     private readonly ICourseService _courseService;
     private readonly ICatalogItemService _businessServiceService;
     private readonly IProductService _productService;
     private readonly IPostService _postService;
     private readonly IEnquiryService _enquiryService;
-    private readonly IContactInfoService _contactInfoService;
+    private readonly IContactService _iContactService;
 
     public HomeController(
             IHomePageSliderItemService homePageSliderItemService,
             IAboutUsIntroductionService aboutUsIntroductionService,
-            ITeamMembersService teamMemberService,
-            IBusinessCertificateService businessCertificateService,
+            ITeamMemberService iTeamMemberService,
+            ICertificateService iCertificateService,
             IIntroductionItemService introductionItemService,
             ICourseService courseService,
             ICatalogItemService businessServiceService,
             IProductService productService,
             IPostService postService,
             IEnquiryService enquiryService,
-            IContactInfoService contactInfoService)
+            IContactService iContactService)
     {
         _homePageSliderItemService = homePageSliderItemService;
         _aboutUsIntroductionService = aboutUsIntroductionService;
-        _teamMembersService = teamMemberService;
-        _businessCertificateService = businessCertificateService;
+        _iTeamMemberService = iTeamMemberService;
+        _iCertificateService = iCertificateService;
         _introductionItemService = introductionItemService;
         _courseService = courseService;
         _businessServiceService = businessServiceService;
         _productService = productService;
         _postService = postService;
         _enquiryService = enquiryService;
-        _contactInfoService = contactInfoService;
+        _iContactService = iContactService;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
         // Fetch homepage slider item list
-        ServiceResult<List<HomePageSliderItemResponseDto>> _homePageSliderItemServiceResult;
+        ServiceResult<List<SliderItemResponseDto>> _homePageSliderItemServiceResult;
         _homePageSliderItemServiceResult = await _homePageSliderItemService.GetListAsync();
 
         // Fetch course introduction item list
@@ -146,10 +146,10 @@ public class HomeController : Controller
     public async Task<IActionResult> TeamMembers()
     {
         ServiceResult<List<TeamMemberResponseDto>> teamMembersServiceResult;
-        teamMembersServiceResult = await _teamMembersService.GetListAsync();
+        teamMembersServiceResult = await _iTeamMemberService.GetListAsync();
         
-        ServiceResult<List<BusinessCertificateResponseDto>> businessCertificateServiceResult;
-        businessCertificateServiceResult = await _businessCertificateService.GetListAsync();
+        ServiceResult<List<CertificateResponseDto>> businessCertificateServiceResult;
+        businessCertificateServiceResult = await _iCertificateService.GetListAsync();
 
         TeamMemberListViewModel model = new TeamMemberListViewModel
         {
@@ -295,13 +295,13 @@ public class HomeController : Controller
     [HttpGet("lien-he")]
     public async Task<IActionResult> Contact()
     {
-        ServiceResult<ContactInfoResponseDto> contactInfoServiceResult;
-        contactInfoServiceResult = await _contactInfoService.GetAsync();
+        ServiceResult<ContactResponseDto> contactInfoServiceResult;
+        contactInfoServiceResult = await _iContactService.GetListAsync();
         
         // Initialize view model.
-        ContactViewModel model = new ContactViewModel
+        ContactListModel listModel = new ContactListModel
         {
-            ContactInfo = new ContactInfoViewModel
+            ContactInfo = new ContactModel
             {
                 PhoneNumber = contactInfoServiceResult.ResponseDto.PhoneNumber,
                 ZaloNumber = contactInfoServiceResult.ResponseDto.ZaloNumber,
@@ -311,20 +311,20 @@ public class HomeController : Controller
         };
         
         // Return the view.
-        return View("~/Views/Home/Contact.cshtml", model);
+        return View("~/Views/Home/Contact.cshtml", listModel);
     }
     
     [HttpPost("lien-he")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Contact(ContactViewModel model)
+    public async Task<IActionResult> Contact(ContactListModel listModel)
     {
         // Map enquiry data from view model to request dto.
-        EnquiryRequestDto requestDto = new EnquiryRequestDto
+        EnquiryUpsertRequestDto requestDto = new EnquiryUpsertRequestDto
         {
-            FullName = model.Enquiry?.FullName,
-            PhoneNumber = model.Enquiry?.PhoneNumber,
-            Email = model.Enquiry?.Email,
-            Content = model.Enquiry?.Content
+            FullName = listModel.Enquiry?.FullName,
+            PhoneNumber = listModel.Enquiry?.PhoneNumber,
+            Email = listModel.Enquiry?.Email,
+            Content = listModel.Enquiry?.Content
         };
         
         // Perform creating operation.
@@ -333,9 +333,9 @@ public class HomeController : Controller
         if (!enquiryServiceResult.Succeeded)
         {
             // Fetch contact info data to display the page again.
-            ServiceResult<ContactInfoResponseDto> contactInfoServiceResult;
-            contactInfoServiceResult = await _contactInfoService.GetAsync();
-            model.ContactInfo = new ContactInfoViewModel
+            ServiceResult<ContactResponseDto> contactInfoServiceResult;
+            contactInfoServiceResult = await _iContactService.GetListAsync();
+            listModel.ContactInfo = new ContactModel
             {
                 PhoneNumber = contactInfoServiceResult.ResponseDto.PhoneNumber,
                 ZaloNumber = contactInfoServiceResult.ResponseDto.ZaloNumber,
@@ -348,10 +348,10 @@ public class HomeController : Controller
             enquiryServiceResult.Errors.ForEach(error =>
             {
                 ModelState.AddModelError(
-                    nameof(model.Enquiry) + "." + error.PropertyName,
+                    nameof(listModel.Enquiry) + "." + error.PropertyName,
                     error.ErrorMessage);
             });
-            return View("~/Views/Home/Contact.cshtml", model);
+            return View("~/Views/Home/Contact.cshtml", listModel);
         }
         
         (string, string, string) saveSuccessModel = (

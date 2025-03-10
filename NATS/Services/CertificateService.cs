@@ -1,190 +1,168 @@
-using NATS.Services.Entity;
-
 namespace NATS.Services;
 
-public class CertificateService : IBusinessCertificateService
+/// <inheritdoc />
+public class CertificateService : ICertificateService
 {
     private readonly DatabaseContext _context;
-    private readonly IValidator<BusinessCertificateRequestDto> _validator;
     private readonly IPhotoService _photoService;
 
-    public CertificateService(
-            DatabaseContext context,
-            IValidator<BusinessCertificateRequestDto> validator,
-            IPhotoService photoService)
+    public CertificateService(DatabaseContext context, IPhotoService photoService)
     {
         _context = context;
-        _validator = validator;
         _photoService = photoService;
     }
 
-    public async Task<ServiceResult<List<BusinessCertificateResponseDto>>> GetListAsync()
+    /// <inheritdoc />
+    public async Task<List<CertificateResponseDto>> GetListAsync()
     {
-        List<BusinessCertificateResponseDto> responseDtos;
-        responseDtos = await _context.Certificates
-            .OrderBy(bc => bc.Id)
-            .Select(bc => new BusinessCertificateResponseDto
-            {
-                Id = bc.Id,
-                Name = bc.Name,
-                PhotoUrl = bc.PhotoUrl
-            }).ToListAsync();
-        return ServiceResult<List<BusinessCertificateResponseDto>>.Success(responseDtos);
+        return await _context.Certificates
+            .OrderBy(certificate => certificate.Id)
+            .Select(certificate => new CertificateResponseDto(certificate))
+            .ToListAsync();
     }
 
-    public async Task<ServiceResult<BusinessCertificateResponseDto>> GetAsync(int id)
+    /// <inheritdoc />
+    public async Task<CertificateResponseDto> GetSingleAsync(int id)
     {
-        // Fetch for the entity by id
-        Certificate certificate;
-        certificate = await _context.Certificates
-            .SingleOrDefaultAsync(c => c.Id == id);
-
-        // Ensure the entity exists in the database
-        if (certificate == null)
-        {
-            return ServiceResult<BusinessCertificateResponseDto>.Failed(
-                ServiceError.NotAvailableByProperty(
-                    nameof(Certificate),
-                    nameof(id),
-                    id.ToString()));
-        }
-
-        BusinessCertificateResponseDto responseDto = new BusinessCertificateResponseDto
-        {
-            Id = certificate.Id,
-            Name = certificate.Name,
-            PhotoUrl = certificate.PhotoUrl
-        };
-        return ServiceResult<BusinessCertificateResponseDto>.Success(responseDto);
+        return await _context.Certificates
+            .Select(certificate => new CertificateResponseDto(certificate))
+            .SingleOrDefaultAsync(c => c.Id == id)
+            ?? throw new ResourceNotFoundException(
+                nameof(Certificate),
+                nameof(id),
+                id.ToString());
     }
 
-    public async Task<ServiceResult<BusinessCertificateResponseDto>> CreateAsync(
-            BusinessCertificateRequestDto requestDto)
+    /// <inheritdoc />
+    public async Task<int> CreateAsync(CertificateUpsertRequestDto upsertRequestDto)
     {
-        // Validate data from request
-        ValidationResult result = _validator.Validate(
-            requestDto,
-            options => options.IncludeRuleSets("Create").IncludeRulesNotInRuleSet());
-        if (!result.IsValid)
-        {
-            return ServiceResult<BusinessCertificateResponseDto>.Failed(result.Errors);
-        }
-
-        // Save the photo if exists
-        string photoUrl = null;
-        if (requestDto.PhotoFile != null)
-        {
-            ServiceResult<string> photoServiceResult;
-            photoServiceResult = await _photoService.CreateAsync(
-                requestDto.PhotoFile,
-                "certificates",
-                false);
-            photoUrl = photoServiceResult.ResponseDto;
-        }
-
-        // Initialize business certificate entity
+        // Initialize a new entity.
         Certificate certificate = new Certificate
         {
-            Name = requestDto.Name,
-            PhotoUrl = photoUrl
+            Name = upsertRequestDto.Name
         };
+        
         _context.Certificates.Add(certificate);
-        await _context.SaveChangesAsync();
-
-        // Returning the data of the created entity
-        BusinessCertificateResponseDto responseDto;
-        responseDto = new BusinessCertificateResponseDto
+        
+        // Save the photo if exists.
+        if (upsertRequestDto.PhotoFile != null)
         {
-            Id = certificate.Id,
-            Name = certificate.Name
-        };
-        return ServiceResult<BusinessCertificateResponseDto>.Success(responseDto);
+            certificate.PhotoUrl = await _photoService.CreateAsync(
+                upsertRequestDto.PhotoFile,
+                "certificates");
+        }
+
+        try
+        {
+            await _context.SaveChangesAsync();
+            return certificate.Id;
+        }
+        catch
+        {
+            // Remove the created photo if the operation fails.
+            _photoService.Delete(certificate.PhotoUrl);
+
+            throw;
+        }
     }
 
-    public async Task<ServiceResult<BusinessCertificateResponseDto>> UpdateAsync(
-            int id,
-            BusinessCertificateRequestDto requestDto)
+    /// <inheritdoc />
+    public async Task UpdateAsync(int id, CertificateUpsertRequestDto upsertRequestDto)
     {
-        // Validate data from the request
-        ValidationResult result = _validator.Validate(
-            requestDto,
-            options => options.IncludeRuleSets("Update").IncludeRulesNotInRuleSet());
-        if (!result.IsValid)
-        {
-            return ServiceResult<BusinessCertificateResponseDto>.Failed(result.Errors);
-        }
+        // Fetch the entity from the database and ensure it exists.
+        Certificate certificate = await _context.Certificates
+            .SingleOrDefaultAsync(c => c.Id == id)
+            ?? throw new ResourceNotFoundException(
+                nameof(Certificate),
+                nameof(id),
+                id.ToString());
 
-        // Ensure the entity exists in the database
-        Certificate certificate;
-        certificate = await _context.Certificates.SingleOrDefaultAsync(c => c.Id == id);
-        if (certificate == null)
+        // Update photo if changed.
+        string urlToBeDeletedWhenFailure = null;
+        string urlToBeDeletedWhenSuccess = null;
+        if (upsertRequestDto.PhotoChanged)
         {
-            return ServiceResult<BusinessCertificateResponseDto>.Failed(
-                ServiceError.NotFoundByProperty(
-                    nameof(Certificate),
-                    nameof(id),
-                    id.ToString()));
-        }
-
-        // Update photo
-        if (requestDto.PhotoChanged)
-        {
-            ServiceResult<string> photoServiceResult;
             // Delete old photo if exists
             if (certificate.PhotoUrl != null)
             {
-                photoServiceResult = _photoService.Delete(certificate.PhotoUrl);
+                urlToBeDeletedWhenSuccess = certificate.PhotoUrl;
                 certificate.PhotoUrl = null;
             }
+            
             // Create new photo if it's data is included in the request
-            if (requestDto.PhotoFile != null)
+            if (upsertRequestDto.PhotoFile != null)
             {
-                photoServiceResult = await _photoService
-                    .CreateAsync(requestDto.PhotoFile, "certificates", false);
-                certificate.PhotoUrl = photoServiceResult.ResponseDto;
+                 certificate.PhotoUrl = await _photoService.CreateAsync(
+                     upsertRequestDto.PhotoFile,
+                     "certificates");
+                 urlToBeDeletedWhenFailure = certificate.PhotoUrl;
             }
         }
 
-        // Update business certificate entity's column
-        certificate.Name = requestDto.Name;
+        // Update the entity's other property.
+        certificate.Name = upsertRequestDto.Name;
 
-        // Save changes
-        await _context.SaveChangesAsync();
-
-        // Return data of the updated entity
-        BusinessCertificateResponseDto responseDto = new BusinessCertificateResponseDto
+        // Save changes.
+        try
         {
-            Id = certificate.Id,
-            Name = certificate.Name,
-            PhotoUrl = certificate.PhotoUrl
-        };
-        return ServiceResult<BusinessCertificateResponseDto>.Success(responseDto);
+            await _context.SaveChangesAsync();
+
+            // The operation is successful, delete the old photo file.
+            if (urlToBeDeletedWhenSuccess != null)
+            {
+                _photoService.Delete(urlToBeDeletedWhenSuccess);
+            }
+        }
+        catch (DbUpdateException exception)
+        {
+            // The operation is failed, delete the created photo.
+            if (urlToBeDeletedWhenFailure != null)
+            {
+                _photoService.Delete(urlToBeDeletedWhenFailure);
+            }
+            
+            if (exception is DbUpdateConcurrencyException)
+            {
+                throw new ConcurrencyException();
+            }
+
+            throw;
+        }
     }
 
-    public async Task<ServiceResult<int>> DeleteAsync(int id)
+    /// <inheritdoc />
+    public async Task DeleteAsync(int id)
     {
-        // Ensure the entity exists in the database
-        Certificate certificate;
-        certificate = await _context.Certificates
-            .SingleOrDefaultAsync(c => c.Id == id);
-        if (certificate == null)
-        {
-            return ServiceResult<int>.Failed(
-                ServiceError.NotFoundByProperty(
-                    nameof(Certificate),
-                    nameof(id),
-                    id.ToString()));
-        }
-        // Delete the photo of the entity in the filesystem
-        _photoService.Delete(certificate.PhotoUrl);
+        // Fetch the entity and ensure it exists.
+        Certificate certificate = await _context.Certificates
+            .SingleOrDefaultAsync(c => c.Id == id)
+            ?? throw new ResourceNotFoundException(
+                nameof(Certificate),
+                nameof(id),
+                id.ToString());
         
-        // Delete the entity from the database
+        // Delete the entity from the database.
         _context.Certificates.Remove(certificate);
 
-        // Save changes
-        await _context.SaveChangesAsync();
+        // Save changes.
+        try
+        {
+            await _context.SaveChangesAsync();
+            
+            // The operation is successful, delete the photo file.
+            if (certificate.PhotoUrl != null)
+            {
+                _photoService.Delete(certificate.PhotoUrl);
+            }
+        }
+        catch (DbUpdateException exception)
+        {
+            if (exception is DbUpdateConcurrencyException)
+            {
+                throw new ConcurrencyException();
+            }
 
-        // Returning the id of the deleted entity
-        return ServiceResult<int>.Success(id);
+            throw;
+        }
     }
 }

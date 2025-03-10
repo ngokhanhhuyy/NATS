@@ -1,6 +1,6 @@
 namespace NATS.Models;
 
-public class EnquiryViewModel
+public class EnquiryModel
 {
     [Display(Name = DisplayNames.Id)]
     [BindNever]
@@ -36,4 +36,14 @@ public class EnquiryViewModel
     [Display(Name = DisplayNames.IsCompleted)]
     [BindNever]
     public bool IsCompleted { get; set; }
+
+    public EnquiryModel(EnquiryResponseDto responseDto)
+    {
+        Id = responseDto.Id;
+        FullName = responseDto.FullName;
+        PhoneNumber = responseDto.PhoneNumber;
+        Content = responseDto.Content;
+        ReceivedDateTime = responseDto.ReceivedDateTime;
+        IsCompleted = responseDto.IsCompleted;
+    }
 }

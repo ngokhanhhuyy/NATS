@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using IContactService = NATS.Services.IContactService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -100,8 +101,8 @@ builder.Services.AddScoped<DatabaseContext>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGeneralSettingsService, GeneralSettingsService>();
 builder.Services.AddScoped<IAboutUsIntroductionService, AboutUsIntroductionService>();
-builder.Services.AddScoped<ITeamMembersService, TeamMembersService>();
-builder.Services.AddScoped<IBusinessCertificateService, BusinessCertificateService>();
+builder.Services.AddScoped<TeamMemberService, TeamMemberService>();
+builder.Services.AddScoped<ICertificateService, CertificateService>();
 builder.Services.AddScoped<IIntroductionItemService, IntroductionItemService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IIntroductionItemService, IntroductionItemService>();
@@ -111,7 +112,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IHomePageSliderItemService, HomePageSliderItemService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IEnquiryService, EnquiryService>();
-builder.Services.AddScoped<IContactInfoService, ContactInfoService>();
+builder.Services.AddScoped<IContactService, IContactService>();
 builder.Services.AddScoped<ITrafficService, TrafficService>();
 
 WebApplication app = builder.Build();
