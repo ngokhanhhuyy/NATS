@@ -6,17 +6,17 @@ public class TrafficByDate
     [Key]
     public int Id { get; set; }
     
-    [Column("recorded_at")]
+    [Column("recorded_date")]
     [Required]
-    public DateTime RecordedAt { get; set; }
+    public DateOnly RecordedDate { get; set; }
     
     [Column("access_count")]
     [Required]
     public int AccessCount { get; set; }
     
-    [Column("guess_count")]
+    [Column("guest_count")]
     [Required]
-    public int GuessCount { get; set; }
+    public int GuestCount { get; set; }
     
     // Navigation properties
     public virtual List<TrafficByHour> TrafficByHours { get; set; }

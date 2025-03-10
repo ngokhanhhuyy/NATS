@@ -9,6 +9,6 @@ public class TrafficStatisticsByDateViewModel
     [Display(Name = DisplayNames.AccessCount)]
     public int AccessCount { get; set; }
     
-    [Display(Name = DisplayNames.GuessCount)]
+    [Display(Name = DisplayNames.GuestCount)]
     public int GuessCount { get; set; }
 }

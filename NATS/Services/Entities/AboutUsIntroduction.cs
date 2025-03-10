@@ -6,9 +6,12 @@ public class AboutUsIntroduction
     [Key]
     public int Id { get; set; }
     
-    [Column("main_photo_url")]
-    [StringLength(255)]
-    public string MainPhotoUrl { get; set; }
+    [Column("thumbnail_url")]
+    [StringLength(1000)]
+    public string ThumbnailUrl { get; set; }
+
+    [Column("thumbnail_type")]
+    public ThumbnailType ThumbnailType { get; set; } = ThumbnailType.Photo;
 
     [Column("main_quote_content")]
     [Required]

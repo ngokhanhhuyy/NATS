@@ -1,6 +1,6 @@
-namespace NATS.Services.Entity;
+namespace NATS.Services.Entities;
 
-public class BusinessCertificate
+public class Certificate
 {
     [Column("id")]
     [Key]

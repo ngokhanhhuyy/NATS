@@ -72,7 +72,7 @@ public class AdminPostController : Controller
         }
 
         // Map data from view model to request dto.
-        PostDetailRequestDto requestDto = new PostDetailRequestDto
+        PostUpsertRequestDto requestDto = new PostUpsertRequestDto
         {
             Title = model.Title,
             Content = model.Content,
@@ -141,7 +141,7 @@ public class AdminPostController : Controller
         }
 
         // Map data from view model to request dto.
-        PostDetailRequestDto requestDto = new PostDetailRequestDto
+        PostUpsertRequestDto requestDto = new PostUpsertRequestDto
         {
             Title = model.Title,
             Content = model.Content,

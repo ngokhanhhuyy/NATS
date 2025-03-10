@@ -1,32 +1,30 @@
-﻿using NATS.Services.Entity;
+﻿namespace NATS.Services;
 
-namespace NATS.Services;
-
-public class DatabaseContext : IdentityDbContext<User, Role, int, IdentityUserClaim<int>,
-    IdentityUserRole<int>, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
+public class DatabaseContext
+    : IdentityDbContext<
+        User,
+        Role,
+        int,
+        IdentityUserClaim<int>,
+        IdentityUserRole<int>,
+        IdentityUserLogin<int>,
+        IdentityRoleClaim<int>,
+        IdentityUserToken<int>>
 {
-    public DbSet<IntroductionItem> IntroductionItems { get; set; }
+    public DbSet<SummaryItem> SummaryItems { get; set; }
     public DbSet<AboutUsIntroduction> AboutUsIntroductions { get; set; }
-    public DbSet<Course> Courses { get; set; }
-    public DbSet<CourseSection> CourseSections { get; set; }
-    public DbSet<CoursePhoto> CoursePhotos { get; set; }
-    public DbSet<BusinessService> BusinessServices { get; set; }
-    public DbSet<BusinessServiceFeature> BusinessServiceFeatures { get; set; }
-    public DbSet<BusinessServicePhoto> BusinessServicePhotos { get; set; }
-    public DbSet<Product> Products { get; set; }
-    public DbSet<ProductFeature> ProductFeatures { get; set; }
-    public DbSet<ProductPrice> ProductPrices { get; set; }
-    public DbSet<ProductPhoto> ProductPhotos { get; set; }
+    public DbSet<CatalogItem> CatalogItems { get; set; }
+    public DbSet<CatalogItemPhoto> CatalogItemPhotos { get; set; }
     public DbSet<TeamMember> TeamMembers { get; set; }
-    public DbSet<BusinessCertificate> BusinessCertificates { get; set; }
+    public DbSet<Certificate> Certificates { get; set; }
     public DbSet<Enquiry> Enquiries { get; set; }
     public DbSet<Post> Posts { get; set; }
     public DbSet<TrafficByDate> TrafficByDates { get; set; }
     public DbSet<TrafficByHour> TrafficByHours { get; set; }
-    public DbSet<TrafficByHourIPAddress> TrafficByHourIPAddresses { get; set; }
+    public DbSet<TrafficByHourIpAddress> TrafficByHourIpAddresses { get; set; }
     public DbSet<GeneralSettings> GeneralSettings { get; set; }
     public DbSet<HomePageSliderItem> HomePageSliderItems { get; set; }
-    public DbSet<ContactInfo> ContactInfos { get; set; }
+    public DbSet<Contact> Contacts { get; set; }
 
     public DatabaseContext(DbContextOptions options) : base(options) {}
 
@@ -40,9 +38,9 @@ public class DatabaseContext : IdentityDbContext<User, Role, int, IdentityUserCl
                 .IsUnique()
                 .HasDatabaseName("unique__homepage_slider_items__index");
         });
-        builder.Entity<IntroductionItem>(e =>
+        builder.Entity<SummaryItem>(e =>
         {
-            e.ToTable("introduction_items");
+            e.ToTable("business_summary_items");
             e.HasKey(ii => ii.Id);
         });
         builder.Entity<AboutUsIntroduction>(e =>
@@ -50,86 +48,17 @@ public class DatabaseContext : IdentityDbContext<User, Role, int, IdentityUserCl
             e.ToTable("about_us_introductions");
             e.HasKey(aui => aui.Id);
         });
-        builder.Entity<BusinessService>(e => {
-            e.ToTable("business_services");
+        builder.Entity<CatalogItem>(e => {
+            e.ToTable("catalog_items");
             e.HasKey(bs => bs.Id);
         });
-        builder.Entity<BusinessServiceFeature>(e =>
+        builder.Entity<CatalogItemPhoto>(e =>
         {
-            e.ToTable("business_service_features");
-            e.HasKey(bsf => bsf.Id);
-            e.HasOne(bsf => bsf.BusinessService)
-                .WithMany(bs => bs.Features)
-                .HasForeignKey(bsf => bsf.BusinessServiceId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-        builder.Entity<BusinessServicePhoto>(e =>
-        {
-            e.ToTable("business_service_photos");
+            e.ToTable("catalog_item_photos");
             e.HasKey(bsp => bsp.Id);
-            e.HasOne(bsp => bsp.BusinessService)
+            e.HasOne(bsp => bsp.Item)
                 .WithMany(bs => bs.Photos)
-                .HasForeignKey(bsp => bsp.BusinessServiceId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-        builder.Entity<Product>(e =>
-        {
-            e.ToTable("products");
-            e.HasKey(p => p.Id);
-            e.HasIndex(p => p.Name)
-                .IsUnique()
-                .HasDatabaseName("unique__products__name");
-        });
-        builder.Entity<ProductFeature>(e =>
-        {
-            e.ToTable("product_features");
-            e.HasKey(pf => pf.Id);
-            e.HasOne(pf => pf.Product)
-                .WithMany(p => p.Features)
-                .HasForeignKey(pf => pf.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-        builder.Entity<ProductPrice>(e =>
-        {
-            e.ToTable("product_prices");
-            e.HasKey(pp => pp.Id);
-            e.HasOne(pp => pp.Product)
-                .WithMany(p => p.Prices)
-                .HasForeignKey(pp => pp.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-        builder.Entity<ProductPhoto>(e =>
-        {
-            e.ToTable("product_photos");
-            e.HasKey(pp => pp.Id);
-            e.HasOne(pp => pp.Product)
-                .WithMany(p => p.Photos)
-                .HasForeignKey(pp => pp.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-        builder.Entity<Course>(e =>
-        {
-            e.ToTable("courses");
-            e.HasKey(c => c.Id);
-            e.HasIndex(p => p.Name)
-                .IsUnique()
-                .HasDatabaseName("unique__courses__name");
-        });
-        builder.Entity<CourseSection>(e =>
-        {
-            e.ToTable("course_sections");
-            e.HasKey(cs => cs.Id);
-            e.HasOne(cs => cs.Course)
-                .WithMany(c => c.Sections)
-                .HasForeignKey(cs => cs.CourseId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-        builder.Entity<CoursePhoto>(e => {
-            e.ToTable("course_photos");
-            e.HasKey(cs => cs.Id);
-            e.HasOne(cs => cs.Course)
-                .WithMany(c => c.Photos)
-                .HasForeignKey(cs => cs.CourseId)
+                .HasForeignKey(bsp => bsp.ItemId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
         builder.Entity<TeamMember>(e =>
@@ -137,9 +66,9 @@ public class DatabaseContext : IdentityDbContext<User, Role, int, IdentityUserCl
             e.ToTable("team_members");
             e.HasKey(tm => tm.Id);
         });
-        builder.Entity<BusinessCertificate>(e =>
+        builder.Entity<Certificate>(e =>
         {
-            e.ToTable("business_certificates");
+            e.ToTable("certificates");
             e.HasKey(bc => bc.Id);
         });
         builder.Entity<Enquiry>(e => {
@@ -158,23 +87,23 @@ public class DatabaseContext : IdentityDbContext<User, Role, int, IdentityUserCl
         {
             e.ToTable("traffic_by_date");
             e.HasKey(td => td.Id);
-            e.HasIndex(td => td.RecordedAt)
+            e.HasIndex(td => td.RecordedDate)
                 .IsUnique()
-                .HasDatabaseName("unique__traffic_by_date__recorded_at");
+                .HasDatabaseName("unique__traffic_by_date__recorded_date");
         });
         builder.Entity<TrafficByHour>(e =>
         {
             e.ToTable("traffic_by_hour");
             e.HasKey(th => th.Id);
-            e.HasIndex(th => th.RecordedAt)
+            e.HasIndex(th => th.RecordedDateTime)
                 .IsUnique()
-                .HasDatabaseName("unique__traffic_by_hour__recoreded_at");
+                .HasDatabaseName("unique__traffic_by_hour__recoreded_datetime");
             e.HasOne(th => th.TrafficByDate)
                 .WithMany(td => td.TrafficByHours)
                 .HasForeignKey(th => th.TrafficByDateId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
-        builder.Entity<TrafficByHourIPAddress>(e =>
+        builder.Entity<TrafficByHourIpAddress>(e =>
         {
             e.ToTable("traffic_by_hour_ip_address");
             e.HasKey(thia => thia.Id);
@@ -189,7 +118,7 @@ public class DatabaseContext : IdentityDbContext<User, Role, int, IdentityUserCl
             e.ToTable("general_settings");
             e.HasKey(gs => gs.Id);
         });
-        builder.Entity<ContactInfo>(e =>
+        builder.Entity<Contact>(e =>
         {
             e.ToTable("contact_info");
             e.HasKey(ci => ci.Id);

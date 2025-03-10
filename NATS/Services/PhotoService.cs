@@ -1,7 +1,6 @@
-using System.ComponentModel;
-
 namespace NATS.Services;
 
+/// <inheritdoc />
 public class PhotoService : IPhotoService
 {
     private readonly IWebHostEnvironment _environment;
@@ -11,36 +10,22 @@ public class PhotoService : IPhotoService
         _environment = environment;
     }
 
-    /// <summary>
-    /// Create a photo and save on the photo folder with subfolder {ntityName}.
-    /// The name of the photo will be the time when this method is called.
-    /// </summary>
-    /// <param name="content">
-    /// An array of byte representing the photo file after reading file from the request.
-    /// </param>
-    /// <param name="folderName">
-    /// The name of the folder inside /images/front-pages directory that this photo will be saved.
-    /// </param>
-    /// <param name="cropToSquare">
-    /// Determine if the image should be cropped into square image.
-    /// </param>
-    /// <returns>The relative path (URL) to the created photo on the server</returns>
-    /// <example>~/photos/users/{id}.jpg</example>
-    public async Task<ServiceResult<string>> CreateAsync(
+    /// <inheritdoc />
+    public async Task<string> CreateAsync(
             byte[] content,
             string folderName,
             bool cropToSquare)
     {
-        MagickImage image = new MagickImage(content);
+        MagickImage image = new(content);
 
-        // Process image's size
+        // Process image's size.
         ResizeImageIfTooLarge(image);
         if (cropToSquare)
         {
             CropIntoSquareImage(image);
         }
 
-        // Determine the path where the image would be saved
+        // Determine the path where the image would be saved.
         string path = Path.Combine(
             _environment.WebRootPath,
             "images",
@@ -61,30 +46,16 @@ public class PhotoService : IPhotoService
             "front-pages",
             folderName,
             fileName);
-        return ServiceResult<string>.Success(relativeFilePath);
+        return relativeFilePath;
     }
 
-    /// <summary>
-    /// Create a photo and save on the photo folder with subfolder {ntityName}.
-    /// The name of the photo will be the time when this method is called.
-    /// </summary>
-    /// <param name="content">
-    /// An array of byte representing the photo file after reading file from the request.
-    /// </param>
-    /// <param name="folderName">
-    /// The name of the folder inside /images/front-pages directory that this photo will be saved.
-    /// </param>
-    /// <param name="options">
-    /// The object contains the desired with, height and aspect ratio of the image after being processed.
-    /// </param>
-    /// <returns>The relative path (URL) to the created photo on the server</returns>
-    /// <example>~/photos/users/{id}.jpg</example>
-    public async Task<ServiceResult<string>> CreateAsync(
+    /// <inheritdoc />
+    public async Task<string> CreateAsync(
             byte[] content,
             string folderName,
             double aspectRatio)
     {
-        MagickImage image = new MagickImage(content);
+        MagickImage image = new(content);
 
         CropToAspectRatio(image, aspectRatio);
 
@@ -109,76 +80,79 @@ public class PhotoService : IPhotoService
             "front-pages",
             folderName,
             fileName);
-        return ServiceResult<string>.Success(relativeFilePath);
+
+        return relativeFilePath;
     }
 
-    /// <summary>
-    /// Delete an existing photo by relative path on the server. The relative path is usually stored in
-    /// the database and associated with some of the main entities.
-    /// </summary>
-    /// <param name="relativePath">
-    /// The relative path to the photo on the server, usually in wwwroot/photos/{entityName}/
-    /// </param>
-    /// <returns>The old relative path (URL) of the photo before being deleted.</return>
-    public ServiceResult<string> Delete(string relativePath)
+    /// <inheritdoc />
+    public void Delete(string relativePath)
     {
-        List<string> pathElements = new List<string> { _environment.WebRootPath };
-        string[] testingArray = relativePath.Split("/");
+        List<string> pathElements = new() { _environment.WebRootPath };
         pathElements.AddRange(relativePath.Split("/").Skip(1));
         string path = Path.Combine(pathElements.ToArray());
 
-        if (!File.Exists(path))
+        if (File.Exists(path))
         {
-            return ServiceResult<string>.Failed(ServiceError.NotFound("PhotoFile"));
+            File.Delete(path);
         }
-
-        File.Delete(path);
-        return ServiceResult<string>.Success(path);
     }
 
     /// <summary>
-    /// Resize an image if either of width or height, or both of them, exceeds the maximum pixel value (1024px)
-    /// while keeping the aspect ratio.
-    /// The resized image will also be converted into JPEG format.
+    /// Resizes an image if either of width or height, or both of them, exceeds the maximum
+    /// pixel value (1024px) while keeping the aspect ratio.
     /// </summary>
+    /// <remarks>
+    /// The resized image will also be converted into JPEG format.
+    /// </remarks>
     /// <param name="image">
-    /// An IMagickImage instance loaded from byte array to be checked and resized.
+    /// An instance of the <see cref="MagickImage"/> class loaded from a byte array which is to
+    /// be checked and resized.
     /// </param>
-    private static void ResizeImageIfTooLarge(IMagickImage image, int maxWidth = 1024, int maxHeight = 1024)
+    private static void ResizeImageIfTooLarge(
+            MagickImage image,
+            uint maxWidth = 1024,
+            uint maxHeight = 1024)
     {
         image.Quality = 100;
         image.Format = MagickFormat.Jpeg;
         double widthHeightRatio = (double)image.Width / image.Height;
+
         // Checking if image width or height or both exceeds maximum size
         if (image.Width > maxWidth || image.Height > maxHeight) {
-            int newWidth, newHeight;
-            // Width is greater than height, cropping the left and the right sides of the image
+            uint newWidth, newHeight;
+            // Cropping the left and the right sides of the image when its width is greater
+            // its than height.
             if (widthHeightRatio > 1) {
                 newHeight = maxHeight;
-                newWidth = (int)Math.Round(newHeight * widthHeightRatio);
+                newWidth = (uint)Math.Round(newHeight * widthHeightRatio);
             } else {
                 newWidth = maxWidth;
-                newHeight = (int)Math.Round(newWidth / widthHeightRatio);
+                newHeight = (uint)Math.Round(newWidth / widthHeightRatio);
             }
+
             image.Resize(newWidth, newHeight);
         }
     }
 
     /// <summary>
-    /// Resize an image to the desired aspect ratio.
-    /// The width or height, which one has greater value, will remain.
-    /// The other's value will be calculated based on the desired aspect ratio.
-    /// The resized image will also be converted into JPEG format.
+    /// Resizes an image to the desired aspect ratio.
     /// </summary>
+    /// <remarks>
+    /// The width or height, which one has greater value, will remain. The other's value will
+    /// be calculated based on the desired aspect ratio. The resized image will also be
+    /// converted into JPEG format.
+    /// </remarks>
     /// <param name="image">
-    /// An IMagickImage instance loaded from byte array to be checked and resized.
+    /// An instance of the <see cref="MagickImage"/> class loaded from a byte array which is to
+    /// be checked and resized.
     /// </param>
     /// <param name="desiredAspectRatio">
     /// The desired aspect ratio of the image after being cropped.
     /// </param>
-    private static void CropToAspectRatio(IMagickImage image, double desiredAspectRatio)
+    private static void CropToAspectRatio(MagickImage image, double desiredAspectRatio)
     {
         double originalAspectRatio = (double)image.Width / image.Height;
+
         // Determine which one of width and height is larger.
         MagickGeometry geometry;
         if (desiredAspectRatio >= originalAspectRatio)
@@ -188,7 +162,7 @@ public class PhotoService : IPhotoService
                 0,
                 (int)Math.Round((image.Height - croppedHeight) / 2),
                 image.Width,
-                (int)Math.Round(croppedHeight));
+                (uint)Math.Round(croppedHeight));
             image.Crop(geometry);
         }
         else
@@ -197,24 +171,29 @@ public class PhotoService : IPhotoService
             geometry = new MagickGeometry(
                 (int)Math.Round((image.Width - croppedWidth) / 2),
                 0,
-                (int)Math.Round(croppedWidth),
+                (uint)Math.Round(croppedWidth),
                 image.Height);
             image.Crop(geometry);
         }
     }
 
     /// <summary>
-    /// Crop an image into square. The geomery of the part which is kept after cropping is the center of the image.
-    /// The size after being cropped will equal to original image's width or height, based on which one is smaller.
+    /// Crops an image into a square one.
     /// </summary>
+    /// <remarks>
+    /// The geomery of the part which is kept after cropping is the center of the image. The
+    /// size after being cropped will equal to original image's width or height, based on which
+    /// one is smaller.
+    /// </remarks>
     /// <param name="image">
-    /// An IMagickImage instance loaded from byte array to be checked and cropped.
+    /// An instance of the <see cref="IMagickImage"/> class, loaded from byte array which is to
+    /// be checked and cropped.
     /// </param>
-    private static void CropIntoSquareImage(IMagickImage image)
+    private static void CropIntoSquareImage(MagickImage image)
     {
         // Crop image if needed to make sure it's square
         if (image.Width != image.Height) {
-            int size = Math.Min(image.Width, image.Height);
+            uint size = image.Width < image.Height ? image.Width : image.Height;
             int x, y;
             if (image.Width > image.Height) {
                 x = (int)Math.Round((double)(image.Width - image.Height) / 2);
@@ -223,6 +202,7 @@ public class PhotoService : IPhotoService
                 x = 0;
                 y = (int)Math.Round((double)(image.Height - image.Width) / 2);
             }
+
             image.Crop(new MagickGeometry(x, y, size, size));
         }
     }

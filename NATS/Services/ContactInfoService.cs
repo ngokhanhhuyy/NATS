@@ -16,7 +16,7 @@ public class ContactInfoService : IContactInfoService
     public async Task<ServiceResult<ContactInfoResponseDto>> GetAsync()
     {
         // Fetch the entity from the database and map its data to the response dto.
-        ContactInfoResponseDto responseDto = await _context.ContactInfos
+        ContactInfoResponseDto responseDto = await _context.Contacts
             .Select(ci => new ContactInfoResponseDto
             {
                 PhoneNumber = ci.PhoneNumber,
@@ -37,7 +37,7 @@ public class ContactInfoService : IContactInfoService
         }
 
         // Fetch the entity from the database.
-        ContactInfo contactInfo = await _context.ContactInfos.SingleAsync();
+        Contact contactInfo = await _context.Contacts.SingleAsync();
 
         // Perform update operation.
         contactInfo.PhoneNumber = requestDto.PhoneNumber;

@@ -5,13 +5,13 @@ public class PostService : IPostService
     private readonly DatabaseContext _context;
     private readonly IPhotoService _photoService;
     private readonly IUserService _userService;
-    private readonly IValidator<PostDetailRequestDto> _validator;
+    private readonly IValidator<PostUpsertRequestDto> _validator;
     
     public PostService(
             DatabaseContext context,
             IPhotoService photoService,
             IUserService userService,
-            IValidator<PostDetailRequestDto> validator)
+            IValidator<PostUpsertRequestDto> validator)
     {
         _context = context;
         _photoService = photoService;
@@ -279,7 +279,7 @@ public class PostService : IPostService
     /// <param name="requestDto">An object containing all the data for a new post.</param>
     /// <returns>An object containing all the detail information of the created post.</returns>
     public async Task<ServiceResult<PostDetailResponseDto>> CreateAsync(
-            PostDetailRequestDto requestDto)
+            PostUpsertRequestDto requestDto)
     {
         // Validate data from request.
         ValidationResult result = _validator.Validate(requestDto.TransformValues());
@@ -342,7 +342,7 @@ public class PostService : IPostService
     /// <returns>An object containing all the detail information of the updated post.</returns>
     public async Task<ServiceResult<PostDetailResponseDto>> UpdateAsync(
             int id,
-            PostDetailRequestDto requestDto)
+            PostUpsertRequestDto requestDto)
     {
         // Validate data from the request.
         ValidationResult result = _validator.Validate(requestDto.TransformValues());

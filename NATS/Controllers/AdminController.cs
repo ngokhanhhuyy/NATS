@@ -533,7 +533,7 @@ public class AdminController : Controller
             await model.ThumbnailFile.CopyToAsync(stream);
             thumbnailFile = stream.ToArray();
         }
-        IntroductionItemRequestDto requestDto = new IntroductionItemRequestDto
+        SummaryItemUpsertRequestDto requestDto = new SummaryItemUpsertRequestDto
         {
             Name = model.Name,
             Summary = model.Summary,

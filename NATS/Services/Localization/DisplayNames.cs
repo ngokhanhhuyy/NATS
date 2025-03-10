@@ -89,7 +89,8 @@ public static class DisplayNames
     public const string WorkingHours = "Giờ làm việc";
     public const string RecordedAt = "Ghi nhận lúc";
     public const string AccessCount = "Lượt truy cập";
-    public const string GuessCount = "Khách truy cập";
+    public const string GuestCount = "Khách truy cập";
+    public const string Type = "Phân loại";
 
     private static readonly Dictionary<string, string> names;
 
@@ -105,26 +106,27 @@ public static class DisplayNames
 
     public static string Get(string objectName)
     {
-        if (objectName == null)
-        {
-            throw new ArgumentNullException(nameof(objectName));
-        }
+        ArgumentNullException.ThrowIfNull(objectName, nameof(objectName));
+        
         return names
-            .Where(pair => pair.Key == objectName.ToWordsFirstLetterCapitalized())
+            .Where(pair => pair.Key == objectName.CapitalizeFirstLetter())
             .Select(pair => pair.Value)
             .Single();
     }
 
     public static string Get(object[] objectName)
     {
-        if (objectName == null || !objectName.Any())
+        if (objectName == null || objectName.Length == 0)
         {
-            throw new ArgumentException($"{nameof(objectName)} must be non-null and contain at least 1 element.");
+            string errorMessage = $"{nameof(objectName)} must be non-null " +
+                "and contain at least 1 element.";
+            throw new ArgumentException(errorMessage);
         }
+        
         return Get(objectName
             .Reverse()
             .Where(name => name != null)
-            .Select(name => name.ToString().ToWordsFirstLetterCapitalized())
+            .Select(name => name.ToString().CapitalizeFirstLetter())
             .First());
     }
 }

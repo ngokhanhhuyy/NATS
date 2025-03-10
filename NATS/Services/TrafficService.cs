@@ -18,14 +18,14 @@ public class TrafficService : ITrafficService
     public async Task<ServiceResult<TrafficStatisticsByDateResponseDto>> GetTodayStatisticsAsync()
     {
         TrafficByDate trafficByDate = await _context.TrafficByDates
-            .SingleAsync(td => td.RecordedAt.Date == DateTime.Today);
+            .SingleAsync(td => td.RecordedDateTime.Date == DateTime.Today);
         
         TrafficStatisticsByDateResponseDto responseDto;
         responseDto = new TrafficStatisticsByDateResponseDto
         {
-            RecordedDate = trafficByDate.RecordedAt,
+            RecordedDate = trafficByDate.RecordedDateTime,
             AccessCount = trafficByDate.AccessCount,
-            GuessCount = trafficByDate.GuessCount
+            GuessCount = trafficByDate.GuestCount
         };
           
         return ServiceResult<TrafficStatisticsByDateResponseDto>.Success(responseDto);
@@ -41,17 +41,17 @@ public class TrafficService : ITrafficService
     {
         List<TrafficByDate> trafficsByDates = await _context.TrafficByDates
             .Where(td => 
-                td.RecordedAt.Date > DateTime.Today.Date.AddDays(-lastDays) &&
-                td.RecordedAt.Date <= DateTime.Today.Date)
-            .OrderBy(td => td.RecordedAt)
+                td.RecordedDateTime.Date > DateTime.Today.Date.AddDays(-lastDays) &&
+                td.RecordedDateTime.Date <= DateTime.Today.Date)
+            .OrderBy(td => td.RecordedDateTime)
             .ToListAsync();
 
         List<TrafficStatisticsByDateResponseDto> responseDtos = trafficsByDates
             .Select(td => new TrafficStatisticsByDateResponseDto
             {
-                RecordedDate = td.RecordedAt.Date,
+                RecordedDate = td.RecordedDateTime.Date,
                 AccessCount = td.AccessCount,
-                GuessCount = td.GuessCount
+                GuessCount = td.GuestCount
             }).ToList();
 
         return ServiceResult<List<TrafficStatisticsByDateResponseDto>>.Success(responseDtos);
@@ -68,9 +68,9 @@ public class TrafficService : ITrafficService
     {
         List<TrafficByHour> trafficByHours = await _context.TrafficByHours
             .Where(th => 
-                th.RecordedAt.Date > DateTime.Today.Date.AddDays(-lastDays) &&
-                th.RecordedAt.Date <= DateTime.Today.Date)
-            .OrderBy(th => th.RecordedAt)
+                th.RecordedDateTime.Date > DateTime.Today.Date.AddDays(-lastDays) &&
+                th.RecordedDateTime.Date <= DateTime.Today.Date)
+            .OrderBy(th => th.RecordedDateTime)
             .ToListAsync();
 
         List<TrafficStatisticsByHourRangeResponseDto> responseDtos;
@@ -93,14 +93,14 @@ public class TrafficService : ITrafficService
                 ToTime = new TimeOnly(session.ToHour, 0, 0),
                 AccessCount = trafficByHours
                     .Where(th =>
-                        th.RecordedAt.Hour >= session.FromHour &&
-                        th.RecordedAt.Hour < session.ToHour)
+                        th.RecordedDateTime.Hour >= session.FromHour &&
+                        th.RecordedDateTime.Hour < session.ToHour)
                     .Sum(th => th.AccessCount),
                 GuessCount = trafficByHours
                     .Where(th =>
-                        th.RecordedAt.Hour >= session.FromHour &&
-                        th.RecordedAt.Hour < session.ToHour)
-                    .Sum(th => th.GuessCount),
+                        th.RecordedDateTime.Hour >= session.FromHour &&
+                        th.RecordedDateTime.Hour < session.ToHour)
+                    .Sum(th => th.GuestCount),
             });
         }
 
@@ -119,14 +119,14 @@ public class TrafficService : ITrafficService
         trafficByHours = await _context.TrafficByHours
             .Include(td => td.IPAddresses)
             .Where(td =>
-                td.RecordedAt.Date > DateTime.Today.AddDays(-lastDays) &&
-                td.RecordedAt.Date <= DateTime.Today)
+                td.RecordedDateTime.Date > DateTime.Today.AddDays(-lastDays) &&
+                td.RecordedDateTime.Date <= DateTime.Today)
             .ToListAsync();
         List<TrafficStatisticsByDeviceResponseDto> responseDtos;
         responseDtos = new List<TrafficStatisticsByDeviceResponseDto>();
         foreach (TrafficByHour trafficByHour in trafficByHours)
         {
-            foreach (TrafficByHourIPAddress trafficIpAddress in trafficByHour.IPAddresses)
+            foreach (TrafficByHourIpAddress trafficIpAddress in trafficByHour.IPAddresses)
             {
                 Parser parser = Parser.GetDefault();
                 ClientInfo clientInfo = parser.Parse(trafficIpAddress.LastUserAgent);
@@ -161,38 +161,38 @@ public class TrafficService : ITrafficService
         TrafficByDate trafficByDate = await _context.TrafficByDates
             .Include(td => td.TrafficByHours)
             .ThenInclude(th => th.IPAddresses)
-            .Where(td => td.RecordedAt.Date == DateTime.Today)
+            .Where(td => td.RecordedDateTime.Date == DateTime.Today)
             .SingleAsync();
 
         // Fetch current hour's traffic by hour entity
         TrafficByHour trafficByHour = trafficByDate.TrafficByHours
-            .Single(th => th.RecordedAt.Hour == DateTime.Now.Hour);
+            .Single(th => th.RecordedDateTime.Hour == DateTime.Now.Hour);
         
         // Assign a list if traffic ip address list in the traffic entity is null.
         if (trafficByHour.IPAddresses == null)
         {
-            trafficByHour.IPAddresses = new List<TrafficByHourIPAddress>();
+            trafficByHour.IPAddresses = new List<TrafficByHourIpAddress>();
         }
         
         // Fetch traffic ip address.
-        TrafficByHourIPAddress trafficIPAddress = trafficByHour.IPAddresses!
+        TrafficByHourIpAddress trafficIPAddress = trafficByHour.IPAddresses!
             .SingleOrDefault(tia => tia.IPAddress == ipAddress);
         
         // Create new traffic ip address entity if it doesn't exist.
         if (trafficIPAddress == null)
         {
-            trafficIPAddress = new TrafficByHourIPAddress
+            trafficIPAddress = new TrafficByHourIpAddress
             {
                 IPAddress = ipAddress,
             };
             trafficByHour.IPAddresses!.Add(trafficIPAddress);
-            trafficByHour.GuessCount += 1;
+            trafficByHour.GuestCount += 1;
             bool ipAddressRecorded = trafficByDate.TrafficByHours
                 .Any(th => th.IPAddresses
                     .Any(ip => ip.IPAddress == ipAddress));
             if (!ipAddressRecorded)
             {
-                trafficByDate.GuessCount += 1;
+                trafficByDate.GuestCount += 1;
             }
         }
         

@@ -3,12 +3,12 @@ namespace NATS.Services;
 public class IntroductionItemService : IIntroductionItemService
 {
     private readonly DatabaseContext _context;
-    private readonly IValidator<IntroductionItemRequestDto> _validator;
+    private readonly IValidator<SummaryItemUpsertRequestDto> _validator;
     private readonly IPhotoService _photoService;
 
     public IntroductionItemService(
             DatabaseContext context,
-            IValidator<IntroductionItemRequestDto> validator,
+            IValidator<SummaryItemUpsertRequestDto> validator,
             IPhotoService photoService)
     {
         _context = context;
@@ -26,15 +26,15 @@ public class IntroductionItemService : IIntroductionItemService
     public async Task<ServiceResult<List<IntroductionItemResponseDto>>> GetListAsync()
     {
         List<IntroductionItemResponseDto> responseDtos;
-        responseDtos = await _context.IntroductionItems
+        responseDtos = await _context.SummaryItems
             .OrderBy(ii => ii.Id)
             .Take(4)
             .Select(ii => new IntroductionItemResponseDto
             {
                 Id = ii.Id,
                 Name = ii.Name,
-                Summary = ii.Summary,
-                Content = ii.Content,
+                Summary = ii.SummaryContent,
+                Content = ii.DetailContent,
                 ThumbnailUrl = ii.ThumbnailUrl
             }).ToListAsync();
         return ServiceResult<List<IntroductionItemResponseDto>>.Success(responseDtos);
@@ -52,15 +52,15 @@ public class IntroductionItemService : IIntroductionItemService
     public async Task<ServiceResult<IntroductionItemResponseDto>> GetAsync(int id)
     {
         // Fetch the entity with given id in the database
-        IntroductionItem introductionItem;
-        introductionItem = await _context.IntroductionItems
+        SummaryItem introductionItem;
+        introductionItem = await _context.SummaryItems
             .SingleOrDefaultAsync(ii => ii.Id == id);
 
         // Ensure the entity exists
         if (introductionItem == null)
         {
             return ServiceResult<IntroductionItemResponseDto>.Failed(ServiceError.NotFoundByProperty(
-                nameof(IntroductionItem),
+                nameof(SummaryItem),
                 nameof(id),
                 id.ToString()));
         }
@@ -70,8 +70,8 @@ public class IntroductionItemService : IIntroductionItemService
         {
             Id = introductionItem.Id,
             Name = introductionItem.Name,
-            Summary = introductionItem.Summary,
-            Content = introductionItem.Content,
+            Summary = introductionItem.SummaryContent,
+            Content = introductionItem.DetailContent,
             ThumbnailUrl = introductionItem.ThumbnailUrl
         };
         return ServiceResult<IntroductionItemResponseDto>.Success(responseDto);
@@ -89,7 +89,7 @@ public class IntroductionItemService : IIntroductionItemService
     /// </returns>
     public async Task<ServiceResult<IntroductionItemResponseDto>> UpdateAsync(
             int id,
-            IntroductionItemRequestDto requestDto)
+            SummaryItemUpsertRequestDto requestDto)
     {
         // Validate data from the request
         ValidationResult result = _validator.Validate(requestDto.TransformValues());
@@ -99,7 +99,7 @@ public class IntroductionItemService : IIntroductionItemService
         }
 
         // Fetch for the entity from the database
-        IntroductionItem item = await _context.IntroductionItems
+        SummaryItem item = await _context.SummaryItems
             .SingleOrDefaultAsync(ii => ii.Id == id);
 
         // Ensure the entity exists in the database
@@ -107,7 +107,7 @@ public class IntroductionItemService : IIntroductionItemService
         {
             return ServiceResult<IntroductionItemResponseDto>.Failed(
                 ServiceError.NotFoundByProperty(
-                    nameof(IntroductionItem),
+                    nameof(SummaryItem),
                     nameof(id),
                     id.ToString()));
         }
@@ -129,8 +129,8 @@ public class IntroductionItemService : IIntroductionItemService
         }
         // Update other properties
         item.Name = requestDto.Name;
-        item.Summary = requestDto.Summary;
-        item.Content = requestDto.Content;
+        item.SummaryContent = requestDto.Summary;
+        item.DetailContent = requestDto.Content;
 
         // Save changes
         await _context.SaveChangesAsync();
@@ -140,8 +140,8 @@ public class IntroductionItemService : IIntroductionItemService
         {
             Id = item.Id,
             Name = item.Name,
-            Summary = item.Summary,
-            Content = item.Content,
+            Summary = item.SummaryContent,
+            Content = item.DetailContent,
             ThumbnailUrl = item.ThumbnailUrl
         };
         return ServiceResult<IntroductionItemResponseDto>.Success(responseDto);

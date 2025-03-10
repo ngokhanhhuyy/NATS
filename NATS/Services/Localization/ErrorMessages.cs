@@ -32,4 +32,7 @@ public static class ErrorMessages
     public const string InvalidUserNamePattern = "{PropertyName} chỉ được chứa chữ cái hoặc chữ số.";
     public const string NotAvailable = "{EntityName} hiện đang không khả dụng.";
     public const string NotAvailableByProperty = "{EntityName} có {PropertyName} '{PropertyValue}' hiện đang không khả dụng.";
+
+    // Error messages for concurrency conflicts.
+    public const string ConcurrencyConflict = "Dữ liệu đã bị chỉnh sửa bởi thiết bị/người dùng khác trong quá trình cập nhật.";
 }

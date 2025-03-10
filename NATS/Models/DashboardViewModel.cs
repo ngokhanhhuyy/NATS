@@ -6,7 +6,7 @@ public class DashboardViewModel
     [DisplayFormat(DataFormatString = "{0} lượt")]
     public int AccessCount { get; set; }
     
-    [Display(Name = DisplayNames.GuessCount)]
+    [Display(Name = DisplayNames.GuestCount)]
     [DisplayFormat(DataFormatString = "{0} khách")]
     public int GuessCount { get; set; }
     

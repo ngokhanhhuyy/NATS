@@ -8,5 +8,5 @@ public interface IIntroductionItemService
 
     Task<ServiceResult<IntroductionItemResponseDto>> UpdateAsync(
         int id,
-        IntroductionItemRequestDto requestDto);
+        SummaryItemUpsertRequestDto requestDto);
 }

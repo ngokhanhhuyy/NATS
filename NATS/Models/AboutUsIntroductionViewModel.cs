@@ -3,6 +3,7 @@ namespace NATS.Models;
 public class AboutUsIntroductionViewModel
 {
     public string MainPhotoUrl { get; set; }
+    
     public bool MainPhotoChanged { get; set; }
 
     [Required]

@@ -155,7 +155,7 @@ public sealed class DataInitializer
         {
             AboutUsIntroduction aboutUsIntroduction = new AboutUsIntroduction
             {
-                MainPhotoUrl = "/images/front-pages/about-us/1.jpg",
+                ThumbnailUrl = "/images/front-pages/about-us/1.jpg",
                 MainQuoteContent = "Trong cuộc sống hiện đại, nhiều áp lực và lo lắng " +
                                     "khiến cho chúng ta càng ngày càng cảm thấy căng thảng, " +
                                     "mệt mỏi và có xu hướng tìm các giải pháp để cải thiện " +
@@ -245,21 +245,21 @@ public sealed class DataInitializer
 
     private void InitializeBusinessCertificates()
     {
-        if (!_context.BusinessCertificates.Any())
+        if (!_context.Certificates.Any())
         {
-            BusinessCertificate certificate = new BusinessCertificate
+            Certificate certificate = new Certificate
             {
                 Name = "Quyết định Thành lập",
                 PhotoUrl = "/images/front-pages/certificates/1.jpg"
             };
-            _context.BusinessCertificates.Add(certificate);
+            _context.Certificates.Add(certificate);
             _context.SaveChangesAsync();
         }
     }
 
     private void InitializeIntroductionItems()
     {
-        if (!_context.IntroductionItems.Any())
+        if (!_context.SummaryItems.Any())
         {
             Faker faker = new Faker("vi");
             Dictionary<string, string> dataItems = new Dictionary<string, string>
@@ -283,16 +283,16 @@ public sealed class DataInitializer
             };
             foreach (KeyValuePair<string, string> pair in dataItems)
             {
-                IntroductionItem item = new IntroductionItem
+                SummaryItem item = new SummaryItem
                 {
                     Name = pair.Key,
-                    Summary = faker.Lorem.Paragraph(4),
-                    Content = faker.Lorem.Paragraph(12) +
+                    SummaryContent = faker.Lorem.Paragraph(4),
+                    DetailContent = faker.Lorem.Paragraph(12) +
                             Environment.NewLine +
                             faker.Lorem.Paragraph(15),
                     ThumbnailUrl = pair.Value
                 };
-                _context.IntroductionItems.Add(item);
+                _context.SummaryItems.Add(item);
             }
 
             _context.SaveChanges();
@@ -413,7 +413,7 @@ public sealed class DataInitializer
 
     private void InitializeBusinessServices()
     {
-        if (!_context.BusinessServices.Any())
+        if (!_context.CatalogItems.Any())
         {
             Faker faker = new Faker("vi");
             Random random = new Random();
@@ -480,7 +480,7 @@ public sealed class DataInitializer
             {
                 (string Title, string Summary, string ThumbnailUrl) dataService;
                 dataService = dataServices[serviceIndex];
-                BusinessService service = new BusinessService
+                CatalogItem service = new CatalogItem
                 {
                     Name = dataService.Title,
                     Summary = dataService.Summary,
@@ -489,9 +489,9 @@ public sealed class DataInitializer
                         faker.Lorem.Paragraph(10),
                     ThumbnailUrl = dataService.ThumbnailUrl,
                     Features = new List<BusinessServiceFeature>(),
-                    Photos = new List<BusinessServicePhoto>()
+                    Photos = new List<CatalogItemPhoto>()
                 };
-                _context.BusinessServices.Add(service);
+                _context.CatalogItems.Add(service);
 
                 // Initialize business service features
                 for (int i = 0; i < random.Next(5, 10); i++)
@@ -509,7 +509,7 @@ public sealed class DataInitializer
                 {
                     foreach (string url in dataServicePhotoUrls)
                     {
-                        BusinessServicePhoto servicePhoto = new BusinessServicePhoto
+                        CatalogItemPhoto servicePhoto = new CatalogItemPhoto
                         {
                             Url = url
                         };
@@ -589,16 +589,16 @@ public sealed class DataInitializer
     
     private void InitializeContactInfo()
     {
-        if (!_context.ContactInfos.Any())
+        if (!_context.Contacts.Any())
         {
-            ContactInfo contactInfo = new ContactInfo
+            Contact contactInfo = new Contact
             {
                 PhoneNumber = "0914 64 0979",
                 ZaloNumber = "0914 64 0979",
                 Email = "thammyquocgia@gmail.com",
                 Address = "21 Phan Đăng Lưu, phường Tân An, thành phố Buôn Ma Thuột, tỉnh Đắk Lắk"
             };
-            _context.ContactInfos.Add(contactInfo);
+            _context.Contacts.Add(contactInfo);
         }
         _context.SaveChanges();
     }
@@ -609,19 +609,19 @@ public sealed class DataInitializer
         // just covers up to less than 3 days ahead from today.
         TrafficByDate lastTrafficByDate = _context.TrafficByDates
             .Include(td => td.TrafficByHours)
-            .OrderByDescending(td => td.RecordedAt)
+            .OrderByDescending(td => td.RecordedDateTime)
             .Take(1)
             .FirstOrDefault();
 
-        if (lastTrafficByDate == null || lastTrafficByDate.RecordedAt.Date < DateTime.Today.AddDays(3))
+        if (lastTrafficByDate == null || lastTrafficByDate.RecordedDateTime.Date < DateTime.Today.AddDays(3))
         {
-            DateTime startingDateTime = lastTrafficByDate?.RecordedAt.AddDays(1) ?? DateTime.Today;
+            DateTime startingDateTime = lastTrafficByDate?.RecordedDateTime.AddDays(1) ?? DateTime.Today;
             DateTime generatingDateTime = startingDateTime;
             while (generatingDateTime <= DateTime.Today.AddDays(7))
             {
                 TrafficByDate trafficByDate = new TrafficByDate
                 {
-                    RecordedAt = generatingDateTime,
+                    RecordedDateTime = generatingDateTime,
                     TrafficByHours = new List<TrafficByHour>() 
                 };
                 _context.TrafficByDates.Add(trafficByDate);
@@ -631,7 +631,7 @@ public sealed class DataInitializer
                 {
                     TrafficByHour trafficByHour = new TrafficByHour
                     {
-                        RecordedAt = generatingTime
+                        RecordedDateTime = generatingTime
                     };
                     trafficByDate.TrafficByHours.Add(trafficByHour);
                     generatingTime = generatingTime.AddHours(1);

@@ -12,7 +12,7 @@ public class HomePageViewModel
     public CourseBasicListViewModel Courses { get; set; }
     
     [Display(Name = DisplayNames.BusinessService)]
-    public BusinessServiceBasicListViewModel BusinessServices { get; set; }
+    public CatalogItemBasicListModel BusinessServices { get; set; }
     
     [Display(Name = DisplayNames.Product)]
     public ProductBasicListViewModel Products { get; set; }

@@ -16,57 +16,42 @@ public class AboutUsIntroductionService : IAboutUsIntroductionService
         _photoService = photoService;
     }
 
-    public async Task<ServiceResult<AboutUsIntroductionResponseDto>> GetAsync()
+    public async Task<AboutUsIntroductionResponseDto> GetAsync()
     {
-        AboutUsIntroductionResponseDto responseDto = await _context.AboutUsIntroductions
-            .Select(aui => new AboutUsIntroductionResponseDto
-            {
-                MainPhotoUrl = aui.MainPhotoUrl,
-                MainQuoteContent = aui.MainQuoteContent,
-                AboutUsContent = aui.AboutUsContent,
-                WhyChooseUsContent = aui.WhyChooseUsContent,
-                OurDifferenceContent = aui.OurDifferenceContent,
-                OurCultureContent = aui.OurCultureContent
-            }).SingleAsync();
-        return ServiceResult<AboutUsIntroductionResponseDto>.Success(responseDto);
+        return await _context.AboutUsIntroductions
+            .Select(aui => new AboutUsIntroductionResponseDto(aui))
+            .SingleAsync();
     }
 
-    public async Task<ServiceResult<AboutUsIntroductionResponseDto>> UpdateAsync(
+    public async Task<AboutUsIntroductionResponseDto> UpdateAsync(
             AboutUsIntroductionRequestDto requestDto)
     {
-        // Validate data from request
-        ValidationResult result = _validator.Validate(requestDto.TransformValues());
-        if (!result.IsValid)
-        {
-            return ServiceResult<AboutUsIntroductionResponseDto>.Failed(result.Errors);
-        }
-
-        // Fetch for the entity
+        // Fetch the entity from the database.
         AboutUsIntroduction introduction = await _context.AboutUsIntroductions.SingleAsync();
 
-        // Update photo when the request indicates that it has been changed
+        // Update photo when the request indicates that it has been changed.
+        string photoUrlToBeDeletedWhenSuccess = null;
+        string photoUrlToBeDeletedWhenFailure = null;
         if (requestDto.MainPhotoChanged)
         {
             // Delete the old photo if exists
-            if (introduction.MainPhotoUrl != null)
+            if (introduction.ThumbnailUrl != null)
             {
-                _photoService.Delete(introduction.MainPhotoUrl);
-                introduction.MainPhotoUrl = null;
+                _photoService.Delete(introduction.ThumbnailUrl);
+                introduction.ThumbnailUrl = null;
             }
 
-            // Create a new photo if the request contains the data for a new one
+            // Create a new photo if the request contains the data for a new one.
             if (requestDto.MainPhotoFile != null)
             {
-                ServiceResult<string> photoServiceResult;
-                photoServiceResult = await _photoService.CreateAsync(
+                introduction.ThumbnailUrl = await _photoService.CreateAsync(
                     requestDto.MainPhotoFile,
                     "about-us",
                     false);
-                introduction.MainPhotoUrl = photoServiceResult.ResponseDto;
             }
         }
 
-        // Update the other properties
+        // Update the other properties.
         introduction.MainQuoteContent = requestDto.MainQuoteContent;
         introduction.AboutUsContent = requestDto.AboutUsContent;
         introduction.WhyChooseUsContent = requestDto.WhyChooseUsContent;
@@ -74,13 +59,16 @@ public class AboutUsIntroductionService : IAboutUsIntroductionService
         introduction.OurCultureContent = requestDto.OurCultureContent;
 
         // Save changes
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
 
         // Return the data of the updated entity
         return ServiceResult<AboutUsIntroductionResponseDto>.Success(
             new AboutUsIntroductionResponseDto
             {
-                MainPhotoUrl = introduction.MainPhotoUrl,
+                ThumbnailUrl = introduction.ThumbnailUrl,
                 MainQuoteContent = introduction.MainQuoteContent,
                 AboutUsContent = introduction.AboutUsContent,
                 WhyChooseUsContent = introduction.WhyChooseUsContent,

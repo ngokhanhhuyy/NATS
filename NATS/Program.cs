@@ -106,7 +106,7 @@ builder.Services.AddScoped<IIntroductionItemService, IntroductionItemService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IIntroductionItemService, IntroductionItemService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
-builder.Services.AddScoped<IBusinessServiceService, BusinessServiceService>();
+builder.Services.AddScoped<ICatalogItemService, CatalogItemService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IHomePageSliderItemService, HomePageSliderItemService>();
 builder.Services.AddScoped<IPostService, PostService>();

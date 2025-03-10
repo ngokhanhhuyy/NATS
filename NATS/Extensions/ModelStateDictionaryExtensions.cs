@@ -1,18 +1,55 @@
 namespace NATS.Extensions;
 
-public static class ModelStateDictionaryExtension {
-    public static void AddModelErrorsFromServiceErrors(
+public static class ModelStateDictionaryExtensions
+{
+    public static void AddModelErrorsFromValidationErrors(
             this ModelStateDictionary modelState,
-            List<ServiceError> serviceErrors)
+            List<ValidationFailure> validationFailures)
     {
-        foreach (ModelStateEntry entry in modelState.Values) {
-            entry.Errors.Clear();
+        ClearModelState(modelState);
+        foreach (ValidationFailure failure in validationFailures)
+        {
+            modelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
         }
-        
-        foreach (ServiceError error in serviceErrors) {
-            modelState.AddModelError(
-                error.PropertyName ?? string.Empty,
-                error.ErrorMessage);
+    }
+
+    public static void AddModelErrorsFromServiceException(
+            this ModelStateDictionary modelState,
+            DuplicatedException exception)
+    {
+        ClearModelState(modelState);
+        modelState.AddModelError(exception.PropertyName, exception.Message);
+    }
+
+    public static void AddModelErrorsFromServiceException(
+            this ModelStateDictionary modelState,
+            ResourceNotFoundException exception)
+    {
+        ClearModelState(modelState);
+        modelState.AddModelError(exception.PropertyName ?? string.Empty, exception.Message);
+    }
+
+    public static void AddModelErrorsFromServiceException(
+            this ModelStateDictionary modelState,
+            OperationException exception)
+    {
+        ClearModelState(modelState);
+        modelState.AddModelError(exception.PropertyName ?? string.Empty, exception.Message);
+    }
+
+    public static void AddModelErrorsFromServiceException(
+            this ModelStateDictionary modelState,
+            ConcurrencyException exception)
+    {
+        ClearModelState(modelState);
+        modelState.AddModelError("", ErrorMessages.ConcurrencyConflict);
+    }
+
+    private static void ClearModelState(ModelStateDictionary modelState)
+    {
+        foreach (ModelStateEntry entry in modelState.Values)
+        {
+            entry.Errors.Clear();
         }
     }
 }

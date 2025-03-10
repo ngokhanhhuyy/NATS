@@ -21,7 +21,7 @@ public class BusinessCertificateService : IBusinessCertificateService
     public async Task<ServiceResult<List<BusinessCertificateResponseDto>>> GetListAsync()
     {
         List<BusinessCertificateResponseDto> responseDtos;
-        responseDtos = await _context.BusinessCertificates
+        responseDtos = await _context.Certificates
             .OrderBy(bc => bc.Id)
             .Select(bc => new BusinessCertificateResponseDto
             {
@@ -35,8 +35,8 @@ public class BusinessCertificateService : IBusinessCertificateService
     public async Task<ServiceResult<BusinessCertificateResponseDto>> GetAsync(int id)
     {
         // Fetch for the entity by id
-        BusinessCertificate certificate;
-        certificate = await _context.BusinessCertificates
+        Certificate certificate;
+        certificate = await _context.Certificates
             .SingleOrDefaultAsync(c => c.Id == id);
 
         // Ensure the entity exists in the database
@@ -44,7 +44,7 @@ public class BusinessCertificateService : IBusinessCertificateService
         {
             return ServiceResult<BusinessCertificateResponseDto>.Failed(
                 ServiceError.NotAvailableByProperty(
-                    nameof(BusinessCertificate),
+                    nameof(Certificate),
                     nameof(id),
                     id.ToString()));
         }
@@ -83,12 +83,12 @@ public class BusinessCertificateService : IBusinessCertificateService
         }
 
         // Initialize business certificate entity
-        BusinessCertificate certificate = new BusinessCertificate
+        Certificate certificate = new Certificate
         {
             Name = requestDto.Name,
             PhotoUrl = photoUrl
         };
-        _context.BusinessCertificates.Add(certificate);
+        _context.Certificates.Add(certificate);
         await _context.SaveChangesAsync();
 
         // Returning the data of the created entity
@@ -115,13 +115,13 @@ public class BusinessCertificateService : IBusinessCertificateService
         }
 
         // Ensure the entity exists in the database
-        BusinessCertificate certificate;
-        certificate = await _context.BusinessCertificates.SingleOrDefaultAsync(c => c.Id == id);
+        Certificate certificate;
+        certificate = await _context.Certificates.SingleOrDefaultAsync(c => c.Id == id);
         if (certificate == null)
         {
             return ServiceResult<BusinessCertificateResponseDto>.Failed(
                 ServiceError.NotFoundByProperty(
-                    nameof(BusinessCertificate),
+                    nameof(Certificate),
                     nameof(id),
                     id.ToString()));
         }
@@ -164,14 +164,14 @@ public class BusinessCertificateService : IBusinessCertificateService
     public async Task<ServiceResult<int>> DeleteAsync(int id)
     {
         // Ensure the entity exists in the database
-        BusinessCertificate certificate;
-        certificate = await _context.BusinessCertificates
+        Certificate certificate;
+        certificate = await _context.Certificates
             .SingleOrDefaultAsync(c => c.Id == id);
         if (certificate == null)
         {
             return ServiceResult<int>.Failed(
                 ServiceError.NotFoundByProperty(
-                    nameof(BusinessCertificate),
+                    nameof(Certificate),
                     nameof(id),
                     id.ToString()));
         }
@@ -179,7 +179,7 @@ public class BusinessCertificateService : IBusinessCertificateService
         _photoService.Delete(certificate.PhotoUrl);
         
         // Delete the entity from the database
-        _context.BusinessCertificates.Remove(certificate);
+        _context.Certificates.Remove(certificate);
 
         // Save changes
         await _context.SaveChangesAsync();

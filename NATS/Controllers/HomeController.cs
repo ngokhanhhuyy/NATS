@@ -9,7 +9,7 @@ public class HomeController : Controller
     private readonly IBusinessCertificateService _businessCertificateService;
     private readonly IIntroductionItemService _introductionItemService;
     private readonly ICourseService _courseService;
-    private readonly IBusinessServiceService _businessServiceService;
+    private readonly ICatalogItemService _businessServiceService;
     private readonly IProductService _productService;
     private readonly IPostService _postService;
     private readonly IEnquiryService _enquiryService;
@@ -22,7 +22,7 @@ public class HomeController : Controller
             IBusinessCertificateService businessCertificateService,
             IIntroductionItemService introductionItemService,
             ICourseService courseService,
-            IBusinessServiceService businessServiceService,
+            ICatalogItemService businessServiceService,
             IProductService productService,
             IPostService postService,
             IEnquiryService enquiryService,
@@ -57,8 +57,8 @@ public class HomeController : Controller
         courseServiceResult = await _courseService.GetBasicListAsync();
         
         // Fetch service list
-        ServiceResult<List<BusinessServiceBasicResponseDto>> businessServiceServiceResult;
-        businessServiceServiceResult = await _businessServiceService.GetBasicListAsync();
+        ServiceResult<List<CatalogItemBasicResponseDto>> businessServiceServiceResult;
+        businessServiceServiceResult = await _businessServiceService.GetListAsync();
 
         // Fetch product list
         ServiceResult<List<ProductBasicResponseDto>> productServiceResult;
@@ -99,7 +99,7 @@ public class HomeController : Controller
                         ThumbnailUrl = bs.ThumbnailUrl
                     }).ToList()
             },
-            BusinessServices = new BusinessServiceBasicListViewModel
+            BusinessServices = new CatalogItemBasicListModel
             {
                 Items = businessServiceServiceResult.ResponseDto
                     .Select(bs => new BusinessServiceBasicViewModel
@@ -231,7 +231,7 @@ public class HomeController : Controller
     [HttpGet("dich-vu")]
     public async Task<IActionResult> BusinessServiceList()
     {
-        ServiceResult<List<BusinessServiceDetailResponseDto>> serviceResult;
+        ServiceResult<List<CatalogItemDetailResponseDto>> serviceResult;
         serviceResult = await _businessServiceService.GetDetailListAsync();
 
         BusinessServiceDetailListViewModel model = new BusinessServiceDetailListViewModel

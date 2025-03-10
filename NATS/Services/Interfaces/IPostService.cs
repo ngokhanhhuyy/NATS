@@ -17,11 +17,11 @@ public interface IPostService
     Task<ServiceResult<PostListStatisticsResponseDto>> GetStatisticsAsync();
 
     Task<ServiceResult<PostDetailResponseDto>> CreateAsync(
-        PostDetailRequestDto requestDto);
+        PostUpsertRequestDto requestDto);
 
     Task<ServiceResult<PostDetailResponseDto>> UpdateAsync(
         int id,
-        PostDetailRequestDto requestDto);
+        PostUpsertRequestDto requestDto);
     
     Task<ServiceResult<int>> DeleteAsync(int id);
 }
