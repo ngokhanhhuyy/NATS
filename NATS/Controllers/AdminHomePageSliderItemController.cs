@@ -3,9 +3,9 @@ namespace NATS.Controllers;
 [Route("quan-tri/noi-dung/trinh-chieu-anh")]
 public class AdminHomePageSliderItemController : Controller
 {
-    private readonly IHomePageSliderItemService _service;
+    private readonly ISliderItemService _service;
 
-    public AdminHomePageSliderItemController(IHomePageSliderItemService service)
+    public AdminHomePageSliderItemController(ISliderItemService service)
     {
         _service = service;
     }

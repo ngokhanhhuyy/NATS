@@ -1,6 +1,6 @@
 namespace NATS.Services.Entities;
 
-public class AboutUsIntroduction
+public class AboutUsIntroduction : IHasThumbnailEntity
 {
     [Column("id")]
     [Key]

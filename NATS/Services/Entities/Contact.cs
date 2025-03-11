@@ -1,6 +1,6 @@
 ﻿namespace NATS.Services.Entities;
 
-public class Contact
+public class Contact : IEntity
 {
     [Column("id")]
     [Key]

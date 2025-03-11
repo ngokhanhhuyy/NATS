@@ -18,15 +18,15 @@ public abstract class AbstractHasThumbnailService<TEntity, TUpsertRequestDto>
             IHasThumbnailUpsertRequestDto<TUpsertRequestDto>,
             new()
 {
-    private readonly IPhotoService _photoService;
-    private List<string> _photoUrlsToBeDeletedWhenSuccess;
-    private List<string> _photoUrlsToBeDeletedWhenFailure;
+    protected IPhotoService PhotoService { get; init; }
+    protected List<string> PhotoUrlsToBeDeletedWhenSuccess { get; init; } = new List<string>();
+    protected List<string> PhotoUrlsToBeDeletedWhenFailure { get; init; } = new List<string>();
 
     protected AbstractHasThumbnailService(
             DatabaseContext context,
             IPhotoService photoService) : base(context)
     {
-        _photoService = photoService;
+        PhotoService = photoService;
     }
 
     /// <inheritdoc/>
@@ -38,9 +38,8 @@ public abstract class AbstractHasThumbnailService<TEntity, TUpsertRequestDto>
         if (requestDto.ThumbnailFile != null)
         {
             byte[] thumbnailFile = requestDto.ThumbnailFile;
-            entity.ThumbnailUrl = await _photoService.CreateAsync(thumbnailFile, true);
-            _photoUrlsToBeDeletedWhenFailure ??= new List<string>();
-            _photoUrlsToBeDeletedWhenFailure.Add(entity.ThumbnailUrl);
+            entity.ThumbnailUrl = await PhotoService.CreateAsync(thumbnailFile, true);
+            PhotoUrlsToBeDeletedWhenFailure.Add(entity.ThumbnailUrl);
         }
 
         return await base.SaveCreatedEntityAsync(entity, requestDto);
@@ -57,17 +56,15 @@ public abstract class AbstractHasThumbnailService<TEntity, TUpsertRequestDto>
             if (entity.ThumbnailUrl != null)
             {
                 entity.ThumbnailUrl = null;
-                _photoUrlsToBeDeletedWhenSuccess ??= new List<string>();
-                _photoUrlsToBeDeletedWhenSuccess.Add(entity.ThumbnailUrl);
+                PhotoUrlsToBeDeletedWhenSuccess.Add(entity.ThumbnailUrl);
             }
 
             // Create new photo if it's data is included in the request.
             if (requestDto.ThumbnailFile != null)
             {
                 byte[] thumbnailFile = requestDto.ThumbnailFile;
-                entity.ThumbnailUrl = await _photoService.CreateAsync(thumbnailFile, true);
-                _photoUrlsToBeDeletedWhenFailure ??= new List<string>();
-                _photoUrlsToBeDeletedWhenFailure.Add(entity.ThumbnailUrl);
+                entity.ThumbnailUrl = await PhotoService.CreateAsync(thumbnailFile, true);
+                PhotoUrlsToBeDeletedWhenFailure.Add(entity.ThumbnailUrl);
             }
         }
     }
@@ -75,7 +72,8 @@ public abstract class AbstractHasThumbnailService<TEntity, TUpsertRequestDto>
     /// <inheritdoc/>
     protected override async Task SaveDeletedEntityAsync(TEntity entity)
     {
-        GetRepository(_context).Remove(entity);
+        PhotoUrlsToBeDeletedWhenSuccess.Add(entity.ThumbnailUrl);
+        GetRepository(Context).Remove(entity);
 
         await base.SaveDeletedEntityAsync(entity);
     }
@@ -83,11 +81,11 @@ public abstract class AbstractHasThumbnailService<TEntity, TUpsertRequestDto>
     /// <inheritdoc/>
     protected override void HandleSuccessfulOperation()
     {
-        if (_photoUrlsToBeDeletedWhenSuccess != null)
+        if (PhotoUrlsToBeDeletedWhenSuccess != null)
         {
-            foreach (string url in _photoUrlsToBeDeletedWhenSuccess)
+            foreach (string url in PhotoUrlsToBeDeletedWhenSuccess)
             {
-                _photoService.Delete(url);
+                PhotoService.Delete(url);
             }
         }
 
@@ -97,11 +95,11 @@ public abstract class AbstractHasThumbnailService<TEntity, TUpsertRequestDto>
     /// <inheritdoc/>
     protected override void HandleFailedOperation()
     {
-        if (_photoUrlsToBeDeletedWhenFailure != null)
+        if (PhotoUrlsToBeDeletedWhenFailure != null)
         {
-            foreach (string url in _photoUrlsToBeDeletedWhenFailure)
+            foreach (string url in PhotoUrlsToBeDeletedWhenFailure)
             {
-                _photoService.Delete(url);
+                PhotoService.Delete(url);
             }
         }
 

@@ -248,7 +248,7 @@ public sealed class DataInitializer
             Certificate certificate = new Certificate
             {
                 Name = "Quyết định Thành lập",
-                PhotoUrl = "/images/front-pages/certificates/1.jpg"
+                ThumbnailUrl = "/images/front-pages/certificates/1.jpg"
             };
             _context.Certificates.Add(certificate);
             _context.SaveChangesAsync();
@@ -535,7 +535,7 @@ public sealed class DataInitializer
             {
                 SliderItem item = new SliderItem
                 {
-                    PhotoUrl = photoUrls[i],
+                    ThumbnailUrl = photoUrls[i],
                     Index = i
                 };
                 _context.SliderItems.Add(item);

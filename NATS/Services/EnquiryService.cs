@@ -14,7 +14,7 @@ public class EnquiryService
     /// <inheritdoc/>
     public async Task<List<EnquiryResponseDto>> GetListAsync()
     {
-        return await _context.Enquiries
+        return await Context.Enquiries
             .Select(e => new EnquiryResponseDto(e))
             .ToListAsync();
     }
@@ -22,7 +22,7 @@ public class EnquiryService
     /// <inheritdoc/>
     public async Task<EnquiryResponseDto> GetSingleAsync(int id)
     {
-        return await _context.Enquiries
+        return await Context.Enquiries
             .Where(e => e.Id == id)
             .Select(e => new EnquiryResponseDto(e))
             .SingleOrDefaultAsync()
@@ -32,7 +32,7 @@ public class EnquiryService
     /// <inheritdoc/>
     public async Task<int> GetIncompletedCountAsync()
     {
-        return await _context.Enquiries.CountAsync(e => !e.IsCompleted);
+        return await Context.Enquiries.CountAsync(e => !e.IsCompleted);
     }
     
     /// <inheritdoc/>
@@ -53,12 +53,12 @@ public class EnquiryService
     public async Task MarkAsCompletedAsync(int id)
     {
         // Use transaction for atomic operations.
-        await using IDbContextTransaction transaction = await _context
+        await using IDbContextTransaction transaction = await Context
             .Database
             .BeginTransactionAsync();
         
         // Perform the update operation on the entity with given id.
-        int affectedEntities = await _context.Enquiries
+        int affectedEntities = await Context.Enquiries
             .Where(e => e.Id == id)
             .ExecuteUpdateAsync(setters => setters.SetProperty(e => e.IsCompleted, true));
         
@@ -73,7 +73,7 @@ public class EnquiryService
     }
 
     /// <inheritdoc/>
-    protected override DbSet<Enquiry> GetRepository(DatabaseContext context)
+    protected override sealed DbSet<Enquiry> GetRepository(DatabaseContext context)
     {
         return context.Enquiries;
     }

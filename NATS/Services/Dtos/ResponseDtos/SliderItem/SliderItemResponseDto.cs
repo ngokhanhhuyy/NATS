@@ -11,7 +11,7 @@ public class SliderItemResponseDto
     {
         Id = sliderItem.Id;
         Title = sliderItem.Title;
-        PhotoUrl = sliderItem.PhotoUrl;
+        PhotoUrl = sliderItem.ThumbnailUrl;
         Index = sliderItem.Index;
     }
 }

@@ -1,27 +1,21 @@
-using NATS.Services.Exceptions;
-
 namespace NATS.Services;
 
-public class CatalogItemService : ICatalogItemService
+/// <inheritdoc cref="IMemberService" />
+public class CatalogItemService
+        :
+            AbstractHasThumbnailService<CatalogItem, CatalogItemUpsertRequestDto>,
+            ICatalogItemService
 {
-    private readonly DatabaseContext _context;
-    private readonly IValidator<CatalogItemUpsertRequestDto> _validator;
-    private readonly IPhotoService _photoService;
-
     public CatalogItemService(
             DatabaseContext context,
-            IValidator<CatalogItemUpsertRequestDto> validator,
-            IPhotoService photoService)
+            IPhotoService photoService) : base(context, photoService)
     {
-        _context = context;
-        _validator = validator;
-        _photoService = photoService;
     }
 
     /// <inheritdoc />
     public async Task<List<CatalogItemBasicResponseDto>> GetListAsync(CatalogItemType type)
     {
-        return await _context.CatalogItems
+        return await Context.CatalogItems
             .OrderBy(ci => ci.Id)
             .Where(ci => ci.Type == type)
             .Select(ci => new CatalogItemBasicResponseDto(ci))
@@ -31,7 +25,7 @@ public class CatalogItemService : ICatalogItemService
     /// <inheritdoc />
     public async Task<CatalogItemDetailResponseDto> GetDetailAsync(int id)
     {
-        return await _context.CatalogItems
+        return await Context.CatalogItems
             .Include(bs => bs.Photos)
             .Select(bs => new CatalogItemDetailResponseDto(bs))
             .SingleOrDefaultAsync(bs => bs.Id == id)
@@ -42,7 +36,7 @@ public class CatalogItemService : ICatalogItemService
     public async Task<int> CreateAsync(CatalogItemUpsertRequestDto requestDto)
     {
         // Using transaction for atomic operations.
-        await using IDbContextTransaction transaction = await _context.Database
+        await using IDbContextTransaction transaction = await Context.Database
             .BeginTransactionAsync();
 
         // Initialize the entity.
@@ -54,17 +48,6 @@ public class CatalogItemService : ICatalogItemService
             Photos = new List<CatalogItemPhoto>()
         };
 
-        _context.CatalogItems.Add(catalogItem);
-
-        // Create new thumbnail if the request contains the data for it.
-        if (requestDto.ThumbnailFile != null)
-        {
-            catalogItem.ThumbnailUrl = await _photoService.CreateAsync(
-                requestDto.ThumbnailFile,
-                "catalogItems",
-                true);
-        }
-
         // Create photos.
         if (requestDto.Photos != null)
         {
@@ -72,60 +55,38 @@ public class CatalogItemService : ICatalogItemService
             {
                 CatalogItemPhoto photo = new CatalogItemPhoto
                 {
-                    Url = await _photoService.CreateAsync(
-                        photoRequestDto.File,
-                        "services",
-                        false)
+                    Url = await PhotoService.CreateAsync(photoRequestDto.File, false)
                 };
 
                 catalogItem.Photos.Add(photo);
+                PhotoUrlsToBeDeletedWhenFailure.Add(photo.Url);
             }
+        }
+
+        // Create new thumbnail if the request contains the data for it.
+        if (requestDto.ThumbnailFile != null)
+        {
+            byte[] thumbnailFile = requestDto.ThumbnailFile;
+            catalogItem.ThumbnailUrl = await PhotoService.CreateAsync(thumbnailFile, true);
+            PhotoUrlsToBeDeletedWhenFailure.Add(catalogItem.ThumbnailUrl);
         }
 
         // Save changes.
-        try
-        {
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
+        int createdId = await base.SaveCreatedEntityAsync(catalogItem, requestDto);
+        await transaction.CommitAsync();
 
-            return catalogItem.Id;
-        }
-        catch (DbUpdateException exception)
-        {
-            // Delete the recently created thumbnail if existing.
-            if (catalogItem.ThumbnailUrl != null)
-            {
-                _photoService.Delete(catalogItem.ThumbnailUrl);
-            }
-
-            // Delete the recently created photos if exsting.
-            if (catalogItem.Photos?.Count > 0)
-            {
-                foreach (CatalogItemPhoto photo in catalogItem.Photos)
-                {
-                    _photoService.Delete(photo.Url);
-                }
-            }
-            
-            // Handle the concurrency-related operation.
-            if (exception is DbUpdateConcurrencyException)
-            {
-                throw new ConcurrencyException();
-            }
-
-            throw;
-        }
+        return createdId;
     }
 
     /// <inheritdoc />
     public async Task UpdateAsync(int id, CatalogItemUpsertRequestDto requestDto)
     {
         // Use transaction for atomic operations.
-        await using IDbContextTransaction transaction = await _context.Database
+        await using IDbContextTransaction transaction = await Context.Database
             .BeginTransactionAsync();
 
         // Fetch the entity in the database.
-        CatalogItem catalogItem = await _context.CatalogItems
+        CatalogItem catalogItem = await Context.CatalogItems
             .Include(bs => bs.Photos)
             .SingleOrDefaultAsync(bs => bs.Id == id)
             ?? throw new ResourceNotFoundException();
@@ -134,31 +95,6 @@ public class CatalogItemService : ICatalogItemService
         catalogItem.Name = requestDto.Name;
         catalogItem.Summary = requestDto.Summary;
         catalogItem.Detail = requestDto.Detail;
-
-        // Prepare lists of urls to be deleted later when the operation succeeds or fails.
-        List<string> urlsToBeDeletedWhenFailure = new List<string>();
-        List<string> urlsToBeDeletedWhenSuccess = new List<string>();
-
-        // Replace the thumbnail with a new one if it has been changed.
-        if (requestDto.ThumbnailChanged)
-        {
-            // Delete the old thumbnail with the URL stored in the entity property if exists
-            if (catalogItem.ThumbnailUrl != null)
-            {
-                urlsToBeDeletedWhenSuccess.Add(catalogItem.ThumbnailUrl);
-                catalogItem.ThumbnailUrl = null;
-            }
-
-            // Add a new thumbnail if the request contains it
-            if (requestDto.ThumbnailFile != null)
-            {
-                catalogItem.ThumbnailUrl = await _photoService.CreateAsync(
-                    requestDto.ThumbnailFile,
-                    "courses",
-                    true);
-                urlsToBeDeletedWhenFailure.Add(catalogItem.ThumbnailUrl);
-            }
-        }
         
         // Update photos.
         if (requestDto.Photos != null)
@@ -188,7 +124,7 @@ public class CatalogItemService : ICatalogItemService
                     if (photoRequestDto.IsDeleted)
                     {
                         // Mark the url to be deleted later when the transaction succeeds.
-                        urlsToBeDeletedWhenSuccess.Add(photo.Url);
+                        PhotoUrlsToBeDeletedWhenSuccess.Add(photo.Url);
                         catalogItem.Photos.Remove(photo);
                         continue;
                     }
@@ -198,56 +134,28 @@ public class CatalogItemService : ICatalogItemService
                     // Create new photo if the request doesn't have id.
                     photo = new CatalogItemPhoto
                     {
-                        Url = await _photoService.CreateAsync(
-                            photoRequestDto.File,
-                            "courses",
-                            false),
+                        Url = await PhotoService.CreateAsync(photoRequestDto.File, false),
                         ItemId = catalogItem.Id
                     };
 
-                    _context.CatalogItemPhotos.Add(photo);
-                    
+                    Context.CatalogItemPhotos.Add(photo);
+
                     // Mark the created photo to be deleted later if the transaction fails.
-                    urlsToBeDeletedWhenFailure.Add(photo.Url);
+                    PhotoUrlsToBeDeletedWhenFailure.Add(photo.Url);
                 }
             }
         }
 
         // Save changes.
-        try
-        {
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
-            // The operation succeeded, delete the photos marked to be deleted.
-            foreach (string url in urlsToBeDeletedWhenSuccess)
-            {
-                _photoService.Delete(url);
-            }
-        }
-        catch (DbUpdateException exception)
-        {
-            // Delete the recently added thumbnail and photos.
-            foreach (string url in urlsToBeDeletedWhenFailure)
-            {
-                _photoService.Delete(url);
-            }
-            
-            // Handle the concurrency-related operation.
-            if (exception is DbUpdateConcurrencyException)
-            {
-                throw new ConcurrencyException();
-            }
-
-            throw;
-        }
+        await base.SaveUpdatedEntityAsync(catalogItem, requestDto);
+        await transaction.CommitAsync();
     }
 
     /// <inheritdoc />
     public async Task DeleteAsync(int id)
     {
         // Fetch the entity with the given id from the database and ensure it exists.
-        CatalogItem catalogItem = await _context.CatalogItems
+        CatalogItem catalogItem = await Context.CatalogItems
             .Include(bs => bs.Photos)
             .SingleOrDefaultAsync(bs => bs.Id == id)
             ?? throw new ResourceNotFoundException(
@@ -255,35 +163,19 @@ public class CatalogItemService : ICatalogItemService
                 nameof(id),
                 id.ToString());
 
-        // Delete the entity.
-        _context.CatalogItems.Remove(catalogItem);
-
         // Delete all photos.
         foreach (CatalogItemPhoto photo in catalogItem.Photos)
         {
-            _context.CatalogItemPhotos.Remove(photo);
+            Context.CatalogItemPhotos.Remove(photo);
+            PhotoUrlsToBeDeletedWhenSuccess.Add(photo.Url);
         }
 
-        // Save changes.
-        try
-        {
-            await _context.SaveChangesAsync();
+        await base.SaveDeletedEntityAsync(catalogItem);
+    }
 
-            // The entities are deleted successfully, remove the photo files.
-            foreach (CatalogItemPhoto photo in catalogItem.Photos)
-            {
-                _photoService.Delete(photo.Url);
-            }
-        }
-        catch (DbUpdateException exception)
-        {
-            // Handle the concurrency-related exception.
-            if (exception is DbUpdateConcurrencyException)
-            {
-                throw new ConcurrencyException();
-            }
-
-            throw;
-        }
+    /// <inheritdoc />
+    protected override sealed DbSet<CatalogItem> GetRepository(DatabaseContext context)
+    {
+        return context.CatalogItems;
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace NATS.Services.Validations.Validators;
 
-public class IntroductionItemValidator : Validator<SummaryItemUpsertRequestDto>
+public class SummaryItemUpsertValidator : Validator<SummaryItemUpsertRequestDto>
 {
-    public IntroductionItemValidator()
+    public SummaryItemUpsertValidator()
     {
         RuleFor(dto => dto.Name)
             .NotEmpty()

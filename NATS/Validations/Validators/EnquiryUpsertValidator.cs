@@ -1,11 +1,11 @@
 namespace NATS.Services.Validations.Validators;
 
-public class EnquiryValidator : Validator<EnquiryUpsertRequestDto>
+public class EnquiryUpsertValidator : Validator<EnquiryUpsertRequestDto>
 {
     private const string phoneNumberRegex = @"^[^\-+][\d\-+]+$";
     private const string emailRegex = @"^\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b$";
     
-    public EnquiryValidator()
+    public EnquiryUpsertValidator()
     {
         RuleFor(dto => dto.FullName)
             .NotEmpty()

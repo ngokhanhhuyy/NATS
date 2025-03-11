@@ -1,56 +1,42 @@
 ﻿namespace NATS.Services;
 
-/// <inheritdoc />
-public class GeneralSettingsService : IGeneralSettingsService
+/// <inheritdoc cref="IGeneralSettingsService" />
+public class GeneralSettingsService
+    :
+        AbstractUpsertableService<GeneralSettings, GeneralSettingsUpsertRequestDto>,
+        IGeneralSettingsService
 {
-    private readonly DatabaseContext _context;
-
-    public GeneralSettingsService(
-            DatabaseContext context,
-            IValidator<GeneralSettingsRequestDto> validator)
+    /// <inheritdoc />
+    public GeneralSettingsService(DatabaseContext context) : base(context)
     {
-        _context = context;
-        _validator = validator;
     }
 
+    /// <inheritdoc />
     public async Task<GeneralSettingsResponseDto> GetAsync()
     {
-        GeneralSettingsResponseDto responseDto = await _context.GeneralSettings
-            .Select(gs => new GeneralSettingsResponseDto
-            {
-                ApplicationName = gs.ApplicationName,
-                ApplicationShortName = gs.ApplicationShortName,
-                FavIconUrl = gs.FavIconUrl,
-                UnderMaintainance = gs.UnderMaintainance
-            }).SingleAsync();
-        return<GeneralSettingsResponseDto>.Success(responseDto);
+        return await Context.GeneralSettings
+            .Select(gs => new GeneralSettingsResponseDto(gs))
+            .SingleAsync();
     }
 
-    public async Task<ServiceResult<GeneralSettingsResponseDto>> UpdateAsync(
-            GeneralSettingsRequestDto requestDto)
+    /// <inheritdoc />
+    public async Task UpdateAsync(GeneralSettingsUpsertRequestDto requestDto)
     {
-        // Validate data from request
-        requestDto = requestDto.TransformValues();
-        ValidationResult validationResult = _validator.Validate(requestDto);
-        if (!validationResult.IsValid)
-        {
-            return ServiceResult<GeneralSettingsResponseDto>.Failed(validationResult.Errors);
-        }
+        // Fetching the entity from the database.
+        GeneralSettings settings = await Context.GeneralSettings.SingleAsync();
 
-        // Fetching for the entity
-        GeneralSettings settings = await _context.GeneralSettings.SingleAsync();
-
+        // Update the entity's properties.
         settings.ApplicationName = requestDto.ApplicationName;
         settings.ApplicationShortName = requestDto.ApplicationShortName;
         settings.UnderMaintainance = requestDto.UnderMaintainance;
-        await _context.SaveChangesAsync();
 
-        return ServiceResult<GeneralSettingsResponseDto>.Success(new GeneralSettingsResponseDto
-        {
-            ApplicationName = settings.ApplicationName,
-            ApplicationShortName = settings.ApplicationShortName,
-            FavIconUrl = settings.FavIconUrl,
-            UnderMaintainance = settings.UnderMaintainance
-        });
+        // Save changes.
+        await base.SaveUpdatedEntityAsync(settings, requestDto);
+    }
+
+    /// <inheritdoc />
+    protected sealed override DbSet<GeneralSettings> GetRepository(DatabaseContext context)
+    {
+        return context.GeneralSettings;
     }
 }

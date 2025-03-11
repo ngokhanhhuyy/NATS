@@ -6,4 +6,12 @@ public class GeneralSettingsResponseDto
     public string ApplicationShortName { get; set; }
     public string FavIconUrl { get; set; }
     public bool UnderMaintainance { get; set; }
+
+    public GeneralSettingsResponseDto(GeneralSettings settings)
+    {
+        ApplicationName = settings.ApplicationName;
+        ApplicationShortName = settings.ApplicationShortName;
+        FavIconUrl = settings.FavIconUrl;
+        UnderMaintainance = UnderMaintainance;
+    }
 }

@@ -10,6 +10,6 @@ public class CertificateResponseDto
     {
         Id = certificate.Id;
         Name = certificate.Name;
-        PhotoUrl = certificate.PhotoUrl;
+        PhotoUrl = certificate.ThumbnailUrl;
     }
 }

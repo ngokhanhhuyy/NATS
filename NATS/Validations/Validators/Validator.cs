@@ -31,7 +31,7 @@ public class Validator<TRequestDto> : AbstractValidator<TRequestDto>
     protected virtual bool ValidIdCardNumber(string value) {
         if (value != null) {
             Regex regex = new Regex(@"[0-9]");
-            return regex.Matches(value).Any();
+            return regex.Matches(value).Count > 0;
         }
         return true;
     }

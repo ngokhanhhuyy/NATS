@@ -1,6 +1,7 @@
 ﻿namespace NATS.Services.Dtos.RequestDtos;
 
-public class SummaryItemUpsertRequestDto : IRequestDto<SummaryItemUpsertRequestDto>
+public class SummaryItemUpsertRequestDto
+    : IHasThumbnailUpsertRequestDto<SummaryItemUpsertRequestDto>
 {
     public string Name { get; set; }
     public string Summary { get; set; }

@@ -3,7 +3,7 @@ namespace NATS.Services.Interfaces;
 /// <summary>
 /// A service to handle the operations which are related to slider items.
 /// </summary>
-public interface IHomePageSliderItemService
+public interface ISliderItemService
 {
     /// <summary>
     /// Gets a list of all slider items.

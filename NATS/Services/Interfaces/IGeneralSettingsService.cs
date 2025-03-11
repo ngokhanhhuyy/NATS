@@ -23,5 +23,8 @@ public interface IGeneralSettingsService
     /// <returns>
     /// A <see cref="Task{T}"/> representing the asynchronous operation.
     /// </returns>
-    Task UpdateAsync(GeneralSettingsRequestDto requestDto);
+    /// <exception cref="ConcurrencyException">
+    /// Throws when there is a concurrency-related conflict occuring during the operation.
+    /// </exception>
+    Task UpdateAsync(GeneralSettingsUpsertRequestDto requestDto);
 }

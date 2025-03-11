@@ -1,6 +1,6 @@
 namespace NATS.Services.Entities;
 
-public class SliderItem
+public class SliderItem : IHasThumbnailEntity
 {
     [Column("id")]
     [Key]
@@ -10,9 +10,9 @@ public class SliderItem
     [StringLength(100)]
     public string Title { get; set; }
 
-    [Column("photo_url")]
+    [Column("thumbnail_url")]
     [StringLength(255)]
-    public string PhotoUrl { get; set; }
+    public string ThumbnailUrl { get; set; }
 
     [Column("index")]
     [Required]

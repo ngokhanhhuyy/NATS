@@ -1,6 +1,7 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class CatalogItemUpsertRequestDto : IRequestDto<CatalogItemUpsertRequestDto>
+public class CatalogItemUpsertRequestDto
+        : IHasThumbnailUpsertRequestDto<CatalogItemUpsertRequestDto>
 {
     public string Name { get; set; }
     public string Summary { get; set; }

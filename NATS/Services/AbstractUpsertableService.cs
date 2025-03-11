@@ -15,11 +15,11 @@ public abstract class AbstractUpsertableService<TEntity, TUpsertRequestDto>
         where TEntity : class, IEntity, new()
         where TUpsertRequestDto : class, IRequestDto<TUpsertRequestDto>, new()
 {
-    protected readonly DatabaseContext _context;
+    protected DatabaseContext Context { get; init; }
 
     protected AbstractUpsertableService(DatabaseContext context)
     {
-        _context = context;
+        Context = context;
     }
 
     /// <summary>
@@ -42,12 +42,12 @@ public abstract class AbstractUpsertableService<TEntity, TUpsertRequestDto>
             TUpsertRequestDto requestDto)
     {
         // Add the entity into the database.
-        GetRepository(_context).Add(entity);
+        GetRepository(Context).Add(entity);
 
         // Save changes.
         try
         {
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
             // The operation is success, execute the handling logic for successful screnario.
             HandleSuccessfulOperation();
@@ -88,7 +88,7 @@ public abstract class AbstractUpsertableService<TEntity, TUpsertRequestDto>
         // Save changes.
         try
         {
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
             // The operation is successful, execute the logic for successful screnario.
             HandleSuccessfulOperation();
@@ -128,12 +128,12 @@ public abstract class AbstractUpsertableService<TEntity, TUpsertRequestDto>
     protected virtual async Task SaveDeletedEntityAsync(TEntity entity)
     {
         // Performing the deleting operation.
-        GetRepository(_context).Remove(entity);
+        GetRepository(Context).Remove(entity);
 
         // Save changes.
         try
         {
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
 
             // The operation is successful, execute the logic for successful screnario.
             HandleSuccessfulOperation();
@@ -165,6 +165,21 @@ public abstract class AbstractUpsertableService<TEntity, TUpsertRequestDto>
     /// representing the repository.
     /// </returns>
     protected abstract DbSet<TEntity> GetRepository(DatabaseContext context);
+
+    /// <summary>
+    /// Generates an instance of the <see cref="ResourceNotFoundException"/> class, which
+    /// contains the error message based on the specified id.
+    /// </summary>
+    /// <param name="id">
+    /// The id of the resource.
+    /// </param>
+    /// <returns>
+    /// An instance of the <see cref="ResourceNotFoundException"/> class.
+    /// </returns>
+    protected ResourceNotFoundException GetResourceNotFoundExceptionById(int id)
+    {
+        return new ResourceNotFoundException(typeof(TEntity).Name, nameof(id), id.ToString());
+    }
 
     /// <summary>
     /// Provides logic which is executed after a creating or updating operation is successful.

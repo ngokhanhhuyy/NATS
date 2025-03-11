@@ -3,11 +3,11 @@
 [AllowAnonymous]
 public class HomeController : Controller
 {
-    private readonly IHomePageSliderItemService _homePageSliderItemService;
+    private readonly ISliderItemService _homePageSliderItemService;
     private readonly IAboutUsIntroductionService _aboutUsIntroductionService;
     private readonly IMemberService _iTeamMemberService;
     private readonly ICertificateService _iCertificateService;
-    private readonly IIntroductionItemService _introductionItemService;
+    private readonly ISummaryItemService _introductionItemService;
     private readonly ICourseService _courseService;
     private readonly ICatalogItemService _businessServiceService;
     private readonly IProductService _productService;
@@ -16,11 +16,11 @@ public class HomeController : Controller
     private readonly IContactService _iContactService;
 
     public HomeController(
-            IHomePageSliderItemService homePageSliderItemService,
+            ISliderItemService homePageSliderItemService,
             IAboutUsIntroductionService aboutUsIntroductionService,
             IMemberService iTeamMemberService,
             ICertificateService iCertificateService,
-            IIntroductionItemService introductionItemService,
+            ISummaryItemService introductionItemService,
             ICourseService courseService,
             ICatalogItemService businessServiceService,
             IProductService productService,
@@ -49,7 +49,7 @@ public class HomeController : Controller
         _homePageSliderItemServiceResult = await _homePageSliderItemService.GetListAsync();
 
         // Fetch course introduction item list
-        ServiceResult<List<IntroductionItemResponseDto>> _introductionItemServiceResult;
+        ServiceResult<List<SummaryItemResponseDto>> _introductionItemServiceResult;
         _introductionItemServiceResult = await _introductionItemService.GetListAsync();
         
         // Fetch course list
@@ -176,7 +176,7 @@ public class HomeController : Controller
     [HttpGet("gioi-thieu")]
     public async Task<IActionResult> IntroductionList()
     {
-        ServiceResult<List<IntroductionItemResponseDto>> serviceResult;
+        ServiceResult<List<SummaryItemResponseDto>> serviceResult;
         serviceResult = await _introductionItemService.GetListAsync();
         IntroductionItemListViewModel model = new IntroductionItemListViewModel
         {

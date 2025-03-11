@@ -1,7 +1,9 @@
+using NATS.Services.Dtos.ResponseDtos.Traffic;
 using UAParser;
 
 namespace NATS.Services;
 
+/// <inheritdoc cref="ITrafficService" />
 public class TrafficService : ITrafficService
 {
     private readonly DatabaseContext _context;
@@ -10,72 +12,46 @@ public class TrafficService : ITrafficService
     {
         _context = context;
     }
-    
-    /// <summary>
-    /// Get today's traffic statistics which contains recorded date as today, access count and guess count.
-    /// </summary>
-    /// <returns>An object containing the statistics data.</returns>
-    public async Task<ServiceResult<TrafficStatisticsByDateResponseDto>> GetTodayStatisticsAsync()
+
+    /// <inheritdoc />
+    public async Task<TrafficByDateResponseDto> GetTodayTrafficAsync()
     {
-        TrafficByDate trafficByDate = await _context.TrafficByDates
-            .SingleAsync(td => td.RecordedDateTime.Date == DateTime.Today);
-        
-        TrafficStatisticsByDateResponseDto responseDto;
-        responseDto = new TrafficStatisticsByDateResponseDto
-        {
-            RecordedDate = trafficByDate.RecordedDateTime,
-            AccessCount = trafficByDate.AccessCount,
-            GuessCount = trafficByDate.GuestCount
-        };
-          
-        return ServiceResult<TrafficStatisticsByDateResponseDto>.Success(responseDto);
+        DateOnly today = DateOnly.FromDateTime(DateTime.UtcNow.ToApplicationTime());
+        return await _context.TrafficByDates
+            .Select(td => new TrafficByDateResponseDto(td))
+            .SingleAsync(td => td.RecordedDate == today);
     }
 
-    /// <summary>
-    /// Get the traffic statistics over last specific number of days (including today).
-    /// </summary>
-    /// <param name="lastDays">The number of the last specific days.</param>
-    /// <returns>A list of objects containing the statistics data.</returns>
-    public async Task<ServiceResult<List<TrafficStatisticsByDateResponseDto>>> GetStatisticsByDateRangeAsync(
-            int lastDays)
+    /// <inheritdoc />
+    public async Task<List<TrafficByDateResponseDto>> GetTrafficByDateRangeAsync(int lastDays)
     {
-        List<TrafficByDate> trafficsByDates = await _context.TrafficByDates
-            .Where(td => 
-                td.RecordedDateTime.Date > DateTime.Today.Date.AddDays(-lastDays) &&
-                td.RecordedDateTime.Date <= DateTime.Today.Date)
-            .OrderBy(td => td.RecordedDateTime)
+        DateOnly endingDate = DateOnly.FromDateTime(DateTime.UtcNow.ToApplicationTime());
+        DateOnly startingDate = endingDate.AddDays(-lastDays);
+
+        return await _context.TrafficByDates
+            .Where(td => td.RecordedDate > startingDate && td.RecordedDate <= endingDate)
+            .OrderBy(td => td.RecordedDate)
+            .Select(td => new TrafficByDateResponseDto(td))
             .ToListAsync();
-
-        List<TrafficStatisticsByDateResponseDto> responseDtos = trafficsByDates
-            .Select(td => new TrafficStatisticsByDateResponseDto
-            {
-                RecordedDate = td.RecordedDateTime.Date,
-                AccessCount = td.AccessCount,
-                GuessCount = td.GuestCount
-            }).ToList();
-
-        return ServiceResult<List<TrafficStatisticsByDateResponseDto>>.Success(responseDtos);
     }
 
-    /// <summary>
-    /// Get the traffic average statistics over last specific number of days (including today)
-    /// by hour range (morning, noon, afternoon, evening, night).
-    /// </summary>
-    /// <param name="lastDays">The number of the last specific days.</param>
-    /// <returns>A list of objects containing the statistics data.</returns>
-    public async Task<ServiceResult<List<TrafficStatisticsByHourRangeResponseDto>>> GetStatisticsByHourRangeAsync(
-            int lastDays)
+    /// <inheritdoc />
+    public async Task<List<TrafficByHourRangeResponseDto>>
+            GetTrafficByHourRangeAsync(int lastDays)
     {
+        DateTime endingDateTime = DateTime.UtcNow.ToApplicationTime();
+        DateTime startingDateTime = endingDateTime.AddDays(-lastDays);
+
         List<TrafficByHour> trafficByHours = await _context.TrafficByHours
             .Where(th => 
-                th.RecordedDateTime.Date > DateTime.Today.Date.AddDays(-lastDays) &&
-                th.RecordedDateTime.Date <= DateTime.Today.Date)
+                th.RecordedDateTime > startingDateTime &&
+                th.RecordedDateTime <= endingDateTime)
             .OrderBy(th => th.RecordedDateTime)
             .ToListAsync();
 
-        List<TrafficStatisticsByHourRangeResponseDto> responseDtos;
-        responseDtos = new List<TrafficStatisticsByHourRangeResponseDto>();
-        List<(string, int, int)> hoursForSessions = new()
+        List<TrafficByHourRangeResponseDto> responseDtos;
+        responseDtos = new List<TrafficByHourRangeResponseDto>();
+        List<(string, int, int)> periodsOfDay = new()
         {
             ("Sáng sớm", 4, 7),
             ("Buổi sáng", 7, 11),
@@ -84,35 +60,32 @@ public class TrafficService : ITrafficService
             ("Buổi tối", 17, 23),
             ("Ban đêm", 23, 4),
         };
-        foreach ((string Name, int FromHour, int ToHour) session in hoursForSessions)
+
+        foreach ((string Name, int FromHour, int ToHour) in periodsOfDay)
         {
-            responseDtos.Add(new TrafficStatisticsByHourRangeResponseDto
+            responseDtos.Add(new TrafficByHourRangeResponseDto
             {
-                Name = session.Name,
-                FromTime = new TimeOnly(session.FromHour, 0, 0),
-                ToTime = new TimeOnly(session.ToHour, 0, 0),
+                PeriodOfDayName = Name,
+                FromTime = new TimeOnly(FromHour, 0, 0),
+                ToTime = new TimeOnly(ToHour, 0, 0),
                 AccessCount = trafficByHours
                     .Where(th =>
-                        th.RecordedDateTime.Hour >= session.FromHour &&
-                        th.RecordedDateTime.Hour < session.ToHour)
+                        th.RecordedDateTime.Hour >= FromHour &&
+                        th.RecordedDateTime.Hour < ToHour)
                     .Sum(th => th.AccessCount),
                 GuessCount = trafficByHours
                     .Where(th =>
-                        th.RecordedDateTime.Hour >= session.FromHour &&
-                        th.RecordedDateTime.Hour < session.ToHour)
+                        th.RecordedDateTime.Hour >= FromHour &&
+                        th.RecordedDateTime.Hour < ToHour)
                     .Sum(th => th.GuestCount),
             });
         }
 
-        return ServiceResult<List<TrafficStatisticsByHourRangeResponseDto>>.Success(responseDtos);
+        return responseDtos;
     }
 
-    /// <summary>
-    /// Get the traffic statistics by device in the specified number of the last days.
-    /// </summary>
-    /// <param name="lastDays">The number of the last specific days.</param>
-    /// <returns>A list of objects containing the statistics data.</returns>
-    public async Task<ServiceResult<List<TrafficStatisticsByDeviceResponseDto>>> GetStatisticsByDeviceAsync(
+    /// <inheritdoc />
+    public async Task<List<TrafficStatsByDeviceResponseDto>> GetStatsByDeviceAsync(
             int lastDays)
     {
         List<TrafficByHour> trafficByHours;
@@ -122,46 +95,44 @@ public class TrafficService : ITrafficService
                 td.RecordedDateTime.Date > DateTime.Today.AddDays(-lastDays) &&
                 td.RecordedDateTime.Date <= DateTime.Today)
             .ToListAsync();
-        List<TrafficStatisticsByDeviceResponseDto> responseDtos;
-        responseDtos = new List<TrafficStatisticsByDeviceResponseDto>();
+
+        List<TrafficStatsByDeviceResponseDto> responseDtos;
+        responseDtos = new List<TrafficStatsByDeviceResponseDto>();
+
         foreach (TrafficByHour trafficByHour in trafficByHours)
         {
             foreach (TrafficByHourIpAddress trafficIpAddress in trafficByHour.IPAddresses)
             {
                 Parser parser = Parser.GetDefault();
                 ClientInfo clientInfo = parser.Parse(trafficIpAddress.LastUserAgent);
-                TrafficStatisticsByDeviceResponseDto responseDto;
-                responseDto = responseDtos
+                TrafficStatsByDeviceResponseDto responseDto = responseDtos
                     .SingleOrDefault(dto => dto.DeviceName == clientInfo.OS.Family);
+
                 if (responseDto == null)
                 {
-                    responseDto = new TrafficStatisticsByDeviceResponseDto
+                    responseDto = new TrafficStatsByDeviceResponseDto
                     {
                         DeviceName = clientInfo.OS.Family
                     };
                     responseDtos.Add(responseDto);
                 }
+
                 responseDto.AccessCount += 1;
             }
         }
 
-        return ServiceResult<List<TrafficStatisticsByDeviceResponseDto>>.Success(responseDtos);
+        return responseDtos;
     }
 
-    /// <summary>
-    /// Record the IP address of the current request by hour.
-    /// </summary>
-    /// <param name="ipAddress">The IP address of the current request.</param>
-    /// <param name="userAgent">The User-Agent header of the request.</param>
-    /// <param name="pathFirstSegment">The first segment of the url path where the request is sent to.</param>
-    /// <returns>The id of the traffic by hour.</returns>
+    /// <inheritdoc />
     public async Task RecordAsync(string ipAddress, string userAgent)
     {
         // Fetch the traffic entity from the database.
+        DateOnly today = DateOnly.FromDateTime(DateTime.UtcNow.ToApplicationTime());
         TrafficByDate trafficByDate = await _context.TrafficByDates
             .Include(td => td.TrafficByHours)
             .ThenInclude(th => th.IPAddresses)
-            .Where(td => td.RecordedDateTime.Date == DateTime.Today)
+            .Where(td => td.RecordedDate == today)
             .SingleAsync();
 
         // Fetch current hour's traffic by hour entity
@@ -169,10 +140,7 @@ public class TrafficService : ITrafficService
             .Single(th => th.RecordedDateTime.Hour == DateTime.Now.Hour);
         
         // Assign a list if traffic ip address list in the traffic entity is null.
-        if (trafficByHour.IPAddresses == null)
-        {
-            trafficByHour.IPAddresses = new List<TrafficByHourIpAddress>();
-        }
+        trafficByHour.IPAddresses ??= new List<TrafficByHourIpAddress>();
         
         // Fetch traffic ip address.
         TrafficByHourIpAddress trafficIPAddress = trafficByHour.IPAddresses!

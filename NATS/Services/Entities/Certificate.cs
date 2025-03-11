@@ -1,6 +1,6 @@
 namespace NATS.Services.Entities;
 
-public class Certificate
+public class Certificate : IHasThumbnailEntity
 {
     [Column("id")]
     [Key]
@@ -13,5 +13,5 @@ public class Certificate
     [Column("photo_url")]
     [Required]
     [StringLength(255)]
-    public string PhotoUrl { get; set; }
+    public string ThumbnailUrl { get; set; }
 }

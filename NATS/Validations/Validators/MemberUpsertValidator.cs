@@ -1,8 +1,8 @@
 namespace NATS.Services.Validation.Validators;
 
-public class TeamMemberValidator : Validator<MemberUpsertRequestDto>
+public class MemberUpsertValidator : Validator<MemberUpsertRequestDto>
 {
-    public TeamMemberValidator()
+    public MemberUpsertValidator()
     {
         RuleFor(dto => dto.ThumbnailFile)
             .Must(IsValidImage)

@@ -1,3 +1,5 @@
+using NATS.Services.Dtos.ResponseDtos.Traffic;
+
 namespace NATS.Controllers;
 
 [Route("/quan-tri")]
@@ -8,8 +10,8 @@ public class AdminController : Controller
     private readonly IMemberService _iTeamMemberService;
     private readonly ICertificateService _iCertificateService;
     private readonly IGeneralSettingsService _generalSettingsService;
-    private readonly IHomePageSliderItemService _homePageSliderItemService;
-    private readonly IIntroductionItemService _introductionItemService;
+    private readonly ISliderItemService _homePageSliderItemService;
+    private readonly ISummaryItemService _introductionItemService;
     private readonly IPostService _postService;
     private readonly IEnquiryService _enquiryService;
     private readonly IContactService _iContactService;
@@ -21,8 +23,8 @@ public class AdminController : Controller
             IMemberService iTeamMemberService,
             ICertificateService iCertificateService,
             IGeneralSettingsService generalSettingsService,
-            IHomePageSliderItemService homePageSliderItemService,
-            IIntroductionItemService introductionItemService,
+            ISliderItemService homePageSliderItemService,
+            ISummaryItemService introductionItemService,
             IPostService postService,
             IEnquiryService enquiryService,
             IContactService iContactService,
@@ -46,16 +48,16 @@ public class AdminController : Controller
     public async Task<IActionResult> Dashboard()
     {
         // Get dates traffic statistics.
-        ServiceResult<List<TrafficStatisticsByDateResponseDto>> datesTrafficServiceResult;
-        datesTrafficServiceResult = await _trafficService.GetStatisticsByDateRangeAsync(7);
+        ServiceResult<List<TrafficByDateResponseDto>> datesTrafficServiceResult;
+        datesTrafficServiceResult = await _trafficService.GetTrafficByDateRangeAsync(7);
 
         // Get hours traffic statistics.
-        ServiceResult<List<TrafficStatisticsByHourRangeResponseDto>> hoursTrafficServiceResult;
-        hoursTrafficServiceResult = await _trafficService.GetStatisticsByHourRangeAsync(7);
+        ServiceResult<List<TrafficByHourRangeResponseDto>> hoursTrafficServiceResult;
+        hoursTrafficServiceResult = await _trafficService.GetTrafficByHourRangeAsync(7);
 
         // Get devices traffic statistics.
-        ServiceResult<List<TrafficStatisticsByDeviceResponseDto>> devicesTrafficServiceResult;
-        devicesTrafficServiceResult = await _trafficService.GetStatisticsByDeviceAsync(7);
+        ServiceResult<List<TrafficStatsByDeviceResponseDto>> devicesTrafficServiceResult;
+        devicesTrafficServiceResult = await _trafficService.GetStatsByDeviceAsync(7);
 
         // Get the number of incompleted enquiries.
         ServiceResult<int> enquiryServiceResult;
@@ -128,7 +130,7 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> GeneralSettings(GeneralSettingsViewModel model)
     {
-        GeneralSettingsRequestDto requestDto = new GeneralSettingsRequestDto
+        GeneralSettingsUpsertRequestDto requestDto = new GeneralSettingsUpsertRequestDto
         {
             ApplicationName = model.ApplicationName,
             ApplicationShortName = model.ApplicationShortName,
@@ -161,7 +163,7 @@ public class AdminController : Controller
         ServiceResult<List<SliderItemResponseDto>> homePageSliderItemServiceResult;
         homePageSliderItemServiceResult = await _homePageSliderItemService.GetListAsync();
 
-        ServiceResult<List<IntroductionItemResponseDto>> introductionItemServiceResult;
+        ServiceResult<List<SummaryItemResponseDto>> introductionItemServiceResult;
         introductionItemServiceResult = await _introductionItemService.GetListAsync();
 
         ServiceResult<ContactResponseDto> contactInfoServiceResult;
@@ -260,11 +262,11 @@ public class AdminController : Controller
             mainPhotoFile = stream.ToArray();
         }
 
-        AboutUsIntroductionRequestDto requestDto;
-        requestDto = new AboutUsIntroductionRequestDto
+        AboutUsIntroductionUpsertRequestDto requestDto;
+        requestDto = new AboutUsIntroductionUpsertRequestDto
         {
-            MainPhotoFile = mainPhotoFile,
-            MainPhotoChanged = model.MainPhotoChanged,
+            ThumbnailFile = mainPhotoFile,
+            ThumbnailChanged = model.MainPhotoChanged,
             MainQuoteContent = model.MainQuoteContent,
             AboutUsContent = model.AboutUsContent,
             WhyChooseUsContent = model.WhyChooseUsContent,
@@ -416,9 +418,9 @@ public class AdminController : Controller
         }
         CertificateUpsertRequestDto upsertRequestDto = new CertificateUpsertRequestDto
         {
-            PhotoFile = photoFile,
+            ThumbnailFile = photoFile,
             Name = model.Name,
-            PhotoChanged = model.PhotoChanged
+            ThumbnailChanged = model.PhotoChanged
         };
         ServiceResult<CertificateResponseDto> serviceResult;
         serviceResult = await _iCertificateService.CreateAsync(upsertRequestDto);
@@ -464,9 +466,9 @@ public class AdminController : Controller
         }
         CertificateUpsertRequestDto upsertRequestDto = new CertificateUpsertRequestDto
         {
-            PhotoFile = photoFile,
+            ThumbnailFile = photoFile,
             Name = model.Name,
-            PhotoChanged = model.PhotoChanged
+            ThumbnailChanged = model.PhotoChanged
         };
         ServiceResult<CertificateResponseDto> serviceResult;
         serviceResult = await _iCertificateService.UpdateAsync(id, upsertRequestDto);
@@ -504,8 +506,8 @@ public class AdminController : Controller
     [HttpGet("gioi-thieu/{id:int}")]
     public async Task<IActionResult> IntroductionItemUpdating(int id)
     {
-        ServiceResult<IntroductionItemResponseDto> serviceResult;
-        serviceResult = await _introductionItemService.GetAsync(id);
+        ServiceResult<SummaryItemResponseDto> serviceResult;
+        serviceResult = await _introductionItemService.GetSingleAsync(id);
         if (!serviceResult.Succeeded)
         {
             return NotFound();
@@ -541,7 +543,7 @@ public class AdminController : Controller
             ThumbnailFile = thumbnailFile,
             ThumbnailChanged = model.ThumbnailChanged
         };
-        ServiceResult<IntroductionItemResponseDto> serviceResult;
+        ServiceResult<SummaryItemResponseDto> serviceResult;
         serviceResult = await _introductionItemService.UpdateAsync(id, requestDto);
 
         if (!serviceResult.Succeeded)

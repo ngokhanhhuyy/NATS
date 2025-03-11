@@ -1,28 +1,29 @@
 namespace NATS.Services.Validation.Validators;
 
-public class BusinessCertificateValidator : Validator<CertificateUpsertRequestDto>
+public class SliderItemUpsertValidator : Validator<SliderItemUpsertRequestDto>
 {
-    public BusinessCertificateValidator()
+    public SliderItemUpsertValidator()
     {
-        RuleFor(dto => dto.Name)
+        RuleFor(dto => dto.Title)
             .MaximumLength(100)
-            .WithName(DisplayNames.Name);
+            .WithName(DisplayNames.Title);
 
         RuleSet("Create", () =>
         {
-            RuleFor(dto => dto.PhotoFile)
-                .NotNull()
+            RuleFor(dto => dto.ThumbnailFile)
+                .NotEmpty()
                 .Must(IsValidImage)
                 .WithMessage(ErrorMessages.Invalid)
                 .WithName(DisplayNames.PhotoFile);
         });
+
         RuleSet("Update", () =>
         {
-            RuleFor(dto => dto.PhotoFile)
-                .NotNull()
+            RuleFor(dto => dto.ThumbnailFile)
+                .NotEmpty()
                 .Must(IsValidImage)
                 .WithMessage(ErrorMessages.Invalid)
-                .When(dto => dto.PhotoChanged)
+                .When(dto => dto.ThumbnailChanged)
                 .WithName(DisplayNames.PhotoFile);
         });
     }

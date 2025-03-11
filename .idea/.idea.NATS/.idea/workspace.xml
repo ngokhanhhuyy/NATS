@@ -11,24 +11,11 @@
     <projectFile pubXmlPath="NATS/Properties/PublishProfiles/nh0zhuybmt-001-subsite2 - FTP.pubxml">NATS/NATS.csproj</projectFile>
     <projectFile pubXmlPath="NATS/Properties/PublishProfiles/nh0zhuybmt-001-subsite2 - FTP1.pubxml">NATS/NATS.csproj</projectFile>
   </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="906859bb-e68b-47c5-b55b-4e77815ff55d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/NATS/Controllers/AdminEnquiryController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Controllers/AdminEnquiryController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Controllers/HomeController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/GlobalUsings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/GlobalUsings.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Models/ContactViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Models/ContactViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Models/EnquiryListViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Models/EnquiryViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/NATS.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/NATS.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Services/Dtos/RequestDtos/EnquiryRequestDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Services/Dtos/ResponseDtos/EnquiryResponseDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Services/Dtos/ResponseDtos/EnquiryResponseDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Services/EnquiryService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Services/EnquiryService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Services/Interfaces/IEnquiryService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Services/Interfaces/IEnquiryService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Services/PostService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Services/PostService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Validations/Validators/EnquiryValidator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Validations/Validators/EnquiryValidator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Views/Admin/Enquiry/Enquiry.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Views/Admin/Enquiry/Enquiry.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Views/Admin/Enquiry/EnquiryList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Views/Admin/Enquiry/EnquiryList.cshtml" afterDir="false" />
-    </list>
+    <list default="true" id="906859bb-e68b-47c5-b55b-4e77815ff55d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,22 +24,28 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "ngokhanhhuyy"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ngokhanhhuyy&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/ngokhanhhuyy/NATS.git",
-    "accountId": "2ba9c534-b543-4d3a-8c33-9867e8819988"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ngokhanhhuyy/NATS.git&quot;,
+    &quot;accountId&quot;: &quot;2ba9c534-b543-4d3a-8c33-9867e8819988&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 5
-}]]></component>
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/NATS/Services/ContactService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/NATS/Services/Dtos/RequestDtos/SliderItem/SliderItemUpsertRequestDto.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/NATS/Services/Interfaces/IGeneralSettingsService.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2u7Z7ut5snaxdOwcEouYQcpC3Ss" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -63,6 +56,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "v2",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
@@ -147,12 +144,14 @@
       <option name="presentableId" value="Default" />
       <updated>1741601415024</updated>
       <workItem from="1741601419187" duration="184000" />
+      <workItem from="1741601888927" duration="10253000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />

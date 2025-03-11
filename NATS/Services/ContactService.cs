@@ -1,29 +1,42 @@
 namespace NATS.Services;
 
-/// <inheritdoc />
-public class ContactService : IContactService
+/// <inheritdoc cref="IContactService"/>
+public class ContactService
+       :
+            AbstractUpsertableService<Contact, ContactUpsertRequestDto>,
+            IContactService
 {
-    private readonly DatabaseContext _context;
     
-    public ContactService(DatabaseContext context)
+    public ContactService(DatabaseContext context) : base(context)
     {
-        _context = context;
     }
     
     /// <inheritdoc />
     public async Task<List<ContactResponseDto>> GetListAsync()
     {
-        // Fetch a list of all entities from the database.
-        return await _context.Contacts
+        return await Context.Contacts
             .Select(contact => new ContactResponseDto(contact))
             .ToListAsync();
+    }
+
+
+    /// <inheritdoc />
+    public async Task<int> CreateAsync(ContactUpsertRequestDto requestDto)
+    {
+        Contact contact = new Contact
+        {
+            Type = requestDto.Type,
+            Content = requestDto.Content
+        };
+
+        return await base.SaveCreatedEntityAsync(contact, requestDto);
     }
 
     /// <inheritdoc />
     public async Task UpdateAsync(int id, ContactUpsertRequestDto requestDto)
     {
         // Fetch the entity from the database and ensure it exists.
-        Contact contact = await _context.Contacts
+        Contact contact = await Context.Contacts
             .SingleOrDefaultAsync(contact => contact.Id == id)
             ?? throw new ResourceNotFoundException(nameof(Contact), nameof(id), id.ToString());
 
@@ -32,6 +45,23 @@ public class ContactService : IContactService
         contact.Content = requestDto.Content;
 
         // Save changes.
-        await _context.SaveChangesAsync();
+        await base.SaveUpdatedEntityAsync(contact, requestDto);
+    }
+
+    /// <inheritdoc />
+    public async Task DeleteAsync(int id)
+    {
+        // Fetch the entity from the database and ensure it exists.
+        Contact contact = await Context.Contacts
+            .SingleOrDefaultAsync(contact => contact.Id == id)
+            ?? throw new ResourceNotFoundException(nameof(Contact), nameof(id), id.ToString());
+
+        await base.SaveDeletedEntityAsync(contact);
+    }
+
+    /// <inheritdoc />
+    protected override sealed DbSet<Contact> GetRepository(DatabaseContext context)
+    {
+        return context.Contacts;
     }
 }

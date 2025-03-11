@@ -1,13 +1,13 @@
 namespace NATS.Services.Validations.Validators;
 
-public class AboutUsIntroductionValidator : Validator<AboutUsIntroductionRequestDto>
+public class AboutUsIntroductionValidator : Validator<AboutUsIntroductionUpsertRequestDto>
 {
     public AboutUsIntroductionValidator()
     {
-        RuleFor(dto => dto.MainPhotoFile)
+        RuleFor(dto => dto.ThumbnailFile)
             .Must(IsValidImage)
             .WithMessage(ErrorMessages.Invalid)
-            .When(dto => dto.MainPhotoFile != null)
+            .When(dto => dto.ThumbnailFile != null)
             .WithName(DisplayNames.MainPhoto);
         RuleFor(dto => dto.MainQuoteContent)
             .NotEmpty()

@@ -1,6 +1,6 @@
 namespace NATS.Services.Entities;
 
-public class SummaryItem
+public class SummaryItem : IHasThumbnailEntity
 {
     [Column("id")]
     [Key]

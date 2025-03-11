@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using IContactService = NATS.Services.IContactService;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -17,11 +14,10 @@ else
 
 // Add signalR
 builder.Services.AddSignalR();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 string connectionString = builder.Configuration.GetConnectionString("MySQL");
-Console.WriteLine(connectionString);
-// connectionString = "Server=MYSQL8003.site4now.net;Database=db_aa5821_nats;Uid=aa5821_nats;Password=Huyy47b1";
 builder.Services.AddDbContext<DatabaseContext>(options => options
     .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
     .AddInterceptors(new VietnamTimeInterceptor()));
@@ -59,33 +55,7 @@ builder.Services.ConfigureApplicationCookie(options => {
     };
 });
 
-builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
-        };
-        options.Events = new JwtBearerEvents
-        {
-            OnTokenValidated = async context =>
-            {
-                IUserService userService = context.HttpContext
-                    .RequestServices
-                    .GetRequiredService<IUserService>();
-                string userIdAsString = context.Principal!.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                int userId = int.Parse(userIdAsString!);
-                await userService.SetCurrentUserId(userId);
-            }
-        };
-    });
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme);
 
 // FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
@@ -97,19 +67,17 @@ ValidatorOptions.Global.LanguageManager = new ValidatorLanguageManager {
 // Dependency injection
 builder.Services.AddScoped<SignInManager<User>>();
 builder.Services.AddScoped<RoleManager<Role>>();
-builder.Services.AddScoped<DatabaseContext>();
+builder.Services.AddTransient<DatabaseContext>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGeneralSettingsService, GeneralSettingsService>();
 builder.Services.AddScoped<IAboutUsIntroductionService, AboutUsIntroductionService>();
 builder.Services.AddScoped<MemberService, MemberService>();
 builder.Services.AddScoped<ICertificateService, CertificateService>();
-builder.Services.AddScoped<IIntroductionItemService, IntroductionItemService>();
+builder.Services.AddScoped<ISummaryItemService, SummaryItemService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
-builder.Services.AddScoped<IIntroductionItemService, IntroductionItemService>();
-builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ISummaryItemService, SummaryItemService>();
 builder.Services.AddScoped<ICatalogItemService, CatalogItemService>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IHomePageSliderItemService, HomePageSliderItemService>();
+builder.Services.AddScoped<ISliderItemService, SliderItemService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IEnquiryService, EnquiryService>();
 builder.Services.AddScoped<IContactService, IContactService>();

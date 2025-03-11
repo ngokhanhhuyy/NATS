@@ -1,6 +1,6 @@
 ﻿namespace NATS.Services.Entities;
 
-public class GeneralSettings
+public class GeneralSettings : IEntity
 {
     [Column("id")]
     [Key]

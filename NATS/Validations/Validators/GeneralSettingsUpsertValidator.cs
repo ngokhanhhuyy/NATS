@@ -1,8 +1,8 @@
 ﻿namespace NATS.Services.Validations.Validators;
 
-public class GeneralSettingsValidator : Validator<GeneralSettingsRequestDto>
+public class GeneralSettingsUpsertValidator : Validator<GeneralSettingsUpsertRequestDto>
 {
-    public GeneralSettingsValidator()
+    public GeneralSettingsUpsertValidator()
     {
         RuleFor(dto => dto.ApplicationName)
             .NotNull()
