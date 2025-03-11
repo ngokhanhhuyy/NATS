@@ -15,7 +15,7 @@ public class DatabaseContext
     public DbSet<AboutUsIntroduction> AboutUsIntroductions { get; set; }
     public DbSet<CatalogItem> CatalogItems { get; set; }
     public DbSet<CatalogItemPhoto> CatalogItemPhotos { get; set; }
-    public DbSet<TeamMember> TeamMembers { get; set; }
+    public DbSet<Member> Members { get; set; }
     public DbSet<Certificate> Certificates { get; set; }
     public DbSet<Enquiry> Enquiries { get; set; }
     public DbSet<Post> Posts { get; set; }
@@ -61,9 +61,9 @@ public class DatabaseContext
                 .HasForeignKey(bsp => bsp.ItemId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
-        builder.Entity<TeamMember>(e =>
+        builder.Entity<Member>(e =>
         {
-            e.ToTable("team_members");
+            e.ToTable("members");
             e.HasKey(tm => tm.Id);
         });
         builder.Entity<Certificate>(e =>

@@ -29,6 +29,7 @@ global using NATS.Services.Identity;
 global using NATS.Services.Validations;
 global using NATS.Services.Validations.Validators;
 global using NATS.Services.Enums;
+global using NATS.Services.Dtos;
 global using NATS.Services.Dtos.RequestDtos;
 global using NATS.Services.Dtos.ResponseDtos;
 

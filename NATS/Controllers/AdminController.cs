@@ -5,7 +5,7 @@ namespace NATS.Controllers;
 public class AdminController : Controller
 {
     private readonly IAboutUsIntroductionService _aboutUsIntroductionService;
-    private readonly ITeamMemberService _iTeamMemberService;
+    private readonly IMemberService _iTeamMemberService;
     private readonly ICertificateService _iCertificateService;
     private readonly IGeneralSettingsService _generalSettingsService;
     private readonly IHomePageSliderItemService _homePageSliderItemService;
@@ -18,7 +18,7 @@ public class AdminController : Controller
 
     public AdminController(
             IAboutUsIntroductionService aboutUsIntroductionService,
-            ITeamMemberService iTeamMemberService,
+            IMemberService iTeamMemberService,
             ICertificateService iCertificateService,
             IGeneralSettingsService generalSettingsService,
             IHomePageSliderItemService homePageSliderItemService,
@@ -152,7 +152,7 @@ public class AdminController : Controller
         ServiceResult<AboutUsIntroductionResponseDto> aboutUsIntroductionServiceResult;
         aboutUsIntroductionServiceResult = await _aboutUsIntroductionService.GetAsync();
 
-        ServiceResult<List<TeamMemberResponseDto>> teamMemberServiceResult;
+        ServiceResult<List<MemberResponseDto>> teamMemberServiceResult;
         teamMemberServiceResult = await _iTeamMemberService.GetListAsync();
 
         ServiceResult<List<CertificateResponseDto>> businessCertificateServiceResult;
@@ -305,15 +305,15 @@ public class AdminController : Controller
             await model.PhotoFile.CopyToAsync(stream);
             photoFile = stream.ToArray();
         }
-        TeamMemberUpsertRequestDto upsertRequestDto = new TeamMemberUpsertRequestDto {
-            PhotoFile = photoFile,
+        MemberUpsertRequestDto upsertRequestDto = new MemberUpsertRequestDto {
+            ThumbnailFile = photoFile,
             FullName = model.FullName,
             RoleName = model.RoleName,
             Description = model.Description,
-            PhotoChanged = model.PhotoChanged
+            ThumbnailChanged = model.PhotoChanged
         };
 
-        ServiceResult<TeamMemberResponseDto> serviceResult;
+        ServiceResult<MemberResponseDto> serviceResult;
         serviceResult = await _iTeamMemberService.CreateAsync(upsertRequestDto);
         if (!serviceResult.Succeeded)
         {
@@ -327,7 +327,7 @@ public class AdminController : Controller
     [HttpGet("noi-dung/doi-ngu/{id:int}/cap-nhat")]
     public async Task<IActionResult> TeamMemberUpdating(int id)
     {
-        ServiceResult<TeamMemberResponseDto> serviceResult;
+        ServiceResult<MemberResponseDto> serviceResult;
         serviceResult = await _iTeamMemberService.GetAsync(id);
         if (!serviceResult.Succeeded)
         {
@@ -357,15 +357,15 @@ public class AdminController : Controller
             await model.PhotoFile.CopyToAsync(stream);
             photoFile = stream.ToArray();
         }
-        TeamMemberUpsertRequestDto upsertRequestDto = new TeamMemberUpsertRequestDto {
-            PhotoFile = photoFile,
+        MemberUpsertRequestDto upsertRequestDto = new MemberUpsertRequestDto {
+            ThumbnailFile = photoFile,
             FullName = model.FullName,
             RoleName = model.RoleName,
             Description = model.Description,
-            PhotoChanged = model.PhotoChanged
+            ThumbnailChanged = model.PhotoChanged
         };
 
-        ServiceResult<TeamMemberResponseDto> serviceResult;
+        ServiceResult<MemberResponseDto> serviceResult;
         serviceResult = await _iTeamMemberService.UpdateAsync(id, upsertRequestDto);
         if (!serviceResult.Succeeded)
         {

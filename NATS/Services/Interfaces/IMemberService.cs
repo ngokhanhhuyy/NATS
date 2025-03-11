@@ -1,79 +1,79 @@
 namespace NATS.Services.Interfaces;
 
 /// <summary>
-/// A service to handle operations which are related to team members.
+/// A service to handle operations which are related to members.
 /// </summary>
-public interface ITeamMemberService
+public interface IMemberService
 {
     /// <summary>
-    /// Gets a list of all team members.
+    /// Gets a list of all members.
     /// </summary>
     /// <returns>
     /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is a
-    /// <see cref="List{T}"/> of DTOs containing the information of the team members.
+    /// <see cref="List{T}"/> of DTOs containing the information of the members.
     /// </returns>
-    Task<List<TeamMemberResponseDto>> GetListAsync();
+    Task<List<MemberResponseDto>> GetListAsync();
 
     /// <summary>
-    /// Gets a single existing team member, specified by its id.
+    /// Gets a single existing member, specified by its id.
     /// </summary>
     /// <param name="id">
-    /// The id of the team member to retrieve.
+    /// The id of the member to retrieve.
     /// </param>
     /// <returns>
     /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is a DTO
-    /// containing the information of the team member.
+    /// containing the information of the member.
     /// </returns>
     /// <exception cref="ResourceNotFoundException">
-    /// Throws when the team member specified by <paramref name="id"/> doesn't exist.
+    /// Throws when the member specified by <paramref name="id"/> doesn't exist.
     /// </exception>
-    Task<TeamMemberResponseDto> GetSingleAsync(int id);
+    Task<MemberResponseDto> GetSingleAsync(int id);
 
     /// <summary>
-    /// Creates a new team member.
+    /// Creates a new member.
     /// </summary>
-    /// <param name="upsertRequestDto">
+    /// <param name="requestDto">
     /// A DTO containing the data for the creating operation.
     /// </param>
     /// <returns>
-    /// The id of the created team member.
+    /// The id of the created member.
     /// </returns>
-    Task<int> CreateAsync(TeamMemberUpsertRequestDto upsertRequestDto);
+    Task<int> CreateAsync(MemberUpsertRequestDto requestDto);
 
     /// <summary>
-    /// Updates an existing team member, specified by its id.
+    /// Updates an existing member, specified by its id.
     /// </summary>
     /// <param name="id">
-    /// The id of the team member to update.
+    /// The id of the member to update.
     /// </param>
-    /// <param name="upsertRequestDto">
+    /// <param name="requestDDto">
     /// A DTO containing the data for the updating operation.
     /// </param>
     /// <returns>
     /// A <see cref="Task{T}"/> representing the asynchronous operation.
     /// </returns>
+    /// <exception cref="ResourceNotFoundException">
+    /// Throws when the member specified by <paramref name="id"/> doesn't exist.
+    /// </exception>
     /// <exception cref="ConcurrencyException">
     /// Throws when there is a concurrency-related conflict occuring during the operation.
     /// </exception>
-    /// <exception cref="ResourceNotFoundException">
-    /// Throws when the team member specified by <paramref name="id"/> doesn't exist.
-    /// </exception>
-    Task UpdateAsync(int id, TeamMemberUpsertRequestDto upsertRequestDto);
+    Task UpdateAsync(int id, MemberUpsertRequestDto requestDDto);
 
     /// <summary>
-    /// Deletes an existing team member, specified by its id.
+    /// Deletes an existing member, specified by its id.
     /// </summary>
     /// <param name="id">
-    /// The id of the team member to delete.
+    /// The id of the member to delete.
     /// </param>
     /// <returns>
     /// A <see cref="Task{T}"/> representing the asynchronous operation.
     /// </returns>
+    /// <exception cref="ResourceNotFoundException">
+    /// Throws when the member specified by <paramref name="id"/> doesn't exist.
+    /// </exception>
     /// <exception cref="ConcurrencyException">
     /// Throws when there is a concurrency-related conflict occuring during the operation.
-    /// </exception>
-    /// <exception cref="ResourceNotFoundException">
-    /// Throws when the team member specified by <paramref name="id"/> doesn't exist.
     /// </exception>
     Task DeleteAsync(int id);
 }

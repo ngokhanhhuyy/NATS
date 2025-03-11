@@ -1,13 +1,13 @@
 namespace NATS.Services.Validation.Validators;
 
-public class TeamMemberValidator : Validator<TeamMemberUpsertRequestDto>
+public class TeamMemberValidator : Validator<MemberUpsertRequestDto>
 {
     public TeamMemberValidator()
     {
-        RuleFor(dto => dto.PhotoFile)
+        RuleFor(dto => dto.ThumbnailFile)
             .Must(IsValidImage)
             .WithMessage(ErrorMessages.Invalid)
-            .When(dto => dto.PhotoChanged && dto.PhotoFile != null)
+            .When(dto => dto.ThumbnailChanged && dto.ThumbnailFile != null)
             .WithName(DisplayNames.Photo);
         RuleFor(dto => dto.FullName)
             .NotEmpty()

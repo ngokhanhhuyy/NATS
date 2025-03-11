@@ -1,14 +1,14 @@
 namespace NATS.Services;
 
 /// <inheritdoc/>
-public class EnquiryService : IEnquiryService
+public class EnquiryService
+    :
+        AbstractUpsertableService<Enquiry, EnquiryUpsertRequestDto>,
+        IEnquiryService
 {
-    private readonly DatabaseContext _context;
     
-    public EnquiryService(DatabaseContext context, IValidator<EnquiryUpsertRequestDto> validator)
+    public EnquiryService(DatabaseContext context) : base(context)
     {
-        _context = context;
-        _validator = validator;
     }
 
     /// <inheritdoc/>
@@ -34,11 +34,10 @@ public class EnquiryService : IEnquiryService
     {
         return await _context.Enquiries.CountAsync(e => !e.IsCompleted);
     }
-
+    
     /// <inheritdoc/>
     public async Task<int> CreateAsync(EnquiryUpsertRequestDto requestDto)
     {
-        // Initialize the entity.
         Enquiry enquiry = new Enquiry
         {
             FullName = requestDto.FullName,
@@ -47,19 +46,10 @@ public class EnquiryService : IEnquiryService
             Content = requestDto.Content
         };
 
-        _context.Enquiries.Add(enquiry);
-        
-        // Save changes.
-        await _context.SaveChangesAsync();
-
-        return enquiry.Id;
+        return await base.SaveCreatedEntityAsync(enquiry, requestDto);
     }
-    
-    /// <summary>
-    /// Mark an enquiry by given id as completed.
-    /// </summary>
-    /// <param name="id">The id of the enquiry.</param>
-    /// <returns>The id of the updated enquiry.</returns>
+
+    /// <inheritdoc/>
     public async Task MarkAsCompletedAsync(int id)
     {
         // Use transaction for atomic operations.
@@ -80,5 +70,11 @@ public class EnquiryService : IEnquiryService
         
         // Commit the transaction and return the id of the updated entity.
         await transaction.CommitAsync();
+    }
+
+    /// <inheritdoc/>
+    protected override DbSet<Enquiry> GetRepository(DatabaseContext context)
+    {
+        return context.Enquiries;
     }
 }

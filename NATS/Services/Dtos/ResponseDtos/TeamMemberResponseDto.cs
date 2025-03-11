@@ -1,6 +1,6 @@
 namespace NATS.Services.Dtos.ResponseDtos;
 
-public class TeamMemberResponseDto
+public class MemberResponseDto
 {
     public int Id { get; set; }
     public string FullName { get; set; }
@@ -8,12 +8,12 @@ public class TeamMemberResponseDto
     public string Description { get; set; }
     public string PhotoUrl { get; set; }
 
-    public TeamMemberResponseDto(TeamMember teamMember)
+    public MemberResponseDto(Member teamMember)
     {
         Id = teamMember.Id;
         FullName = teamMember.FullName;
         RoleName = teamMember.RoleName;
         Description = teamMember.Description;
-        PhotoUrl = teamMember.PhotoUrl;
+        PhotoUrl = teamMember.ThumbnailUrl;
     }
 }

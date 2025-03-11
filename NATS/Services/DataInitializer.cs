@@ -207,7 +207,7 @@ public sealed class DataInitializer
 
     private void InitializeTeamMembers()
     {
-        if (!_context.TeamMembers.Any())
+        if (!_context.Members.Any())
         {
             Faker faker = new Faker("vi");
             List<(string, string , string, string)> memberIntroductions;
@@ -227,14 +227,14 @@ public sealed class DataInitializer
             };
             foreach ((string, string, string, string) introduction in memberIntroductions)
             {
-                TeamMember member = new TeamMember
+                Member member = new Member
                 {
                     FullName = introduction.Item1,
                     RoleName = introduction.Item2,
                     Description = introduction.Item3 ?? faker.Lorem.Sentences(10),
-                    PhotoUrl = introduction.Item4
+                    ThumbnailUrl = introduction.Item4
                 };
-                _context.TeamMembers.Add(member);
+                _context.Members.Add(member);
             }
 
             _context.SaveChanges();

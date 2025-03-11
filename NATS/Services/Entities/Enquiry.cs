@@ -1,6 +1,6 @@
 namespace NATS.Services.Entities;
 
-public class Enquiry
+public class Enquiry : IEntity
 {
     [Column("id")]
     [Key]

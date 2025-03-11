@@ -101,7 +101,7 @@ builder.Services.AddScoped<DatabaseContext>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGeneralSettingsService, GeneralSettingsService>();
 builder.Services.AddScoped<IAboutUsIntroductionService, AboutUsIntroductionService>();
-builder.Services.AddScoped<TeamMemberService, TeamMemberService>();
+builder.Services.AddScoped<MemberService, MemberService>();
 builder.Services.AddScoped<ICertificateService, CertificateService>();
 builder.Services.AddScoped<IIntroductionItemService, IntroductionItemService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();

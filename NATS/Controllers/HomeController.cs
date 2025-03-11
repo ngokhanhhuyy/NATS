@@ -5,7 +5,7 @@ public class HomeController : Controller
 {
     private readonly IHomePageSliderItemService _homePageSliderItemService;
     private readonly IAboutUsIntroductionService _aboutUsIntroductionService;
-    private readonly ITeamMemberService _iTeamMemberService;
+    private readonly IMemberService _iTeamMemberService;
     private readonly ICertificateService _iCertificateService;
     private readonly IIntroductionItemService _introductionItemService;
     private readonly ICourseService _courseService;
@@ -18,7 +18,7 @@ public class HomeController : Controller
     public HomeController(
             IHomePageSliderItemService homePageSliderItemService,
             IAboutUsIntroductionService aboutUsIntroductionService,
-            ITeamMemberService iTeamMemberService,
+            IMemberService iTeamMemberService,
             ICertificateService iCertificateService,
             IIntroductionItemService introductionItemService,
             ICourseService courseService,
@@ -145,7 +145,7 @@ public class HomeController : Controller
     [HttpGet("doi-ngu")]
     public async Task<IActionResult> TeamMembers()
     {
-        ServiceResult<List<TeamMemberResponseDto>> teamMembersServiceResult;
+        ServiceResult<List<MemberResponseDto>> teamMembersServiceResult;
         teamMembersServiceResult = await _iTeamMemberService.GetListAsync();
         
         ServiceResult<List<CertificateResponseDto>> businessCertificateServiceResult;

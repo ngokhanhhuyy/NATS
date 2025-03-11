@@ -11,10 +11,7 @@ public class PhotoService : IPhotoService
     }
 
     /// <inheritdoc />
-    public async Task<string> CreateAsync(
-            byte[] content,
-            string folderName,
-            bool cropToSquare)
+    public async Task<string> CreateAsync(byte[] content, bool cropToSquare)
     {
         MagickImage image = new(content);
 
@@ -26,12 +23,7 @@ public class PhotoService : IPhotoService
         }
 
         // Determine the path where the image would be saved.
-        string path = Path.Combine(
-            _environment.WebRootPath,
-            "images",
-            "front-pages",
-            folderName);
-
+        string path = Path.Combine(_environment.WebRootPath, "images", "data");
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
@@ -41,31 +33,18 @@ public class PhotoService : IPhotoService
             .ToString("HH_mm_ss_fff__dd_MM_yyyy") + Guid.NewGuid() + ".jpg";
         string filePath = Path.Combine(path, fileName);
         await image.WriteAsync(filePath);
-        string relativeFilePath = "/" + Path.Combine(
-            "images",
-            "front-pages",
-            folderName,
-            fileName);
-        return relativeFilePath;
+        return "/" + Path.Combine("images", "data", fileName);
     }
 
     /// <inheritdoc />
-    public async Task<string> CreateAsync(
-            byte[] content,
-            string folderName,
-            double aspectRatio)
+    public async Task<string> CreateAsync(byte[] content, double aspectRatio)
     {
         MagickImage image = new(content);
 
         CropToAspectRatio(image, aspectRatio);
 
         // Determine the path where the image would be savedv
-        string path = Path.Combine(
-            _environment.WebRootPath,
-            "images",
-            "front-pages",
-            folderName);
-
+        string path = Path.Combine(_environment.WebRootPath, "images", "data");
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
@@ -75,13 +54,7 @@ public class PhotoService : IPhotoService
             .ToString("HH_mm_ss_fff__dd_MM_yyyy") + Guid.NewGuid() + ".jpg";
         string filePath = Path.Combine(path, fileName);
         await image.WriteAsync(filePath);
-        string relativeFilePath = "/" + Path.Combine(
-            "images",
-            "front-pages",
-            folderName,
-            fileName);
-
-        return relativeFilePath;
+        return "/" + Path.Combine("images", "data", fileName);
     }
 
     /// <inheritdoc />

@@ -1,6 +1,6 @@
 namespace NATS.Services.Entities;
 
-public class TeamMember
+public class Member : IHasThumbnailEntity
 {
     [Column("id")]
     [Key]
@@ -21,7 +21,7 @@ public class TeamMember
     [StringLength(400)]
     public string Description { get; set; }
 
-    [Column("photo_url")]
+    [Column("thumbnail_url")]
     [StringLength(255)]
-    public string PhotoUrl { get; set; }
+    public string ThumbnailUrl { get; set; }
 }
