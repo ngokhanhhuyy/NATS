@@ -6,7 +6,7 @@ public class UserService : IUserService
 	private readonly UserManager<User> _userManager;
 	private readonly RoleManager<Role> _roleManager;
 	private readonly SignInManager<User> _signInManager;
-	private readonly IValidator<LoginRequestDto> _loginValidator;
+	private readonly IValidator<SignInRequestDto> _loginValidator;
     private readonly IValidator<UserListRequestDto> _userListValidator;
 	private int _currentUserId;
 	private User _currentUser;
@@ -17,7 +17,7 @@ public class UserService : IUserService
 			UserManager<User> userManager,
 			RoleManager<Role> roleManager,
 			SignInManager<User> signInManager,
-			IValidator<LoginRequestDto> loginValidator,
+			IValidator<SignInRequestDto> loginValidator,
             IValidator<UserListRequestDto> userListValidator,
 			IConfiguration config)
 	{
@@ -30,7 +30,7 @@ public class UserService : IUserService
         _config = config;
 	}
 
-	public async Task<ServiceResult<JwtResponseDto>> GetJwtAsync(LoginRequestDto requestDto)
+	public async Task<ServiceResult<JwtResponseDto>> GetJwtAsync(SignInRequestDto requestDto)
 	{
 		// Validate data from request
 		ValidationResult result = _loginValidator.Validate(requestDto.TransformValues());
@@ -80,7 +80,7 @@ public class UserService : IUserService
 		});
 	}
 
-	public async Task<ServiceResult<LoginResponseDto>> LoginAsync(LoginRequestDto requestDto)
+	public async Task<ServiceResult<LoginResponseDto>> LoginAsync(SignInRequestDto requestDto)
 	{
 		// Validate data from request
 		ValidationResult result = _loginValidator.Validate(requestDto.TransformValues());

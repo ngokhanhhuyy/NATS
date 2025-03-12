@@ -1,6 +1,6 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class PostUpsertRequestDto : IRequestDto<PostUpsertRequestDto>
+public class PostUpsertRequestDto : IHasThumbnailUpsertRequestDto<PostUpsertRequestDto>
 {
     public string Title { get; set; }
     public string Content { get; set; }

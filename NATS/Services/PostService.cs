@@ -1,464 +1,196 @@
+using System.Text.RegularExpressions;
+
 namespace NATS.Services;
 
-public class PostService : IPostService
+/// <inheritdoc cref="IPostService" />
+public partial class PostService
+    : 
+        AbstractHasThumbnailService<Post, PostUpsertRequestDto>,
+        IPostService
 {
-    private readonly DatabaseContext _context;
-    private readonly IPhotoService _photoService;
     private readonly IUserService _userService;
-    private readonly IValidator<PostUpsertRequestDto> _validator;
     
     public PostService(
             DatabaseContext context,
             IPhotoService photoService,
-            IUserService userService,
-            IValidator<PostUpsertRequestDto> validator)
+            IUserService userService) : base(context, photoService)
     {
-        _context = context;
-        _photoService = photoService;
         _userService = userService;
-        _validator = validator;
     }
 
-    /// <summary>
-    /// Get a list of all posts' with basic information.
-    /// </summary>
-    /// <returns>A list of objects containing all posts' basic information.</returns>
-    public async Task<PostBasicListResponseDto> GetBasicListAsync(int page)
+    /// <inheritdoc/>
+    public async Task<PostListResponseDto> GetListAsync(int page, int resultsPerPage = 15)
     {
-        const int resultPerPage = 15;
+        // Initialize the response dto.
+        PostListResponseDto responseDto = new PostListResponseDto();
+
         // Determine the page count.
-        int pageCount;
-        int postCount = await _context.Posts.CountAsync();
+        int postCount = await Context.Posts.CountAsync();
         if (postCount == 0)
         {
-            pageCount = 0;
+            responseDto.PageCount = 0;
+            return responseDto;
         }
         else
         {
-            pageCount = (int)Math.Ceiling((double)postCount / resultPerPage);
+            responseDto.PageCount = (int)Math.Ceiling((double)postCount / resultsPerPage);
         }
-        // Preparing query statement
         
-        // Initialize response dto and map data from entities to the dto.
-        PostBasicListResponseDto responseDto = new PostBasicListResponseDto
-        {
-            Items = await _context.Posts
-                .OrderBy(p => p.IsPinned)
-                .ThenBy(p => p.Id)
-                .ThenBy(p => p.NormalizedTitle)
-                .Select(p => new PostBasicResponseDto
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    NormalizedTitle = p.NormalizedTitle,
-                    ThumbnailUrl = p.ThumbnailUrl,
-                    Content = p.Content,
-                    CreatedDateTime = p.CreatedDateTime,
-                    IsPublished = p.IsPublished,
-                    IsPinned = p.IsPinned,
-                    Views = p.Views
-                }).Skip((page - 1) * resultPerPage)
-                .Take(resultPerPage)
-                .ToListAsync(),
-            PageCount = pageCount
-        };
-        
-        // Return the response dto.
-        return ServiceResult<PostBasicListResponseDto>.Success(responseDto);
-    }
-
-    /// <summary>
-    /// Get a list of lastest posts by specified number of posts with basic information.
-    /// </summary>
-    /// <param name="limit">The maximum number of the results.</param>
-    /// <returns>A list of objects containing the basic data of the lastest posts.</returns>
-    public async Task<ServiceResult<List<PostBasicResponseDto>>> GetLastestBasicListAsync(int limit)
-    {
-        List<PostBasicResponseDto> responseDtos = await _context.Posts
-            .OrderByDescending(p => p.CreatedDateTime)
-            .Select(p => new PostBasicResponseDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                NormalizedTitle = p.NormalizedTitle,
-                ThumbnailUrl = p.ThumbnailUrl,
-                Content = p.Content,
-                CreatedDateTime = p.CreatedDateTime,
-                IsPinned = p.IsPinned,
-                IsPublished = p.IsPublished,
-                Views = p.Views
-            }).Take(limit)
+        responseDto.Results = await Context.Posts
+            .OrderBy(post => post.IsPinned)
+            .ThenByDescending(post => post.CreatedDateTime)
+            .ThenBy(post => post.NormalizedTitle)
+            .Select(post => new PostBasicResponseDto(post))
+            .Skip((page - 1) * resultsPerPage)
+            .Take(resultsPerPage)
             .ToListAsync();
         
-        return ServiceResult<List<PostBasicResponseDto>>.Success(responseDtos);
+        return responseDto;
     }
-    
-    /// <summary>
-    /// Get a list of all posts' detail information.
-    /// </summary>
-    /// <returns>A list containing of posts' information</returns>
-    public async Task<ServiceResult<List<PostDetailResponseDto>>> GetDetailListAsync()
+
+    /// <inheritdoc/>
+    public async Task<PostDetailResponseDto> GetDetailAsync(
+            int id,
+            bool viewsIncrement = false)
     {
-        List<PostDetailResponseDto> responseDtos = await _context.Posts
-            .OrderBy(p => p.IsPinned)
-            .ThenBy(p => p.Id)
-            .ThenBy(p => p.NormalizedTitle)
-            .Select(p => new PostDetailResponseDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                NormalizedTitle = p.NormalizedTitle,
-                ThumbnailUrl = p.ThumbnailUrl,
-                Content = p.Content,
-                CreatedDateTime = p.CreatedDateTime,
-                UpdatedDateTime = p.UpdatedDateTime,
-                IsPublished = p.IsPublished,
-                IsPinned = p.IsPinned,
-                Views = p.Views,
-                User = new UserBasicResponseDto
-                {
-                    Id = p.User.Id,
-                    UserName = p.User.UserName
-                }
-            }).ToListAsync();
-        return ServiceResult<List<PostDetailResponseDto>>.Success(responseDtos);
-    }
-    
-    /// <summary>
-    /// Get the detail information of a specific post with given id.
-    /// </summary>
-    /// <param name="id">The id of the post.</param>
-    /// <param name="viewsIncrement">
-    /// Determine if the value of the view property of the post should be incremented
-    /// </param>
-    /// <returns>An object containing all the detail information of the post.</returns>
-    public async Task<ServiceResult<PostDetailResponseDto>> GetDetailAsync(int id, bool viewsIncrement = false)
-    {
-        // Fetch the entity with given id from the database
-        Post post = await _context.Posts
+        // Fetch the entity from the database and ensure it exists.
+        Post post = await Context.Posts
             .Include(p => p.User)
             .ThenInclude(u => u.Roles)
-            .SingleOrDefaultAsync(p => p.Id == id);
-            
-        // Ensure the entity exists in the database
-        if (post == null)
-        {
-            return ServiceResult<PostDetailResponseDto>.Failed(
-                ServiceError.NotFoundByProperty(
-                    nameof(Post),
-                    nameof(id),
-                    id.ToString()));
-        }
+            .SingleOrDefaultAsync(p => p.Id == id)
+            ?? throw new ResourceNotFoundException();
         
-        // Increment views if specified
-        if (viewsIncrement)
-        {
-            post.Views += 1;
-            await _context.SaveChangesAsync();
-        }
-        
-        // Map entity's data to the response dto
-        PostDetailResponseDto responseDto = new PostDetailResponseDto
-        {
-            Id = post.Id,
-            Title = post.Title,
-            NormalizedTitle = post.NormalizedTitle,
-            ThumbnailUrl = post.ThumbnailUrl,
-            Content = post.Content,
-            CreatedDateTime = post.CreatedDateTime,
-            UpdatedDateTime = post.UpdatedDateTime,
-            IsPinned = post.IsPinned,
-            IsPublished = post.IsPublished,
-            Views = post.Views,
-            User = new UserBasicResponseDto
-            {
-                Id = post.User.Id,
-                UserName = post.User.UserName,
-                Role = new RoleResponseDto
-                {
-                    Id = post.User.Role.Id,
-                    Name = post.User.Role.Name
-                }
-            }
-        };
-        
-        // Return the response dto
-        return ServiceResult<PostDetailResponseDto>.Success(responseDto);
+        return await HandlePostViewIncrementAndMapToResponseDtoAsync(post, viewsIncrement);
     }
     
-    /// <summary>
-    /// Get the detail information of a specific post with given normalized title.
-    /// </summary>
-    /// <param name="normalizedTitle">The title of the post representing the url of the post.</param>
-    /// <param name="viewsIncrement">
-    /// Determine if the value of the view property of the post should be incremented
-    /// </param>
-    /// <returns>An object containing all the detail information of the post.</returns>
-    public async Task<ServiceResult<PostDetailResponseDto>> GetDetailAsync(
+    /// <inheritdoc/>
+    public async Task<PostDetailResponseDto> GetDetailAsync(
             string normalizedTitle,
             bool viewsIncrement = true)
     {
-        // Ensure specified normalized title is not null.
-        if (normalizedTitle == null)
-        {
-            return ServiceResult<PostDetailResponseDto>.Failed(
-                ServiceError.NotFound(nameof(Post)));
-        }
+        // Fetch the entity from the database and ensure it exists.
+        Post post = await Context.Posts
+            .Include(p => p.User)
+            .ThenInclude(u => u.Roles)
+            .SingleOrDefaultAsync(p => p.NormalizedTitle == normalizedTitle)
+            ?? throw new ResourceNotFoundException();
 
-        // Fetch the entity from the database.
-        Post post = await _context.Posts
-            .SingleOrDefaultAsync(p => p.NormalizedTitle == normalizedTitle);
-        
-        // Ensure the entity exists in the database.
-        if (post == null)
-        {
-            return ServiceResult<PostDetailResponseDto>.Failed(
-                ServiceError.NotFoundByProperty(
-                    nameof(Post),
-                    nameof(normalizedTitle),
-                    normalizedTitle.ToString()));
-        }
-
-        // Increment post's views value if specified.
-        if (viewsIncrement)
-        {
-            post.Views += 1;
-            await _context.SaveChangesAsync();
-        }
-
-        // Initialize response dto.
-        PostDetailResponseDto responseDto = new PostDetailResponseDto
-        {
-            Id = post.Id,
-            Title = post.Title,
-            NormalizedTitle = post.NormalizedTitle,
-            ThumbnailUrl = post.ThumbnailUrl,
-            Content = post.Content,
-            CreatedDateTime = post.CreatedDateTime,
-            UpdatedDateTime = post.UpdatedDateTime,
-            IsPinned = post.IsPinned,
-            IsPublished = post.IsPublished,
-            Views = post.Views,
-            User = new UserBasicResponseDto
-            {
-                Id = post.User.Id,
-                UserName = post.User.UserName,
-                Role = new RoleResponseDto
-                {
-                    Id = post.User.Role.Id,
-                    Name = post.User.Role.Name,
-                    DisplayName = post.User.Role.DisplayName
-                }
-            }
-        };
-
-        return ServiceResult<PostDetailResponseDto>.Success(responseDto);
+        return await HandlePostViewIncrementAndMapToResponseDtoAsync(post, viewsIncrement);
     }
 
-    /// <summary>
-    /// Get statistics figures of all categories which contains total categories count,
-    /// total posts count, total views count.
-    /// </summary>
-    /// <returns>An object containing data of the statistics.</returns>
-    public async Task<ServiceResult<PostListStatisticsResponseDto>> GetStatisticsAsync()
+    /// <inheritdoc/>
+    public async Task<PostStatsResponseDto> GetStatsAsync()
     {
-        PostListStatisticsResponseDto responseDto = await _context.Posts
-            .Select(_ => new PostListStatisticsResponseDto
+        return await Context.Posts
+            .Select(_ => new PostStatsResponseDto
             {
-                TotalPosts = _context.Posts.Count(),
-                TotalViews = _context.Posts.Sum(p => p.Views),
-                UnpublishedPosts = _context.Posts.Count(p => !p.IsPublished),
+                TotalCount = Context.Posts.Count(),
+                TotalViews = Context.Posts.Sum(p => p.Views),
+                UnpublishedCount = Context.Posts.Count(p => !p.IsPublished),
             }).Take(1)
             .SingleAsync();
-        return ServiceResult<PostListStatisticsResponseDto>.Success(responseDto);
     }
     
-    /// <summary>
-    /// Create a post with the data provided from the request.
-    /// </summary>
-    /// <param name="requestDto">An object containing all the data for a new post.</param>
-    /// <returns>An object containing all the detail information of the created post.</returns>
-    public async Task<ServiceResult<PostDetailResponseDto>> CreateAsync(
-            PostUpsertRequestDto requestDto)
+    /// <inheritdoc/>
+    public async Task<int> CreateAsync(PostUpsertRequestDto requestDto)
     {
-        // Validate data from request.
-        ValidationResult result = _validator.Validate(requestDto.TransformValues());
-        if (!result.IsValid)
-        {
-            return ServiceResult<PostDetailResponseDto>.Failed(result.Errors);
-        }
-
-        // Create a new thumbnail file if the request contains data for one.
-        string thumbnailUrl = null;
-        if (requestDto.ThumbnailFile != null)
-        {
-            ServiceResult<string> photoServiceResult = await _photoService.CreateAsync(
-                requestDto.ThumbnailFile,
-                "posts",
-                true);
-            thumbnailUrl = photoServiceResult.ResponseDto;
-        }
-
-        // Initialize the entity.
+        // Initialize a new entity.
         Post post = new Post
         {
             Title = requestDto.Title,
             NormalizedTitle = await GenerateNormalizedTitle(requestDto.Title),
-            ThumbnailUrl = thumbnailUrl,
             Content = requestDto.Content,
             IsPinned = requestDto.IsPinned,
             IsPublished = requestDto.IsPublished,
             UserId = _userService.GetUserAsCurrentUser().ResponseDto.Id,
         };
-        _context.Posts.Add(post);
 
-        // Save changes
-        await _context.SaveChangesAsync();
-
-        // Return the data of the created post.
-        PostDetailResponseDto responseDto = new PostDetailResponseDto
-        {
-            Id = post.Id,
-            Title = post.Title,
-            NormalizedTitle = post.NormalizedTitle,
-            ThumbnailUrl = post.ThumbnailUrl,
-            Content = post.Content,
-            IsPinned = post.IsPinned,
-            IsPublished = post.IsPublished,
-            User = new UserBasicResponseDto
-            {
-                Id = post.User.Id,
-                UserName = post.User.UserName
-            }
-        };
-        return ServiceResult<PostDetailResponseDto>.Success(responseDto);
+        // Save changes.
+        return await base.SaveCreatedEntityAsync(post, requestDto);
     }
 
-    /// <summary>
-    /// Update a post with the id and data provided from the request.
-    /// </summary>
-    /// <param name="id">The id of the post to be updated.</param>
-    /// <param name="requestDto">An object containing all the data to be updated.</param>
-    /// <returns>An object containing all the detail information of the updated post.</returns>
-    public async Task<ServiceResult<PostDetailResponseDto>> UpdateAsync(
-            int id,
-            PostUpsertRequestDto requestDto)
+    /// <inheritdoc/>
+    public async Task UpdateAsync(int id, PostUpsertRequestDto requestDto)
     {
-        // Validate data from the request.
-        ValidationResult result = _validator.Validate(requestDto.TransformValues());
-        if (!result.IsValid)
-        {
-            return ServiceResult<PostDetailResponseDto>.Failed(result.Errors);
-        }
-
-        // Fetch the entity with given id from the database.
-        Post post = await _context.Posts
+        // Fetch the entity from the database and ensure it exists.
+        Post post = await Context.Posts
             .Include(p => p.User)
-            .SingleOrDefaultAsync(p => p.Id == id);
+            .SingleOrDefaultAsync(p => p.Id == id)
+            ?? throw GetResourceNotFoundExceptionById(id);
 
-        // Ensure the entity exists in the database.
-        if (post == null)
-        {
-            return ServiceResult<PostDetailResponseDto>.Failed(
-                ServiceError.NotFoundByProperty(
-                    nameof(Post),
-                    nameof(id),
-                    id.ToString()));
-        }
 
-        // Update the thumbnail if the request indicated.
-        if (requestDto.ThumbnailChanged)
-        {
-            // Remove the old thumbnail if there is any.
-            if (post.ThumbnailUrl != null)
-            {
-                _photoService.Delete(post.ThumbnailUrl);
-                post.ThumbnailUrl = null;
-            }
-
-            // Create a new one if the request contain the data for a new one.
-            if (requestDto.ThumbnailFile != null)
-            {
-                ServiceResult<string> photoServiceResult;
-                photoServiceResult = await _photoService.CreateAsync(
-                    requestDto.ThumbnailFile,
-                    "posts",
-                    true);
-                post.ThumbnailUrl = photoServiceResult.ResponseDto;
-            }
-        }
-
-        // Update title if needed.
+        // Update title if changed.
         if (post.Title != requestDto.Title)
         {
             post.Title = requestDto.Title;
             post.NormalizedTitle = await GenerateNormalizedTitle(requestDto.Title);
         }
-        // Update other properties
+
+        // Update the entity's other properties.
         post.Content = requestDto.Content;
         post.IsPinned = requestDto.IsPinned;
         post.IsPublished = requestDto.IsPublished;
         post.UpdatedDateTime = DateTime.Now;
 
-        // Save changes
-        await _context.SaveChangesAsync();
+        // Save changes.
+        await base.SaveUpdatedEntityAsync(post, requestDto);
+    }
 
-        // Return the detail of the updated entity
-        PostDetailResponseDto responseDto = new PostDetailResponseDto
-        {
-            Id = post.Id,
-            Title = post.Title,
-            NormalizedTitle = post.NormalizedTitle,
-            ThumbnailUrl = post.ThumbnailUrl,
-            Content = post.Content,
-            CreatedDateTime = post.CreatedDateTime,
-            UpdatedDateTime = post.UpdatedDateTime,
-            IsPinned = post.IsPinned,
-            IsPublished = post.IsPublished,
-            Views = post.Views,
-            User = new UserBasicResponseDto
-            {
-                Id = post.User.Id,
-                UserName = post.User.UserName
-            }
-        };
-        return ServiceResult<PostDetailResponseDto>.Success(responseDto);
+    /// <inheritdoc/>
+    public async Task DeleteAsync(int id)
+    {
+        // Fetch the entity from the database and ensure it exists.
+        Post post = await Context.Posts
+            .Include(p => p.User)
+            .SingleOrDefaultAsync(p => p.Id == id)
+            ?? throw GetResourceNotFoundExceptionById(id);
+
+        await base.SaveDeletedEntityAsync(post);
+    }
+
+    /// <inheritdoc/>
+    protected override sealed DbSet<Post> GetRepository(DatabaseContext context)
+    {
+        return context.Posts;
     }
 
     /// <summary>
-    /// Delete a post with given id.
+    /// Increments the view property of the specified post entity, saves changes to the
+    /// database and handling concurrency exception if occuring.
     /// </summary>
-    /// <param name="id">The id of the post to be deleted.</param>
-    /// <returns>The id of the deleted post.</returns>
-    public async Task<ServiceResult<int>> DeleteAsync(int id)
+    /// <param name="post">
+    /// The post to handle.
+    /// </param>
+    /// <param name="viewsIncrement">
+    /// Indicates whether the post's view should be incremented after the operation finishes.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is the
+    /// mapped DTO containing the detail information of the post.
+    /// </returns>
+    /// <exception cref="ConcurrencyException">
+    /// Throws when there is a concurrency-related conflict occuring during the operation.
+    /// </exception> 
+    private async Task<PostDetailResponseDto> HandlePostViewIncrementAndMapToResponseDtoAsync(
+            Post post,
+            bool viewsIncrement)
     {
-        // Fetch the entity with given id from the database.
-        Post post = await _context.Posts.SingleOrDefaultAsync(p => p.Id == id);
-
-        // Ensure the entity exists in the database.
-        if (post == null)
+        // Increment views if specified.
+        if (viewsIncrement)
         {
-            return ServiceResult<int>.Failed(
-                ServiceError.NotFoundByProperty(
-                    nameof(Post),
-                    nameof(id),
-                    id.ToString()));
+            post.Views += 1;
         }
-
-        // Delete the thumbnail file if the exists.
-        if (post.ThumbnailUrl != null)
+        
+        try
         {
-            _photoService.Delete(post.ThumbnailUrl);
+            await Context.SaveChangesAsync();
+
+            return new PostDetailResponseDto(post);
         }
-
-        // Delete the entity.
-        _context.Posts.Remove(post);
-
-        // Save changes
-        await _context.SaveChangesAsync();
-
-        // Return the id of the deleted entity.
-        return ServiceResult<int>.Success(post.Id);
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new ConcurrencyException();
+        }
     }
 
     /// <summary>
@@ -470,24 +202,16 @@ public class PostService : IPostService
     private async Task<string> GenerateNormalizedTitle(string title)
     {
         // Determine the normalized title that is not duplicated.
-        string originalNormalizedTitle = title
-            .ToNonDiacritics()
-            .ToLower()
-            .Replace(" ", "-")
-            .Replace(".", "")
-            .Replace(",", "")
-            .Replace("?", "")
-            .Replace("-", "")
-            .Replace(":", "")
-            .Replace(";", "")
-            .Replace("/", "")
-            .Replace(">", "")
-            .Replace("<", "")
-            .Replace("(", "")
-            .Replace(")", "")
-            .Replace("đ", "d");
+        string originalNormalizedTitle = NormalizedTitleProhibitedCharactersRegex()
+            .Replace(
+                title.ToNonDiacritics()
+                    .ToLower()
+                    .Replace(" ", "-")
+                    .Replace("đ", "d"),
+                "");
+
         string normalizedTitle = originalNormalizedTitle;
-        List<string> sameNormalizedTitles = await _context.Posts
+        List<string> sameNormalizedTitles = await Context.Posts
             .Where(p => p.Title.Contains(originalNormalizedTitle))
             .Select(p => p.Title)
             .ToListAsync();
@@ -497,4 +221,8 @@ public class PostService : IPostService
         }
         return normalizedTitle;
     }
+
+    [GeneratedRegex(@"[.,\?\-:;/><\(\)]")]
+    private static partial Regex NormalizedTitleProhibitedCharactersRegex();
+
 }

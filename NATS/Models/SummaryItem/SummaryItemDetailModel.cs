@@ -1,6 +1,6 @@
 namespace NATS.Models;
 
-public class IntroductionItemViewModel
+public class SummaryItemDetailModel
 {
     [Display(Name = DisplayNames.Id)]
     public int Id { get; set; }
@@ -13,18 +13,22 @@ public class IntroductionItemViewModel
     [Display(Name = DisplayNames.Summary)]
     [Required]
     [MaxLength(255)]
-    public string Summary { get; set; }
+    public string SummaryContent { get; set; }
 
     [Display(Name = DisplayNames.Content)]
     [Required]
     [MaxLength(3000)]
-    public string Content { get; set; }
+    public string DetailContent { get; set; }
 
     [Display(Name = DisplayNames.Thumbnail)]
     public string ThumbnailUrl { get; set; }
 
-    [Display(Name = DisplayNames.Photo)]
-    public IFormFile ThumbnailFile { get; set; }
-
-    public bool ThumbnailChanged { get; set; } = false;
+    public SummaryItemDetailModel(SummaryItemResponseDto responseDto)
+    {
+        Id = responseDto.Id;
+        Name = responseDto.Name;
+        SummaryContent = responseDto.SummaryContent;
+        DetailContent = responseDto.DetailContent;
+        ThumbnailUrl = responseDto.ThumbnailUrl;
+    }
 }

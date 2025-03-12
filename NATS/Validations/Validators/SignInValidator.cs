@@ -1,8 +1,8 @@
 namespace NATS.Services.Validations.Validators;
 
-public class LoginValidator : Validator<LoginRequestDto>
+public class SignInValidator : Validator<SignInRequestDto>
 {
-    public LoginValidator()
+    public SignInValidator()
     {
         RuleFor(dto => dto.UserName)
             .NotNull()

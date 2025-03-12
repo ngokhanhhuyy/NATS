@@ -6,7 +6,7 @@ public class MemberResponseDto
     public string FullName { get; set; }
     public string RoleName { get; set; }
     public string Description { get; set; }
-    public string PhotoUrl { get; set; }
+    public string ThumbnailUrl { get; set; }
 
     public MemberResponseDto(Member teamMember)
     {
@@ -14,6 +14,6 @@ public class MemberResponseDto
         FullName = teamMember.FullName;
         RoleName = teamMember.RoleName;
         Description = teamMember.Description;
-        PhotoUrl = teamMember.ThumbnailUrl;
+        ThumbnailUrl = teamMember.ThumbnailUrl;
     }
 }

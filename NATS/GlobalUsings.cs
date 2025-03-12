@@ -33,6 +33,8 @@ global using NATS.Services.Dtos;
 global using NATS.Services.Dtos.RequestDtos;
 global using NATS.Services.Dtos.ResponseDtos;
 
+global using IAuthenticationService = NATS.Services.Interfaces.IAuthenticationService;
+global using AuthenticationService = NATS.Services.AuthenticationService;
 global using MySqlConnector;
 global using FluentValidation;
 global using ValidationResult = FluentValidation.Results.ValidationResult;

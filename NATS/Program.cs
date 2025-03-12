@@ -58,7 +58,7 @@ builder.Services.ConfigureApplicationCookie(options => {
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme);
 
 // FluentValidation
-builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<SignInValidator>();
 ValidatorOptions.Global.LanguageManager.Enabled = true;
 ValidatorOptions.Global.LanguageManager = new ValidatorLanguageManager {
     Culture = new CultureInfo("vi")
@@ -68,6 +68,7 @@ ValidatorOptions.Global.LanguageManager = new ValidatorLanguageManager {
 builder.Services.AddScoped<SignInManager<User>>();
 builder.Services.AddScoped<RoleManager<Role>>();
 builder.Services.AddTransient<DatabaseContext>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGeneralSettingsService, GeneralSettingsService>();
 builder.Services.AddScoped<IAboutUsIntroductionService, AboutUsIntroductionService>();

@@ -2,7 +2,7 @@ namespace NATS.Models;
 
 public class TrafficStatisticsByDateViewModel
 {
-    [Display(Name = DisplayNames.RecordedAt)]
+    [Display(Name = DisplayNames.RecordedDateTime)]
     [DisplayFormat(DataFormatString = "{dd tháng MM yyyy}")]
     public DateTime RecordedDate { get; set; }
 

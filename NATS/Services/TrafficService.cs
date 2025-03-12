@@ -1,4 +1,3 @@
-using NATS.Services.Dtos.ResponseDtos.Traffic;
 using UAParser;
 
 namespace NATS.Services;
@@ -19,7 +18,8 @@ public class TrafficService : ITrafficService
         DateOnly today = DateOnly.FromDateTime(DateTime.UtcNow.ToApplicationTime());
         return await _context.TrafficByDates
             .Select(td => new TrafficByDateResponseDto(td))
-            .SingleAsync(td => td.RecordedDate == today);
+            .SingleOrDefaultAsync(td => td.RecordedDate == today)
+            ?? new TrafficByDateResponseDto(today);
     }
 
     /// <inheritdoc />
@@ -28,11 +28,26 @@ public class TrafficService : ITrafficService
         DateOnly endingDate = DateOnly.FromDateTime(DateTime.UtcNow.ToApplicationTime());
         DateOnly startingDate = endingDate.AddDays(-lastDays);
 
-        return await _context.TrafficByDates
+        // Fetch all traffic by date entities available from the database.
+        List<TrafficByDate> trafficByDates = await _context.TrafficByDates
             .Where(td => td.RecordedDate > startingDate && td.RecordedDate <= endingDate)
             .OrderBy(td => td.RecordedDate)
-            .Select(td => new TrafficByDateResponseDto(td))
             .ToListAsync();
+
+        // Check and generate empty response DTOs if the corresponding entities don't exist.
+        List<TrafficByDateResponseDto> responseDtos = new List<TrafficByDateResponseDto>();
+        DateOnly evaluatingDate = startingDate;
+        while (evaluatingDate <= endingDate)
+        {
+            TrafficByDateResponseDto responseDto = trafficByDates
+                .Select(td => new TrafficByDateResponseDto(td))
+                .FirstOrDefault(td => td.RecordedDate == evaluatingDate)
+                ?? new TrafficByDateResponseDto(evaluatingDate);
+
+            evaluatingDate = evaluatingDate.AddDays(1);
+        }
+
+        return responseDtos;
     }
 
     /// <inheritdoc />

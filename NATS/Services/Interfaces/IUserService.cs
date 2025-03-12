@@ -2,9 +2,9 @@ namespace NATS.Services.Interfaces;
 
 public interface IUserService
 {
-    Task<ServiceResult<JwtResponseDto>> GetJwtAsync(LoginRequestDto requestDto);
+    Task<ServiceResult<JwtResponseDto>> GetJwtAsync(SignInRequestDto requestDto);
     
-    Task<ServiceResult<LoginResponseDto>> LoginAsync(LoginRequestDto requestDto);
+    Task<ServiceResult<LoginResponseDto>> LoginAsync(SignInRequestDto requestDto);
     
     Task<ServiceResult<bool>> LogoutAsync();
     

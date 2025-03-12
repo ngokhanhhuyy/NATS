@@ -10,8 +10,7 @@ public static class DisplayNames
     public const string GeneralSettings = "Cài đặt chung";
     public const string Education = "Đào tạo";
     public const string Product = "Sản phẩm";
-    public const string BusinessService = "Dịch vụ";
-    public const string Features = "Tác dụng";
+    public const string Service = "Dịch vụ";
     public const string Enquiry = "Câu hỏi";
     public const string Id = "Mã số";
     public const string Name = "Tên";
@@ -25,7 +24,7 @@ public static class DisplayNames
     public const string FullName = "Tên đầy đủ";
     public const string RoleName = "Chức vụ";
     public const string Description = "Mô tả";
-    public const string Quatity = "Số lượng";
+    public const string Quantity = "Số lượng";
     public const string StartingAt = "Bắt đầu vào lúc";
     public const string EndingAt = "Kết thúc vào lúc";
     public const string Category = "Phân loại";
@@ -51,8 +50,8 @@ public static class DisplayNames
     public const string WhyChooseUs = "Vì sao chọn chúng tôi";
     public const string OurDifference = "Sự khác biệt của chúng tôi";
     public const string OurCulture = "Văn hoá của chúng tôi";
-    public const string TeamMembers = "Đội ngũ";
-    public const string BusinessCertificates = "Chứng chỉ";
+    public const string Members = "Đội ngũ";
+    public const string Certificates = "Chứng chỉ";
     public const string ApplicationName = "Tên trang web";
     public const string ApplicationShortName = "Tên trang web (viết tắt)";
     public const string FavIcon = "Biểu tượng trang web";
@@ -60,13 +59,12 @@ public static class DisplayNames
     public const string Content = "Nội dung";
     public const string PhotoFile = "File ảnh";
     public const string Course = "Khoá học";
-    public const string CourseSection = "Trọng tâm khoá học";
     public const string Summary = "Tóm tắt";
     public const string Introduction = "Giới thiệu";
     public const string IntroductionItem = "Giới thiệu";
     public const string Detail = "Chi tiết";
     public const string Index = "Thứ tự";
-    public const string HomePageSliderItem = "Trình chiếu ảnh";
+    public const string SliderItem = "Trình chiếu ảnh";
     public const string Post = "Bài viết";
     public const string PostCategory = "Chuyên mục bài viết";
     public const string CreatedDateTime = "Tạo vào lúc";
@@ -76,9 +74,9 @@ public static class DisplayNames
     public const string IsPublished = "Được xuất bản";
     public const string Statistics = "Thống kê";
     public const string TotalCategories = "Chuyên mục";
-    public const string TotalPosts = "Bài viết";
-    public const string TotalViews = "Lượt xem";
-    public const string UnpublishedPosts = "Chưa xuất bản";
+    public const string TotalPostCount = "Bài viết";
+    public const string TotalPostViews = "Lượt xem";
+    public const string UnpublishedPostCount = "Chưa xuất bản";
     public const string PhoneNumber = "Số điện thoại";
     public const string Zalo = "Zalo";
     public const string Email = "Địa chỉ email";
@@ -87,7 +85,7 @@ public static class DisplayNames
     public const string IsCompleted = "Đã hoàn thành";
     public const string ContactInfo = "Thông tin liên hệ";
     public const string WorkingHours = "Giờ làm việc";
-    public const string RecordedAt = "Ghi nhận lúc";
+    public const string RecordedDateTime = "Ghi nhận lúc";
     public const string AccessCount = "Lượt truy cập";
     public const string GuestCount = "Khách truy cập";
     public const string Type = "Phân loại";

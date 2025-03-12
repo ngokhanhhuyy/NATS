@@ -1,13 +1,13 @@
 namespace NATS.Models;
 
-public class AboutUsIntroductionViewModel
+public class AboutUsIntroductionUpsertModel : IHasThumbnailUpsertModel
 {
-    public string MainPhotoUrl { get; set; }
+    public string ThumbnailUrl { get; set; }
     
-    public bool MainPhotoChanged { get; set; }
+    public bool ThumbnailChanged { get; set; }
 
     [Required]
-    public IFormFile MainPhotoFile { get; set; }
+    public IFormFile ThumbnailFile { get; set; }
 
     [Display(Name = DisplayNames.MessageFromUs)]
     [Required]
@@ -33,4 +33,12 @@ public class AboutUsIntroductionViewModel
     [Required]
     [MaxLength(1500)]
     public string OurCultureContent { get; set; }
+
+    public AboutUsIntroductionUpsertModel(AboutUsIntroductionResponseDto responseDto)
+    {
+        ThumbnailUrl = responseDto.ThumbnailUrl;
+        MainQuoteContent = responseDto.MainQuoteContent;
+        AboutUsContent = responseDto.AboutUsContent;
+        WhyChooseUsContent = responseDto.WhyChooseUsContent;
+    }
 }

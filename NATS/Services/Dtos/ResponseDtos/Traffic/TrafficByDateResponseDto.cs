@@ -12,4 +12,9 @@ public class TrafficByDateResponseDto
         AccessCount = traffic.AccessCount;
         GuestCount = traffic.GuestCount;
     }
+
+    public TrafficByDateResponseDto(DateOnly recordedDate)
+    {
+        RecordedDate = recordedDate;
+    }
 }

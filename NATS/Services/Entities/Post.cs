@@ -1,6 +1,6 @@
 namespace NATS.Services.Entities;
 
-public class Post
+public class Post : IHasThumbnailEntity
 {
     [Column("id")]
     [Key]
