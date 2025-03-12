@@ -2,7 +2,7 @@
 
 namespace NATS.Models;
 
-public class GeneralSettingsViewModel
+public class GeneralSettingsUpsertModel
 {
     [Display(Name = DisplayNames.ApplicationName)]
     [Required]
@@ -39,4 +39,14 @@ public class GeneralSettingsViewModel
             Selected = UnderMaintainance
         }
     };
+
+    public GeneralSettingsUpsertModel() { }
+
+    public GeneralSettingsUpsertModel(GeneralSettingsResponseDto responseDto)
+    {
+        ApplicationName = responseDto.ApplicationName;
+        ApplicationShortName = responseDto.ApplicationShortName;
+        FavIconUrl = responseDto.FavIconUrl;
+        UnderMaintainance = responseDto.UnderMaintainance;
+    }
 }

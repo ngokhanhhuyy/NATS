@@ -12,7 +12,7 @@ public class PostDetailResponseDto
     public bool IsPinned { get; set; }
     public bool IsPublished { get; set; }
     public int Views { get; set; }
-    public UserBasicResponseDto User { get; set; }
+    public UserDetailResponseDto User { get; set; }
 
     public PostDetailResponseDto(Post post)
     {
@@ -26,6 +26,6 @@ public class PostDetailResponseDto
         IsPinned = post.IsPinned;
         IsPublished = post.IsPublished;
         Views = post.Views;
-        User = new UserBasicResponseDto(post.User);
+        User = new UserDetailResponseDto(post.User);
     }
 }

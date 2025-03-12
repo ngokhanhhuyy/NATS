@@ -1,3 +1,5 @@
+using NATSInternal.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,9 +20,10 @@ builder.Services.AddSignalR();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 string connectionString = builder.Configuration.GetConnectionString("MySQL");
-builder.Services.AddDbContext<DatabaseContext>(options => options
-    .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-    .AddInterceptors(new VietnamTimeInterceptor()));
+builder.Services.AddDbContext<DatabaseContext>(options =>
+{
+    options.UseSqlite("Data Source=database.db");
+});
 
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<DatabaseContext>()
@@ -42,7 +45,11 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.SlidingExpiration = true;
     options.Events.OnSignedIn = async context =>
     {
-        IUserService userService = context.HttpContext.RequestServices.GetService<IUserService>();
+        IUserService userService = context
+            .HttpContext
+            .RequestServices
+            .GetService<IUserService>();
+
         bool parsable = int.TryParse(
             context.Principal!.FindFirstValue(ClaimTypes.NameIdentifier),
             out int userId);
@@ -69,6 +76,7 @@ builder.Services.AddScoped<SignInManager<User>>();
 builder.Services.AddScoped<RoleManager<Role>>();
 builder.Services.AddTransient<DatabaseContext>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGeneralSettingsService, GeneralSettingsService>();
 builder.Services.AddScoped<IAboutUsIntroductionService, AboutUsIntroductionService>();

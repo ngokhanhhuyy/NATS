@@ -4,33 +4,31 @@ public class HomePagesFooter : ViewComponent
 {
     private readonly IGeneralSettingsService _generalSettingsService;
     private readonly IPostService _postService;
-    private readonly IContactService _iContactService;
+    private readonly IContactService _contactService;
 
     public HomePagesFooter(
             IGeneralSettingsService generalSettingsService,
             IPostService postService,
-            IContactService iContactService)
+            IContactService contactService)
     {
         _generalSettingsService = generalSettingsService;
         _postService = postService;
-        _iContactService = iContactService;
+        _contactService = contactService;
     }
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
         // Get general settings data.
-        ServiceResult<GeneralSettingsResponseDto> generalSettingsServiceResult;
-        generalSettingsServiceResult = await _generalSettingsService.GetAsync();
+        Task<GeneralSettingsResponseDto> generalSettingsTask;
+        generalSettingsTask = _generalSettingsService.GetAsync();
 
         // Get top 3 lastest post.
-        ServiceResult<List<PostBasicResponseDto>> postServiceResult;
-        postServiceResult = await _postService.GetLastestBasicListAsync(3);
+        Task<PostListResponseDto> postListTask = _postService.GetListAsync(1, 3);
 
         // Get the contact info.
-        ServiceResult<ContactResponseDto> contactInfoServiceResult;
-        contactInfoServiceResult = await _iContactService.GetListAsync();
+        Task<List<ContactResponseDto>> contactsTask = _contactService.GetListAsync();
 
-
+        await Task.WhenAll(generalSettingsTask, postListTask, contactsTask);
 
         FooterViewModel model = new FooterViewModel
         {
@@ -57,10 +55,10 @@ public class HomePagesFooter : ViewComponent
             },
             ContactInfo = new ContactModel
             {
-                PhoneNumber = contactInfoServiceResult.ResponseDto.PhoneNumber,
-                ZaloNumber = contactInfoServiceResult.ResponseDto.ZaloNumber,
-                Email = contactInfoServiceResult.ResponseDto.Email,
-                Address = contactInfoServiceResult.ResponseDto.Address,
+                PhoneNumber = contactsTask.ResponseDto.PhoneNumber,
+                ZaloNumber = contactsTask.ResponseDto.ZaloNumber,
+                Email = contactsTask.ResponseDto.Email,
+                Address = contactsTask.ResponseDto.Address,
             }
         };
         

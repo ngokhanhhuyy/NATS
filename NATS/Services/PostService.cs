@@ -8,14 +8,14 @@ public partial class PostService
         AbstractHasThumbnailService<Post, PostUpsertRequestDto>,
         IPostService
 {
-    private readonly IUserService _userService;
+    private readonly IAuthorizationService _authorizationService;
     
     public PostService(
             DatabaseContext context,
             IPhotoService photoService,
-            IUserService userService) : base(context, photoService)
+            IAuthorizationService authorizationService) : base(context, photoService)
     {
-        _userService = userService;
+        _authorizationService = authorizationService;
     }
 
     /// <inheritdoc/>
@@ -102,7 +102,7 @@ public partial class PostService
             Content = requestDto.Content,
             IsPinned = requestDto.IsPinned,
             IsPublished = requestDto.IsPublished,
-            UserId = _userService.GetUserAsCurrentUser().ResponseDto.Id,
+            UserId = (await _authorizationService.GetCallerUserDetailAsync()).Id,
         };
 
         // Save changes.

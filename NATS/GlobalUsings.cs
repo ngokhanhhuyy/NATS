@@ -24,7 +24,6 @@ global using NATS.Services.Exceptions;
 global using NATS.Services.Localization;
 global using NATS.Services.Interfaces;
 global using NATS.Services.Handlers;
-global using NATS.Services.Options;
 global using NATS.Services.Identity;
 global using NATS.Services.Validations;
 global using NATS.Services.Validations.Validators;
@@ -34,6 +33,7 @@ global using NATS.Services.Dtos.RequestDtos;
 global using NATS.Services.Dtos.ResponseDtos;
 
 global using IAuthenticationService = NATS.Services.Interfaces.IAuthenticationService;
+global using IAuthorizationService = NATS.Services.Interfaces.IAuthorizationService;
 global using AuthenticationService = NATS.Services.AuthenticationService;
 global using MySqlConnector;
 global using FluentValidation;

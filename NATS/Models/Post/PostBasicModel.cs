@@ -1,6 +1,6 @@
 namespace NATS.Models;
 
-public class PostBasicViewModel
+public class PostBasicModel
 {
     [Display(Name = DisplayNames.Id)]
     public int Id { get; set; }
@@ -28,4 +28,17 @@ public class PostBasicViewModel
     
     [Display(Name = DisplayNames.Views)]
     public int Views { get; set; }
+
+    public PostBasicModel(PostBasicResponseDto responseDto)
+    {
+        Id = responseDto.Id;
+        Title = responseDto.Title;
+        NormalizedTitle = responseDto.NormalizedTitle;
+        ThumbnailUrl = responseDto.ThumbnailUrl;
+        Content = responseDto.Content;
+        CreatedDateTime = responseDto.CreatedDateTime;
+        IsPublished = responseDto.IsPublished;
+        IsPinned = responseDto.IsPinned;
+        Views = responseDto.Views;
+    }
 }

@@ -17,3 +17,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "RCS1194", Justification = "<Pending>", Scope = "module")]
 [assembly: SuppressMessage("Style", "RCS1212", Justification = "<Pending>", Scope = "module")]
 [assembly: SuppressMessage("Style", "RCS1212FadeOut", Justification = "<Pending>", Scope = "module")]
+[assembly: SuppressMessage("Style", "IDE0074:Use compound assignment", Justification = "<Pending>", Scope = "member", Target = "~M:NATSInternal.Services.AuthorizationService.GetUserDetailAsync~System.Threading.Tasks.Task{NATS.Services.Dtos.ResponseDtos.UserDetailResponseDto}")]

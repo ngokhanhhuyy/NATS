@@ -83,7 +83,7 @@ public static class DisplayNames
     public const string Address = "Địa chỉ";
     public const string ReceivedDateTime = "Ngày nhận";
     public const string IsCompleted = "Đã hoàn thành";
-    public const string ContactInfo = "Thông tin liên hệ";
+    public const string Contact = "Thông tin liên hệ";
     public const string WorkingHours = "Giờ làm việc";
     public const string RecordedDateTime = "Ghi nhận lúc";
     public const string AccessCount = "Lượt truy cập";

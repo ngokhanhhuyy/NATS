@@ -1,12 +1,12 @@
 namespace NATS.Services.Dtos.ResponseDtos;
 
-public class UserBasicResponseDto
+public class UserDetailResponseDto
 {
     public int Id { get; set; }
     public string UserName { get; set; }
     public RoleResponseDto Role { get; set; }
 
-    public UserBasicResponseDto(User user)
+    public UserDetailResponseDto(User user)
     {
         Id = user.Id;
         UserName = user.UserName;
