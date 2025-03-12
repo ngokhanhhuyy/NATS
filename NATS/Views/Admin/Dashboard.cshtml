@@ -1,4 +1,4 @@
-@model DashboardViewModel
+@model DashboardModel
 @{
     Layout = "_AdminLayout";
     ViewBag.CurrentPageName = "Dashboard";
@@ -6,47 +6,66 @@
 
 <div class="container-fluid d-flex flex-column">
     <div class="row g-4 p-3 flex-grow-1">
+        <!-- TodayAccessCount -->
         <div class="col col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-            <div class="block statistics d-flex rounded rounded-3 p-3 border-0 bg-primary text-white border-primary h-100 justify-content-between">
+            <div class="block statistics d-flex rounded rounded-3 p-3 border-0 bg-primary
+                        text-white border-primary h-100 justify-content-between">
                 <i class="bi bi-eye-fill text-primary bg-white bg-opacity-50"></i>
                 <div class="description d-flex">
                     <div class="header text-white opacity-50 text-end w-100">
-                        @Html.DisplayNameFor(model => model.AccessCount).ToUpper()
+                        @Html.DisplayNameFor(model => model.TodayAccessCount).ToUpper()
                     </div>
-                    <h2 class="py-0 mb-0 text-end">@Html.DisplayFor(model => model.AccessCount)</h2>
+                    <h2 class="py-0 mb-0 text-end">
+                        @Html.DisplayFor(model => model.TodayAccessCount)
+                    </h2>
                 </div>
             </div>
         </div>
+
+        <!-- GuestCount -->
         <div class="col col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-            <div class="block statistics d-flex rounded rounded-3 p-3 h-100 justify-content-between">
+            <div class="block statistics d-flex rounded rounded-3 p-3 h-100
+                        justify-content-between">
                 <i class="bi bi-person-arms-up text-success bg-success-subtle"></i>
                 <div class="description d-flex">
                     <div class="header opacity-50 text-end w-100">
-                        @Html.DisplayNameFor(model => model.GuessCount).ToUpper()
+                        @Html.DisplayNameFor(model => model.TodayGuestCount).ToUpper()
                     </div>
-                    <h2 class="py-0 mb-0 text-end">@Html.DisplayFor(model => model.GuessCount)</h2>
+                    <h2 class="py-0 mb-0 text-end">
+                        @Html.DisplayFor(model => model.TodayGuestCount)
+                    </h2>
                 </div>
             </div>
         </div>
+
+        <!-- IncompletedEnquiryCount -->
         <div class="col col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-            <div class="block statistics d-flex rounded rounded-3 p-3 h-100 justify-content-between">
+            <div class="block statistics d-flex rounded rounded-3 p-3 h-100
+                        justify-content-between">
                 <i class="bi bi-question-circle-fill text-warning bg-warning-subtle"></i>
                 <div class="description d-flex">
                     <div class="header opacity-50 text-end w-100">
-                        @Html.DisplayNameFor(model => model.EnquiryCount).ToUpper()
+                        @Html.DisplayNameFor(model => model.IncompletedEnquiryCount).ToUpper()
                     </div>
-                    <h2 class="py-0 mb-0 text-end">@Html.DisplayFor(model => model.EnquiryCount)</h2>
+                    <h2 class="py-0 mb-0 text-end">
+                        @Html.DisplayFor(model => model.IncompletedEnquiryCount)
+                    </h2>
                 </div>
             </div>
         </div>
+        
+        <!-- UserCount -->
         <div class="col col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-            <div class="block statistics d-flex rounded rounded-3 p-3 h-100 justify-content-between">
+            <div class="block statistics d-flex rounded rounded-3 p-3 h-100
+                        justify-content-between">
                 <i class="bi bi-person-circle text-danger bg-danger-subtle"></i>
                 <div class="description d-flex">
                     <div class="header opacity-50 text-end w-100">
                         @Html.DisplayNameFor(model => model.UserCount).ToUpper()
                     </div>
-                    <h2 class="py-0 mb-0 text-end">@Html.DisplayFor(model => model.UserCount)</h2>
+                    <h2 class="py-0 mb-0 text-end">
+                        @Html.DisplayFor(model => model.UserCount)
+                    </h2>
                 </div>
             </div>
         </div>
@@ -56,24 +75,26 @@
         <div class="col col-12">
             <div class="block block-chart p-0 d-flex flex-column p-3 overflow-visible"
                     id="block-last-7-days-statistics">
-                <div class="header text-primary border-bottom-0 text-center justify-content-center w-100">
-                    @("Lưu lượng 7 ngày gần nhất".ToUpper())
+                <div class="header text-primary border-bottom-0 text-center
+                            justify-content-center w-100">
+                    @($"Lưu lượng {Model.TrafficByDates.Count()} ngày gần nhất".ToUpper())
                 </div>
                 @{
-                    string[] dateLabels = Model.TrafficStatisticsByDates.Items
+                    string[] dateLabels = Model.TrafficByDates
                         .Select(td => td.RecordedDate.ToString("dd/M"))
                         .ToArray();
-                    int[] dateAccessCountData = Model.TrafficStatisticsByDates.Items
+                    int[] dateAccessCountData = Model.TrafficByDates
                         .Select(td => td.AccessCount)
                         .ToArray();
-                    int[] dateGuessCountData = Model.TrafficStatisticsByDates.Items
-                        .Select(td => td.GuessCount)
+                    int[] dateGuestCountData = Model.TrafficByDates
+                        .Select(td => td.GuestCount)
                         .ToArray();
                 }
-                <div id="last-7-days-statistics-chart" class="flex-fill h-100"
-                        chart-labels='@Json.Serialize(dateLabels)'
-                        chart-access-count='@Json.Serialize(dateAccessCountData)'
-                        chart-guess-count='@Json.Serialize(dateGuessCountData)'>
+                <div
+                    id="last-7-days-statistics-chart" class="flex-fill h-100"
+                    chart-labels='@Json.Serialize(dateLabels)'
+                    chart-access-count='@Json.Serialize(dateAccessCountData)'
+                    chart-guess-count='@Json.Serialize(dateGuestCountData)'>
                 </div>
             </div>
         </div>

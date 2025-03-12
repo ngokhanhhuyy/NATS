@@ -88,7 +88,7 @@ public class TrafficService : ITrafficService
                         th.RecordedDateTime.Hour >= FromHour &&
                         th.RecordedDateTime.Hour < ToHour)
                     .Sum(th => th.AccessCount),
-                GuessCount = trafficByHours
+                GuestCount = trafficByHours
                     .Where(th =>
                         th.RecordedDateTime.Hour >= FromHour &&
                         th.RecordedDateTime.Hour < ToHour)
@@ -100,7 +100,7 @@ public class TrafficService : ITrafficService
     }
 
     /// <inheritdoc />
-    public async Task<List<TrafficStatsByDeviceResponseDto>> GetStatsByDeviceAsync(
+    public async Task<List<TrafficByDeviceResponseDto>> GetStatsByDeviceAsync(
             int lastDays)
     {
         List<TrafficByHour> trafficByHours;
@@ -111,8 +111,8 @@ public class TrafficService : ITrafficService
                 td.RecordedDateTime.Date <= DateTime.Today)
             .ToListAsync();
 
-        List<TrafficStatsByDeviceResponseDto> responseDtos;
-        responseDtos = new List<TrafficStatsByDeviceResponseDto>();
+        List<TrafficByDeviceResponseDto> responseDtos;
+        responseDtos = new List<TrafficByDeviceResponseDto>();
 
         foreach (TrafficByHour trafficByHour in trafficByHours)
         {
@@ -120,12 +120,12 @@ public class TrafficService : ITrafficService
             {
                 Parser parser = Parser.GetDefault();
                 ClientInfo clientInfo = parser.Parse(trafficIpAddress.LastUserAgent);
-                TrafficStatsByDeviceResponseDto responseDto = responseDtos
+                TrafficByDeviceResponseDto responseDto = responseDtos
                     .SingleOrDefault(dto => dto.DeviceName == clientInfo.OS.Family);
 
                 if (responseDto == null)
                 {
-                    responseDto = new TrafficStatsByDeviceResponseDto
+                    responseDto = new TrafficByDeviceResponseDto
                     {
                         DeviceName = clientInfo.OS.Family
                     };

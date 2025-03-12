@@ -52,7 +52,7 @@ public interface ITrafficService
     /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is a list
     /// of DTOs containing the statistics data.
     /// </returns>
-    Task<List<TrafficStatsByDeviceResponseDto>> GetStatsByDeviceAsync(int lastDays);
+    Task<List<TrafficByDeviceResponseDto>> GetStatsByDeviceAsync(int lastDays);
 
     /// <summary>
     /// Records the IP address of the current request by hour.

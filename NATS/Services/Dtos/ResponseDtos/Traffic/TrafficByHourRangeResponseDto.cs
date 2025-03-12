@@ -6,5 +6,5 @@ public class TrafficByHourRangeResponseDto
     public TimeOnly FromTime { get; set; }
     public TimeOnly ToTime { get; set; }
     public int AccessCount { get; set; }
-    public int GuessCount { get; set; }
+    public int GuestCount { get; set; }
 }

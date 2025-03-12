@@ -43,28 +43,27 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.LogoutPath = "/Logout";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.SlidingExpiration = true;
-    options.Events.OnSignedIn = async context =>
+    options.Events.OnSignedIn = async (context) =>
     {
-        IUserService userService = context
+        IAuthorizationService authorizationService = context
             .HttpContext
             .RequestServices
-            .GetService<IUserService>();
+            .GetService<IAuthorizationService>();
 
-        bool parsable = int.TryParse(
-            context.Principal!.FindFirstValue(ClaimTypes.NameIdentifier),
-            out int userId);
+        string nameIdentifier = context.Principal!.FindFirstValue(ClaimTypes.NameIdentifier);
+        bool parsable = int.TryParse(nameIdentifier, out int userId);
         if (!parsable)
         {
             throw new InvalidOperationException();
         }
-        await userService.SetCurrentUserId(userId);
+        
         await Task.CompletedTask;
     };
 });
 
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme);
 
-// FluentValidation
+// FluentValidation.
 builder.Services.AddValidatorsFromAssemblyContaining<SignInValidator>();
 ValidatorOptions.Global.LanguageManager.Enabled = true;
 ValidatorOptions.Global.LanguageManager = new ValidatorLanguageManager {

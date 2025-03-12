@@ -89,6 +89,14 @@ public static class DisplayNames
     public const string AccessCount = "Lượt truy cập";
     public const string GuestCount = "Khách truy cập";
     public const string Type = "Phân loại";
+    public const string PeriodOfDayName = "Khung giờ";
+    public const string TrafficByDate = "Truy cập theo ngày";
+    public const string TrafficByHour = "Truy cập theo giờ";
+    public const string TrafficByHourRange = "Truy cập theo khung giờ";
+    public const string TrafficByDevice = "Truy cập theo thiết bị";
+    public const string TodayAccessCount = "Lượt truy cập hôm nay";
+    public const string TodayGuestCount = "Khách truy cập hôm nay";
+    public const string IncompletedEnquiryCount = "Câu hỏi chưa giải đáp";
 
     private static readonly Dictionary<string, string> names;
 

@@ -30,37 +30,10 @@ public class HomePagesFooter : ViewComponent
 
         await Task.WhenAll(generalSettingsTask, postListTask, contactsTask);
 
-        FooterViewModel model = new FooterViewModel
-        {
-            GeneralSettings = new GeneralSettingsViewModel
-            {
-                ApplicationName = generalSettingsServiceResult.ResponseDto.ApplicationName,
-                ApplicationShortName = generalSettingsServiceResult.ResponseDto.ApplicationShortName
-            },
-            Posts = new PostBasicListViewModel
-            {
-                Items = postServiceResult.ResponseDto
-                    .Select(p => new PostBasicViewModel
-                    {
-                        Id = p.Id,
-                        Title = p.Title,
-                        NormalizedTitle = p.NormalizedTitle,
-                        ThumbnailUrl = p.ThumbnailUrl,
-                        Content = p.Content,
-                        CreatedDateTime = p.CreatedDateTime,
-                        IsPublished = p.IsPublished,
-                        IsPinned = p.IsPinned,
-                        Views = p.Views
-                    }).ToList()
-            },
-            ContactInfo = new ContactModel
-            {
-                PhoneNumber = contactsTask.ResponseDto.PhoneNumber,
-                ZaloNumber = contactsTask.ResponseDto.ZaloNumber,
-                Email = contactsTask.ResponseDto.Email,
-                Address = contactsTask.ResponseDto.Address,
-            }
-        };
+        FooterModel model = new FooterModel(
+            generalSettingsTask.Result,
+            postListTask.Result,
+            contactsTask.Result);
         
         return View(model);
     }

@@ -11,13 +11,8 @@ public class HomePagesLogoAndName : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        ServiceResult<GeneralSettingsResponseDto> serviceResult;
-        serviceResult = await _generalSettingsService.GetAsync();
-        GeneralSettingsViewModel model = new GeneralSettingsViewModel
-        {
-            ApplicationName = serviceResult.ResponseDto.ApplicationName,
-            ApplicationShortName = serviceResult.ResponseDto.ApplicationShortName
-        };
+        GeneralSettingsResponseDto responseDto = await _generalSettingsService.GetAsync();
+        GeneralSettingsDetailModel model = new GeneralSettingsDetailModel(responseDto);
         
         return View(model);
     }

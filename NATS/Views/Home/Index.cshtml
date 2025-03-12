@@ -1,4 +1,4 @@
-﻿@model HomePageViewModel
+﻿@model HomePageModel
 @{
     ViewBag.PageTitle = "Trang chủ";
     Layout = "_Layout";
@@ -9,9 +9,9 @@
     <div class="slider-container">
         <div class="slider-wrapper theme-default">    
             <div id="slider" class="nivoSlider">
-                @for (int i = 0; i < Model.HomePageSliderItems.Items.Count; i++)
+                @for (int i = 0; i < Model.SliderItems.Count; i++)
                 {
-                    HomePageSliderItemViewModel sliderItem;
+                    SliderItemDetailModel sliderItem;
                     sliderItem = Model.HomePageSliderItems.Items[i];
                     <img src="@sliderItem.PhotoUrl" alt="@sliderItem.Title"
                          title='@(i == 0 ? "#htmlcaption1" : string.Empty)' />

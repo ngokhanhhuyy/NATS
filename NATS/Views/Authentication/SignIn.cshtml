@@ -35,8 +35,11 @@
                 <form asp-action="Login" asp-controller="Authentication" method="post">
                     @Html.AntiForgeryToken()
                     <div class="form-group my-2">
-                        <input asp-for="UserName" class="form-control"
-                                placeholder="@Html.DisplayNameFor(model => model.UserName)">
+                        <input
+                            asp-for="UserName"
+                            class="form-control"
+                            placeholder="@Html.DisplayNameFor(model => model.UserName)"
+                        />
                         <span asp-validation-for="UserName"></span>
                     </div>
 
