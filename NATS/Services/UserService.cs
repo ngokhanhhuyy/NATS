@@ -6,8 +6,6 @@ public class UserService : IUserService
 	private readonly UserManager<User> _userManager;
 	private readonly RoleManager<Role> _roleManager;
 	private readonly SignInManager<User> _signInManager;
-	private readonly IValidator<SignInRequestDto> _loginValidator;
-    private readonly IValidator<UserListRequestDto> _userListValidator;
 	private int _currentUserId;
 	private User _currentUser;
     private readonly IConfiguration _config;
