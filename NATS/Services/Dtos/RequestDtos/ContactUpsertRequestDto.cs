@@ -1,13 +1,12 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class ContactUpsertRequestDto : IRequestDto<ContactUpsertRequestDto>
+public class ContactUpsertRequestDto : IRequestDto
 {
     public ContactType Type { get; set; }
     public string Content { get; set; }
 
-    public ContactUpsertRequestDto TransformValues()
+    public void TransformValues()
     {
         Content = Content.ToNullIfEmpty();
-        return this;
     }
 }

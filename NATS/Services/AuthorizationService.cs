@@ -1,4 +1,4 @@
-namespace NATSInternal.Services;
+namespace NATS.Services;
 
 /// <inheritdoc />
 public class AuthorizationService : IAuthorizationService
@@ -33,13 +33,15 @@ public class AuthorizationService : IAuthorizationService
     /// <inheritdoc />
     public async Task<UserDetailResponseDto> GetCallerUserDetailAsync()
     {
-        if (_user == null)
-        {
-            _user = await _context.Users
-                .Include(u => u.Roles)
-                .SingleAsync(u => u.Id == _userId);
-        }
-
+        _user ??= await _context.Users.Include(u => u.Roles).SingleAsync(u => u.Id == _userId);
         return new UserDetailResponseDto(_user);
+    }
+
+    /// <inheritdoc />
+    public bool CanResetUserPassword(User targetUser)
+    {
+        return _user.Id != targetUser.Id &&
+            _user.Role.Name == "Developer" &&
+            targetUser.Role.Name != "Developer";
     }
 }

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 namespace NATS.Services.Validations.Validators;
 
 public class Validator<TRequestDto> : AbstractValidator<TRequestDto>
-        where TRequestDto : IRequestDto<TRequestDto> {
+        where TRequestDto : IRequestDto {
     public Validator() {
         ClassLevelCascadeMode = CascadeMode.Continue;
         RuleLevelCascadeMode = CascadeMode.Stop;

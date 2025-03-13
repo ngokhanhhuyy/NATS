@@ -1,7 +1,6 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class AboutUsIntroductionUpsertRequestDto
-        : IHasThumbnailUpsertRequestDto<AboutUsIntroductionUpsertRequestDto>
+public class AboutUsIntroductionUpsertRequestDto : IHasThumbnailUpsertRequestDto
 {
     public byte[] ThumbnailFile { get; set; }
     public bool ThumbnailChanged { get; set; }
@@ -11,13 +10,12 @@ public class AboutUsIntroductionUpsertRequestDto
     public string OurDifferenceContent { get; set; }
     public string OurCultureContent { get; set; }
 
-    public AboutUsIntroductionUpsertRequestDto TransformValues()
+    public void TransformValues()
     {
         MainQuoteContent = MainQuoteContent.ToNullIfEmpty();
         AboutUsContent = AboutUsContent.ToNullIfEmpty();
         WhyChooseUsContent = WhyChooseUsContent.ToNullIfEmpty();
         OurDifferenceContent = OurDifferenceContent.ToNullIfEmpty();
         OurCultureContent = OurCultureContent.ToNullIfEmpty();
-        return this;
     }
 }

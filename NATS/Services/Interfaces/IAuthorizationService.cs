@@ -22,4 +22,15 @@ public interface IAuthorizationService
     /// the user.
     /// </returns>
     Task<UserDetailResponseDto> GetCallerUserDetailAsync();
+
+    /// <summary>
+    /// Checks if the caller user has permission to reset the target user's password.
+    /// </summary>
+    /// <param name="targetUser">
+    /// An entity representing the target user to compare.
+    ///  </param>
+    /// <returns>
+    /// A <see cref="bool"/> value indicating whether the caller has the permission.
+    /// </returns>
+    bool CanResetUserPassword(User targetUser);
 }

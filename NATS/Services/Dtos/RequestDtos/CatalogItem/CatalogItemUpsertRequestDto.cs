@@ -1,7 +1,6 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class CatalogItemUpsertRequestDto
-        : IHasThumbnailUpsertRequestDto<CatalogItemUpsertRequestDto>
+public class CatalogItemUpsertRequestDto : IHasThumbnailUpsertRequestDto
 {
     public string Name { get; set; }
     public string Summary { get; set; }
@@ -11,12 +10,15 @@ public class CatalogItemUpsertRequestDto
     public bool ThumbnailChanged{ get; set; }
     public List<CatalogItemUpsertPhotoRequestDto> Photos { get; set; }
 
-    public CatalogItemUpsertRequestDto TransformValues()
+    public void TransformValues()
     {
         Name = Name.ToNullIfEmpty();
         Summary = Summary.ToNullIfEmpty();
         Detail = Detail.ToNullIfEmpty();
-        Photos = Photos?.Select(photo => photo.TransformValues()).ToList();
-        return this;
+
+        foreach (CatalogItemUpsertPhotoRequestDto photo in Photos)
+        {
+            photo.TransformValues();
+        }
     }
 }

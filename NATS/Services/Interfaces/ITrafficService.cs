@@ -1,5 +1,3 @@
-using NATS.Services.Dtos.ResponseDtos.Traffic;
-
 namespace NATS.Services.Interfaces;
 
 /// <summary>

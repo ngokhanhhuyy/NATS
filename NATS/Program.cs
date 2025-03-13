@@ -1,25 +1,10 @@
-using NATSInternal.Services;
-
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-if (environment == Environments.Development)
-{
-    builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-}
-else
-{
-    builder.Services.AddControllersWithViews()
-        .AddRazorRuntimeCompilation();
-}
 
 // Add signalR
 builder.Services.AddSignalR();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-string connectionString = builder.Configuration.GetConnectionString("MySQL");
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseSqlite("Data Source=database.db");
@@ -111,6 +96,5 @@ app.UseMiddleware<TrafficMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<UnderMaintainanceMiddleware>();
-app.UseMiddleware<CurrentUserMiddleware>();
-app.MapControllerRoute("default", "{controller=Home}/{action=Index}");
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.Run();

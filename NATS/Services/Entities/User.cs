@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace NATS.Services.Entities;
+﻿namespace NATS.Services.Entities;
 
 public class User : IdentityUser<int>
 {

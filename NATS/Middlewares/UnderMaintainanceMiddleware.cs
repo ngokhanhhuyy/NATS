@@ -14,9 +14,9 @@ public class UnderMaintainanceMiddleware
         bool isAuthenticated = context.User.Identity!.IsAuthenticated;
         bool isLoginRequest = context.Request.Path.StartsWithSegments("/Login");
         bool isUnderMaintainanceRequest = context.Request.Path.StartsWithSegments("/bao-tri");
-        ServiceResult<GeneralSettingsResponseDto> serviceResult;
-        serviceResult = await service.GetAsync();
-        bool isUnderMaintainance = serviceResult.ResponseDto.UnderMaintainance;
+        GeneralSettingsResponseDto generalSettingsResponseDto;
+        generalSettingsResponseDto = await service.GetAsync();
+        bool isUnderMaintainance = generalSettingsResponseDto.UnderMaintainance;
 
         if (!isUnderMaintainance && isUnderMaintainanceRequest)
         {

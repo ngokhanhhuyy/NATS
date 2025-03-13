@@ -1,0 +1,11 @@
+@host = http://localhost:5000/api
+
+# @name GetAccessCookie
+// @no-log
+POST {{host}}/authentication/getAccessCookie HTTP/2.0
+Content-Type: application/json
+
+{
+    "userName": "ngokhanhhuyy",
+    "password": "Huyy47b1"
+}

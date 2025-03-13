@@ -1,7 +1,6 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class CertificateUpsertRequestDto
-        : IHasThumbnailUpsertRequestDto<CertificateUpsertRequestDto>
+public class CertificateUpsertRequestDto : IHasThumbnailUpsertRequestDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -9,9 +8,8 @@ public class CertificateUpsertRequestDto
     public byte[] ThumbnailFile { get; set; }
     public bool ThumbnailChanged { get; set; } = false;
 
-    public CertificateUpsertRequestDto TransformValues()
+    public void TransformValues()
     {
         Name = Name.ToNullIfEmpty();
-        return this;
     }
 }

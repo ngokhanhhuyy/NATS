@@ -1,6 +1,6 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class PostUpsertRequestDto : IHasThumbnailUpsertRequestDto<PostUpsertRequestDto>
+public class PostUpsertRequestDto : IHasThumbnailUpsertRequestDto
 {
     public string Title { get; set; }
     public string Content { get; set; }
@@ -9,10 +9,9 @@ public class PostUpsertRequestDto : IHasThumbnailUpsertRequestDto<PostUpsertRequ
     public bool ThumbnailChanged { get; set; }
     public byte[] ThumbnailFile { get; set; }
 
-    public PostUpsertRequestDto TransformValues()
+    public void TransformValues()
     {
         Title = Title.ToNullIfEmpty();
         Content = Content.ToNullIfEmpty();
-        return this;
     }
 }

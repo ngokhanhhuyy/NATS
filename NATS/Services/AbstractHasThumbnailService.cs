@@ -13,10 +13,7 @@ namespace NATS.Services;
 public abstract class AbstractHasThumbnailService<TEntity, TUpsertRequestDto>
             : AbstractUpsertableService<TEntity, TUpsertRequestDto>
         where TEntity : class, IHasThumbnailEntity, new()
-        where TUpsertRequestDto :
-            class,
-            IHasThumbnailUpsertRequestDto<TUpsertRequestDto>,
-            new()
+        where TUpsertRequestDto : class, IHasThumbnailUpsertRequestDto, new()
 {
     protected IPhotoService PhotoService { get; init; }
     protected List<string> PhotoUrlsToBeDeletedWhenSuccess { get; init; } = new List<string>();

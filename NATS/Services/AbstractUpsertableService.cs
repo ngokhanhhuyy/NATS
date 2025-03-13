@@ -13,7 +13,7 @@ namespace NATS.Services;
 /// </typeparam>
 public abstract class AbstractUpsertableService<TEntity, TUpsertRequestDto>
         where TEntity : class, IEntity, new()
-        where TUpsertRequestDto : class, IRequestDto<TUpsertRequestDto>, new()
+        where TUpsertRequestDto : class, IRequestDto, new()
 {
     protected DatabaseContext Context { get; init; }
 
