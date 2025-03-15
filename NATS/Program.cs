@@ -12,12 +12,13 @@ else
         .AddRazorRuntimeCompilation();
 }
 
-// Add services to the container.
-builder.Services.AddDbContext<DatabaseContext>(options =>
-{
-    options.UseSqlite("Data Source=database.db");
-});
+// Add database context.
+string connectionString = builder.Configuration.GetConnectionString("MySQL");
+builder.Services.AddDbContext<DatabaseContext>(options => options
+    .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+    .AddInterceptors(new VietnamTimeInterceptor()));
 
+// Add identity, for authentication and authorization.
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddErrorDescriber<VietnameseIdentityErrorDescriber>()

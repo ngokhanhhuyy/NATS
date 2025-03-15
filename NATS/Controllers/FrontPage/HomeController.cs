@@ -25,6 +25,16 @@ public class HomeController : Controller
 
         await Task.WhenAll(sliderItemResponseDtosTask, summaryItemResponseDtosTask);
 
-        return new 
+        FrontPageHomeModel model = new FrontPageHomeModel
+        {
+            SliderItems = sliderItemResponseDtosTask.Result
+                .Select(dto => new SliderItemDetailModel(dto))
+                .ToList(),
+            SummaryItems = summaryItemResponseDtosTask.Result
+                .Select(dto => new SummaryItemDetailModel(dto))
+                .ToList()
+        };
+
+        return View("~/Views/FrontPageHomeView.cshtml", model);
     }
 }
