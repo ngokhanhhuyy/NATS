@@ -1,10 +1,18 @@
-var builder = WebApplication.CreateBuilder(args);
-
-// Add signalR
-builder.Services.AddSignalR();
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+if (environment == Environments.Development)
+{
+    builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+}
+else
+{
+    builder.Services.AddControllersWithViews()
+        .AddRazorRuntimeCompilation();
+}
+
+// Add services to the container.
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseSqlite("Data Source=database.db");
@@ -92,9 +100,21 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseMiddleware<TrafficMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseAntiforgery();
+// app.UseMiddleware<TrafficMiddleware>();
 app.UseMiddleware<UnderMaintainanceMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next.Invoke();
+    }
+    catch (AuthenticationException)
+    {
+        context.Response.Redirect("/SignIn");
+    }
+});
 app.Run();

@@ -108,7 +108,7 @@ public class DatabaseContext
             e.ToTable("traffic_by_hour_ip_address");
             e.HasKey(thia => thia.Id);
             e.HasOne(thia => thia.TrafficByHour)
-                .WithMany(th => th.IPAddresses)
+                .WithMany(th => th.IpAddresses)
                 .HasForeignKey(thia => thia.TrafficByHourId)
                 .OnDelete(DeleteBehavior.Cascade);
             e.HasIndex(thia => thia.LastAccessAt);

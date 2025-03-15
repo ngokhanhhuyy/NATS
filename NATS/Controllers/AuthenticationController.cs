@@ -1,13 +1,13 @@
 namespace NATS.Controllers;
 
-[Route("/Api/Authentication")]
-[ApiController]
-public class AuthenticationController : ControllerBase
+[Route("/quan-tri")]
+public class AdminAuthenticationController : Controller
 {
     private readonly IAuthenticationService _authenticationService;
     private readonly IValidator<SignInRequestDto> _signInValidator;
+    private readonly string _viewPath = "~/Admin/SignIn/SignInView.cshtml";
 
-    public AuthenticationController(
+    public AdminAuthenticationController(
             IAuthenticationService authenticationService,
             IValidator<SignInRequestDto> signInValidator)
     {
@@ -15,49 +15,37 @@ public class AuthenticationController : ControllerBase
         _signInValidator = signInValidator;
     }
 
-    [HttpPost("GetAccessCookie")]
+    [HttpGet("/SignIn")]
     [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public async Task<IActionResult> GetAccessCookie(SignInRequestDto requestDto)
+    public IActionResult SignIn()
     {
-        // Validate data from request.
-        requestDto.TransformValues();
+        SignInModel model = new SignInModel();
+        return View(_viewPath, model);
+    }
+
+    [HttpPost("/SignIn")]
+    [AllowAnonymous]
+    public async Task<IActionResult> SignIn(SignInModel model)
+    {
+        SignInRequestDto requestDto = model.ToRequestDto();
+
+        // Validate data from the request.
         ValidationResult validationResult = _signInValidator.Validate(requestDto);
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
-            return BadRequest(ModelState);
+            return View(_viewPath, model);
         }
 
-        // Performing login request verification operation.
         try
         {
-            int userId = await _authenticationService.SignInAsync(requestDto);
-            return Ok(userId);
+            await _authenticationService.SignInAsync(requestDto);
+            return RedirectToAction("Dashboard", "AdminDashboard");
         }
         catch (OperationException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return UnprocessableEntity(ModelState);
+            return View(_viewPath, model);
         }
-    }
-
-    [HttpPost("ClearAccessCookie")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> ClearAccessCookie()
-    {
-        await _authenticationService.SignOutAsync();
-        return Ok();
-    }
-
-    [HttpGet("CheckAuthenticationStatus")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult CheckAuthenticationStatus()
-    {
-        return Ok();
     }
 }

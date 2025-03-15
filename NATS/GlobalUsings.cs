@@ -16,6 +16,7 @@ global using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 global using NATS.Extensions;
 global using NATS.Middlewares;
+global using NATS.Models;
 global using NATS.Services;
 global using NATS.Services.Entities;
 global using NATS.Services.Extensions;

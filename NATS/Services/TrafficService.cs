@@ -105,7 +105,7 @@ public class TrafficService : ITrafficService
     {
         List<TrafficByHour> trafficByHours;
         trafficByHours = await _context.TrafficByHours
-            .Include(td => td.IPAddresses)
+            .Include(td => td.IpAddresses)
             .Where(td =>
                 td.RecordedDateTime.Date > DateTime.Today.AddDays(-lastDays) &&
                 td.RecordedDateTime.Date <= DateTime.Today)
@@ -116,7 +116,7 @@ public class TrafficService : ITrafficService
 
         foreach (TrafficByHour trafficByHour in trafficByHours)
         {
-            foreach (TrafficByHourIpAddress trafficIpAddress in trafficByHour.IPAddresses)
+            foreach (TrafficByHourIpAddress trafficIpAddress in trafficByHour.IpAddresses)
             {
                 Parser parser = Parser.GetDefault();
                 ClientInfo clientInfo = parser.Parse(trafficIpAddress.LastUserAgent);
@@ -143,36 +143,63 @@ public class TrafficService : ITrafficService
     public async Task RecordAsync(string ipAddress, string userAgent)
     {
         // Fetch the traffic entity from the database.
-        DateOnly today = DateOnly.FromDateTime(DateTime.UtcNow.ToApplicationTime());
+        DateTime now = DateTime.UtcNow.ToApplicationTime();
+        DateOnly today = DateOnly.FromDateTime(now);
         TrafficByDate trafficByDate = await _context.TrafficByDates
-            .Include(td => td.TrafficByHours)
-            .ThenInclude(th => th.IPAddresses)
+            .Include(td => td.TrafficByHours).ThenInclude(th => th.IpAddresses)
             .Where(td => td.RecordedDate == today)
-            .SingleAsync();
+            .SingleOrDefaultAsync();
 
-        // Fetch current hour's traffic by hour entity
+        // Create a new entity if not exists.
+        if (trafficByDate == null)
+        {
+            trafficByDate = new TrafficByDate
+            {
+                RecordedDate = today,
+                TrafficByHours = new List<TrafficByHour>()
+            };
+
+            _context.TrafficByDates.Add(trafficByDate);
+        }
+
+        // Fetch current hour's traffic by hour entity.
         TrafficByHour trafficByHour = trafficByDate.TrafficByHours
-            .Single(th => th.RecordedDateTime.Hour == DateTime.Now.Hour);
+            .SingleOrDefault(th => th.RecordedDateTime.Hour == DateTime.Now.Hour);
+        
+        // Create a new hour entity if not exists.
+        if (trafficByHour == null)
+        {
+            trafficByHour = new TrafficByHour
+            {
+                RecordedDateTime = now,
+                IpAddresses = new List<TrafficByHourIpAddress>()
+            };
+
+            trafficByDate.TrafficByHours.Add(trafficByHour);
+            _context.TrafficByHours.Add(trafficByHour);
+        }
         
         // Assign a list if traffic ip address list in the traffic entity is null.
-        trafficByHour.IPAddresses ??= new List<TrafficByHourIpAddress>();
+        trafficByHour.IpAddresses ??= new List<TrafficByHourIpAddress>();
         
         // Fetch traffic ip address.
-        TrafficByHourIpAddress trafficIPAddress = trafficByHour.IPAddresses!
+        TrafficByHourIpAddress trafficIpAddress = trafficByHour.IpAddresses
             .SingleOrDefault(tia => tia.IPAddress == ipAddress);
         
         // Create new traffic ip address entity if it doesn't exist.
-        if (trafficIPAddress == null)
+        if (trafficIpAddress == null)
         {
-            trafficIPAddress = new TrafficByHourIpAddress
+            trafficIpAddress = new TrafficByHourIpAddress
             {
                 IPAddress = ipAddress,
             };
-            trafficByHour.IPAddresses!.Add(trafficIPAddress);
+
+            trafficByHour.IpAddresses.Add(trafficIpAddress);
             trafficByHour.GuestCount += 1;
+
             bool ipAddressRecorded = trafficByDate.TrafficByHours
-                .Any(th => th.IPAddresses
-                    .Any(ip => ip.IPAddress == ipAddress));
+                .Any(th => th.IpAddresses.Any(ip => ip.IPAddress == ipAddress));
+
             if (!ipAddressRecorded)
             {
                 trafficByDate.GuestCount += 1;
@@ -180,9 +207,9 @@ public class TrafficService : ITrafficService
         }
         
         // Update the entities.
-        trafficIPAddress.AccessCount += 1;
-        trafficIPAddress.LastAccessAt = DateTime.Now;
-        trafficIPAddress.LastUserAgent = userAgent;
+        trafficIpAddress.AccessCount += 1;
+        trafficIpAddress.LastAccessAt = DateTime.Now;
+        trafficIpAddress.LastUserAgent = userAgent;
         trafficByHour.AccessCount += 1;
         trafficByDate.AccessCount += 1;
         

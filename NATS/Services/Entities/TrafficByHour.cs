@@ -25,5 +25,5 @@ public class TrafficByHour
 
     // Navigation properties
     public virtual TrafficByDate TrafficByDate { get; set; }
-    public virtual List<TrafficByHourIpAddress> IPAddresses { get; set; }
+    public virtual List<TrafficByHourIpAddress> IpAddresses { get; set; }
 }

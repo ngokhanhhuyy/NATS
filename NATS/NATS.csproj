@@ -29,8 +29,4 @@
     <EditorConfigFiles Remove="C:\repos\NATS\NATS\.editorconfig" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Controllers\Admin*Controller.cs" />
-  </ItemGroup>
-
 </Project>
