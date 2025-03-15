@@ -11,7 +11,6 @@ public sealed partial class DataInitializer
     public void InitializeData(IApplicationBuilder builder)
     {
         using IServiceScope serviceScope = builder.ApplicationServices.CreateScope();
-        using IDbContextTransaction transaction = _context.Database.BeginTransaction();
 
         _context = serviceScope.ServiceProvider.GetService<DatabaseContext>();
         _userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
@@ -19,6 +18,8 @@ public sealed partial class DataInitializer
 
         _context.Database.OpenConnection();
         _context.Database.EnsureCreated();
+
+        using IDbContextTransaction transaction = _context.Database.BeginTransaction();
 
         try
         {
@@ -287,7 +288,7 @@ public sealed partial class DataInitializer
             };
 
             _context.Certificates.Add(certificate);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 

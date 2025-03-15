@@ -42,8 +42,8 @@ public class SummaryItemService
 
         // Update the entity's properties.
         item.Name = requestDto.Name;
-        item.SummaryContent = requestDto.Summary;
-        item.DetailContent = requestDto.Content;
+        item.SummaryContent = requestDto.SummaryContent;
+        item.DetailContent = requestDto.DetailContent;
 
         // Save changes.
         await base.SaveUpdatedEntityAsync(item, requestDto);

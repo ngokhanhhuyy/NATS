@@ -58,7 +58,7 @@ ValidatorOptions.Global.LanguageManager = new ValidatorLanguageManager {
 // Dependency injection
 builder.Services.AddScoped<SignInManager<User>>();
 builder.Services.AddScoped<RoleManager<Role>>();
-builder.Services.AddTransient<DatabaseContext>();
+builder.Services.AddScoped<DatabaseContext>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -73,7 +73,7 @@ builder.Services.AddScoped<ICatalogItemService, CatalogItemService>();
 builder.Services.AddScoped<ISliderItemService, SliderItemService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IEnquiryService, EnquiryService>();
-builder.Services.AddScoped<IContactService, IContactService>();
+builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<ITrafficService, TrafficService>();
 
 WebApplication app = builder.Build();
