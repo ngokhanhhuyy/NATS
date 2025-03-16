@@ -9,13 +9,14 @@ public interface ICatalogItemService
     /// Get the list of all catalog items with basic information and thumbnail only.
     /// </summary>
     /// <param name="type">
-    /// The type of the catalog items to retrieve.
+    /// (Optional) The type of the catalog items to retrieve. If not specified, the results
+    /// will be all available catalog items, regardless their types.
     /// </param>
     /// <returns>
     /// A <see cref="Task"/> representing the asynchronous operation, which result is a
     /// <see cref="List{T}"/> of DTOs, containing the basic information of the catalog items.
     /// </returns>
-    Task<List<CatalogItemBasicResponseDto>> GetListAsync(CatalogItemType type);
+    Task<List<CatalogItemBasicResponseDto>> GetListAsync(CatalogItemType? type = null);
 
     /// <summary>
     /// Gets a specific catalog item by given id with detail information, thumbnail url and

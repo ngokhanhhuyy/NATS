@@ -12,6 +12,6 @@ public class GeneralSettingsResponseDto
         ApplicationName = settings.ApplicationName;
         ApplicationShortName = settings.ApplicationShortName;
         FavIconUrl = settings.FavIconUrl;
-        UnderMaintainance = UnderMaintainance;
+        UnderMaintainance = settings.UnderMaintainance;
     }
 }

@@ -1,0 +1,223 @@
+﻿@using System.Text.RegularExpressions
+@model HomeViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+@functions {
+    List<string> ComputeHotlines(ContactType type)
+    {
+        List<string> hotlines = new List<string>();
+        foreach (ContactDetailModel contact in Model.Contacts)
+        {
+            if (contact.Type == type)
+            {
+                string spacesRemovedContent = contact.Content.Replace(" ", "");
+                string formattedContent = Regex
+                    .Replace(spacesRemovedContent, @"(\d{4})(\d{3})(\d{3})", "$1 $2 $3");
+                hotlines.Add(formattedContent);
+            }
+        }
+
+        return hotlines;
+    }
+}
+
+<div class="container-fluid p-0" id="home-view">
+    <!-- SliderItems -->
+    <div id="slider" class="carousel slide overflow-visible m-0 w-100 position-relative">
+        <!-- Photos -->
+        <div class="carousel-inner">
+            @for (int index = 0; index < Model.SliderItems.Count(); index++)
+            {
+                SliderItemDetailModel sliderItem = Model.SliderItems[index];
+                <div class="carousel-item @(index == 0 ? "active" : "")">
+                    <img
+                        src="@sliderItem.ThumbnailUrl"
+                        class="carousel-img d-block w-100"
+                        alt="..."
+                    />
+                </div>
+            }
+        </div>
+
+        <!-- IndicatorButtons -->
+        <div class="carousel-indicators">
+            @for (int index = 0; index < Model.SliderItems.Count(); index++)
+            {
+                <button
+                    type="button"
+                    class="@(index == 0 ? "active" : "")"
+                    data-bs-target="#slider"
+                    data-bs-slide-to="@index"
+                    aria-current="@(index == 0)"
+                    aria-label="Slide @index">
+                </button>
+            }
+        </div>
+
+        <!-- CarouoselControlButtons -->
+        <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#slider"
+            data-bs-slide="prev"
+        >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#slider"
+            data-bs-slide="next"
+        >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- ApplicationName -->
+    <div
+        class="container-fluid text-center text-white fw-bold p-2 mb-3 shadow"
+        id="application-name-container"
+    >
+        @Model.GeneralSettings.ApplicationName
+    </div>
+
+    <!-- SummaryItems -->
+    <div class="container my-5">
+        <div class="row g-3">
+            @foreach (SummaryItemDetailModel summaryItem in Model.SummaryItems)
+            {
+                <div class="col col-xl-3 col-md-6 col-12 p-3
+                            d-flex flex-column align-items-center">
+                    <img
+                        class="rounded-circle summary-item-thumbnail mb-3 shadow"
+                        src="@summaryItem.ThumbnailUrl"
+                    >
+
+                    <span class="fs-3 text-center text-success mb-3">
+                        @summaryItem.Name
+                    </span>
+
+                    <p>@summaryItem.SummaryContent</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- AboutUsIntroduction -->
+    <div class="container-fluid bg-success text-white fs-5 my-5 shadow">
+        <div class="container">
+            <div class="row justify-content-center align-items-stretch">
+                <div class="col col-xl-6 col-lg-8 col-12 overflow-hidden
+                            d-flex align-items-center p-4">
+                    <img
+                        src="@Model.AboutUsIntroduction.ThumbnailUrl"
+                        class="w-100 rounded-3"
+                    />
+                </div>
+                <div class="col-xl col-lg-8 col p-4 pt-3 d-flex flex-column
+                            justify-content-center align-items-start">
+                    <div class="fs-2 mb-3">Về chúng tôi</div>
+                    <p>@Model.AboutUsIntroduction.AboutUsContent</p>
+                    <a href="#" class="btn btn-outline-light mt-3">
+                        Tìm hiểu thêm
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CatalogItems -->
+    <div class="container my-5 px-3" id="catalog-item-container">
+        @await Html.PartialAsync("_CatalogItemList", Model.Services)
+        @await Html.PartialAsync("_CatalogItemList", Model.Courses)
+        @await Html.PartialAsync("_CatalogItemList", Model.Products)
+    </div>
+
+    <!-- Enquiry -->
+    <div class="container-fluid bg-success">
+        <div class="row justify-content-center p-4 pb-5">
+            <div class="col col-xxl-4 col-xl-5 col-lg-6 col-md-7 col-12">
+                <div class="mb-3 text-white fs-5 d-flex flex-column">
+                    <div class="fs-2">Bạn cần tư vấn?</div>
+                    <span>Hãy gửi câu hỏi cho chúng tôi</span>
+                    <span class="small opacity-75">
+                        * Chúng tôi sẽ không chia sẻ thông tin của bạn.
+                    </span>
+                </div>
+
+                <form
+                    class="bg-white rounded-4 shadow p-3 w-100 d-flex flex-column
+                            align-items-stretch"
+                    action="#">
+                    <!-- FullName -->
+                    <div class="form-floating mb-3 required">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="UserName"
+                            name="UserName"
+                            placeholder=""
+                        />
+                        <label class="required" for="UserName">Họ và tên</label>
+                    </div>
+
+                    <!-- PhoneNumber -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="tel"
+                            class="form-control"
+                            id="PhoneNumber"
+                            name="PhoneNumber"
+                            placeholder=""
+                        />
+                        <label class="required" for="PhoneNumber">Số điện thoại</label>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="Email"
+                            name="Email"
+                            placeholder=""
+                        />
+                        <label for="Email">Địa chỉ email</label>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="form-floating mb-3">
+                        <textarea
+                            class="form-control"
+                            id="Content"
+                            name="Content"
+                            placeholder=""
+                        ></textarea>
+                        <label class="required" for="Content">Nội dung</label>
+                    </div>
+
+                    <!-- Submit -->
+                    <button
+                        type="submit"
+                        class="btn btn-outline-success text-success align-self-end"
+                    >
+                        Gửi
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Trang chủ
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/front-pages/home.css">
+}

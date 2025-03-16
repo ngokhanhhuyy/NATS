@@ -1,0 +1,47 @@
+#home-view .carousel-img {
+    max-height: 750px;
+    object-fit: cover;
+}
+
+#home-view #application-name-container {
+    background-color: rgb(20, 112, 70);
+    font-size: 1.4em;
+}
+
+#home-view .summary-item-thumbnail {
+    width: 150px;
+    height: 150px;
+    aspect-ratio: 1;
+}
+
+#home-view .catalog-item-thumbnail {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: 50% 50%;
+}
+
+#home-view textarea {
+    min-height: 200px;
+}
+
+#home-view button[type="submit"]:hover {
+    color: white !important;
+}
+
+@media (max-width: 768px) {
+    #home-view .catalog-items-row.row {
+        width: fit-content !important;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    #home-view .company-name {
+        font-size: 1.0em;
+    }
+
+    #home-view .catalog-items-row.row {
+        width: 100%;
+    }
+}

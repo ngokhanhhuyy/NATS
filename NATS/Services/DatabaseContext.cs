@@ -40,7 +40,7 @@ public class DatabaseContext
         });
         builder.Entity<SummaryItem>(e =>
         {
-            e.ToTable("business_summary_items");
+            e.ToTable("summary_items");
             e.HasKey(ii => ii.Id);
         });
         builder.Entity<AboutUsIntroduction>(e =>

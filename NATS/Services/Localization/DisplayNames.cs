@@ -79,6 +79,7 @@ public static class DisplayNames
     public const string UnpublishedPostCount = "Chưa xuất bản";
     public const string PhoneNumber = "Số điện thoại";
     public const string Zalo = "Zalo";
+    public const string ZaloNumber = "Số zalo";
     public const string Email = "Địa chỉ email";
     public const string Address = "Địa chỉ";
     public const string ReceivedDateTime = "Ngày nhận";

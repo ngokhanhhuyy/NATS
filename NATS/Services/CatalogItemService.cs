@@ -1,6 +1,6 @@
 namespace NATS.Services;
 
-/// <inheritdoc cref="IMemberService" />
+/// <inheritdoc cref="ICatalogItemService" />
 public class CatalogItemService
         :
             AbstractHasThumbnailService<CatalogItem, CatalogItemUpsertRequestDto>,
@@ -13,13 +13,17 @@ public class CatalogItemService
     }
 
     /// <inheritdoc />
-    public async Task<List<CatalogItemBasicResponseDto>> GetListAsync(CatalogItemType type)
+    public async Task<List<CatalogItemBasicResponseDto>> GetListAsync(
+            CatalogItemType? type = null)
     {
-        return await Context.CatalogItems
-            .OrderBy(ci => ci.Id)
-            .Where(ci => ci.Type == type)
-            .Select(ci => new CatalogItemBasicResponseDto(ci))
-            .ToListAsync();
+        IQueryable<CatalogItem> query = Context.CatalogItems.OrderBy(ci => ci.Id);
+
+        if (type.HasValue)
+        {
+            query = query.Where(ci => ci.Type == type);
+        }
+
+        return await query.Select(ci => new CatalogItemBasicResponseDto(ci)).ToListAsync();
     }
 
     /// <inheritdoc />

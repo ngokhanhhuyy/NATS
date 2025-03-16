@@ -1,0 +1,101 @@
+@model FooterViewModel
+@functions {
+    string ComputeEncodedAddress()
+    {
+        ContactDetailModel addressContact = Model.Contacts
+            .Where(c => c.Type == ContactType.Address)
+            .FirstOrDefault();
+
+        if (addressContact == null)
+        {
+            return null;
+        }
+
+        return Uri.EscapeDataString(addressContact.Content);
+    }
+}
+
+
+<div class="container text-white">
+    <div class="row gx-4 gy-5 justify-content-center align-items-stretch px-3 py-5 pb-4">
+        <!-- Map --> 
+        <div class="col col-xl-4 col-12">
+            @{
+                string encodedAdress = ComputeEncodedAddress();
+                if (encodedAdress != null)
+                {
+                    <iframe 
+                        width="100%"
+                        height="100%"
+                        class="rounded-4 shadow m-0"
+                        style="border:0;"
+                        loading="lazy"
+                        allowfullscreen
+                        src="https://www.google.com/maps?q=@(encodedAdress)&output=embed">
+                    </iframe>
+                }
+            }
+        </div>
+
+        <!-- Contacts --> 
+        <div class="col col-xl-5 col-lg-6 col-12">
+            @foreach (ContactDetailModel contact in Model.Contacts)
+            {
+                <div class="mb-3 d-flex flex-column">
+                    <!-- Label -->
+                    <span class="fw-bold opacity-50">
+                        @DisplayNames.Get(contact.Type.ToString())
+                    </span>
+
+                    <!-- Content -->
+                    @switch (contact.Type)
+                    {
+                        case ContactType.PhoneNumber:
+                            <a href="tel:@contact.Content">
+                                @contact.Content
+                            </a>
+                            break;
+                        case ContactType.ZaloNumber:
+                            string zaloUrl = "https://zalo.me/" + contact.Content
+                                .Replace(" ", "")
+                                .Replace("+84", "0");
+                            <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
+                                @contact.Content
+                            </a>
+                            break;
+                        case ContactType.Email:
+                            <a href="mailto:@contact.Content">
+                                @contact.Content
+                            </a>
+                            break;
+                        case ContactType.Address:
+                            <span>@contact.Content</span>
+                            break;
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Logo -->
+        <div class="col d-flex flex-column justify-content-center align-items-center">
+            <div
+                class="border border-4 rounded-circle d-flex
+                        justify-content-center align-items-center"
+                id="footer-logo-container"
+            >
+                <img src="/images/main-logo-transparent-white.png">
+            </div>
+            
+            <div class="fw-bold fs-5 text-center mt-3">
+                @Model.GeneralSettings.ApplicationName
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="col col-12 text-center">
+            Bản quyền © thuộc Ngô Khánh Huy
+            <a href="https://facebook.com/huy.nino.97">@@ngokhanhhuyy</a><br/>
+            @DateTime.UtcNow.ToApplicationTime().ToVietnameseString()
+        </div>
+    </div>
+</div>

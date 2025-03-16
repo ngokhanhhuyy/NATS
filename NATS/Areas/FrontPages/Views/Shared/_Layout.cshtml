@@ -1,0 +1,111 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    _currentControllerName = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+@functions {
+    string _currentControllerName;
+
+    string ComputeNavBarItemClassName(string correspondingControllerName)
+    {
+        if (_currentControllerName == correspondingControllerName)
+        {
+            return "active";
+        }
+
+        return string.Empty;
+    }
+}
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg fixed-top shadow fs-5" id="navbar" data-bs-theme="light">
+    <div class="container">
+        <!-- Main logo -->
+        <a
+            asp-area="FrontPages"
+            asp-controller="Home"
+            asp-action="Index"
+            class="navbar-brand d-flex align-items-center"
+        >
+            <img
+                src="/images/main-logo-transparent-white-without-text.png"
+                class="me-2 flex-shrink-0"
+            />
+            <span class="fs-2 application-short-name">NATS</span>
+        </a>
+        <button
+            class="navbar-toggler fs-3 me-2 py-2"
+            id="navbar-collapse-button"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbar-content"
+            aria-controls="navbar-content"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar-content">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end w-100">
+                <li class="nav-item">
+                    <a
+                        asp-area="FrontPages"
+                        asp-controller="Home"
+                        asp-action="Index"
+                        class="nav-link @ComputeNavBarItemClassName("Home")"
+                    >
+                        Trang chủ
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a
+                        asp-area="FrontPages"
+                        asp-controller="AboutUs"
+                        asp-action="Index"
+                        class="nav-link @ComputeNavBarItemClassName("AboutUs")"
+                    >
+                        Giới thiệu
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#">Dịch vụ</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#">Khoá học</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#">Sản phẩm</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#">Liên hệ</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="flex-fill h-100">
+    @RenderBody()
+</main>
+
+<footer class="container-fluid bg-dark" id="footer">
+    @await Component.InvokeAsync("FooterComponent")
+</footer>
+
+@section PageTitle {
+    @await RenderSectionAsync("PageTitle", required: true)
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/front-pages/front-pages.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+}
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

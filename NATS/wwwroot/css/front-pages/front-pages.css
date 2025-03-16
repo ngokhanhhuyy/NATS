@@ -1,0 +1,115 @@
+:root {
+    --navbar-height: 60px;
+}
+
+nav {
+    --navbar-background-color: white;
+    --navbar-logo-img-filter:
+        brightness(0)
+        saturate(100%)
+        invert(39%)
+        sepia(90%)
+        saturate(393%)
+        hue-rotate(100deg)
+        brightness(88%)
+        contrast(89%);
+    --navbar-transition-duration: 0.3s;
+    --navbar-background-color: var(--bs-white);
+    --navbar-foreground-color: var(--bs-success);
+    background: var(--navbar-background-color);
+    height: var(--navbar-height);
+    transition: background-color var(--navbar-transition-duration) ease;
+}
+
+nav.color-transformed {
+    --navbar-background-color: var(--bs-success);
+    --navbar-foreground-color: var(--bs-white);
+    --navbar-logo-img-filter: none;
+}
+
+nav img {
+    width: auto;
+    height: calc(var(--navbar-height) - 12px);
+    padding: 5px;
+    filter: var(--navbar-logo-img-filter);
+    transition: filter var(--navbar-transition-duration) ease;
+}
+
+nav .navbar-brand span.application-short-name {
+    font-family: Arial;
+    color: var(--navbar-foreground-color);
+    transform: scaleX(110%);
+    transform-origin: 0% 0%;
+    transition: color var(--navbar-transition-duration) ease;
+}
+
+nav button {
+    color: var(--navbar-foreground-color) !important;
+    border-color: var(--navbar-foreground-color) !important;
+    transition: var(--navbar-transition-duration) ease !important;
+}
+
+nav button:hover {
+    background-color: var(--navbar-foreground-color) !important;
+    color: var(--navbar-background-color) !important;
+}
+
+nav.color-transformed button:hover {
+    background-color: var(--navbar-toggler-color);
+}
+
+nav .navbar-nav {
+    --bs-nav-link-color: var(--navbar-foreground-color) !important;
+    --bs-nav-link-hover-color: var(--navbar-foreground-color) !important;
+    --bs-navbar-active-color: var(--navbar-foreground-color) !important;
+}
+
+nav .navbar-nav .nav-item .nav-link {
+    margin-right: 15px;
+    padding: 3px 10px;
+    border-radius: 8px;
+}
+
+nav .navbar-nav .nav-item .nav-link.active {
+    background-color: var(--navbar-foreground-color) !important;
+    color: var(--navbar-background-color);
+}
+
+main {
+    margin-top: var(--navbar-height);
+}
+
+footer a {
+    color: white !important;
+}
+
+#sub-page-top {
+    background-image:
+        linear-gradient(
+            to right,
+            rgba(var(--bs-success-rgb), 0.85) 0%,
+            rgba(var(--bs-success-rgb), 0.85) 100%),
+        url("/images/front-pages/sub-page-top.webp");
+}
+
+#footer-logo-container {
+    width: 150px;
+    height: auto;
+    aspect-ratio: 1;
+}
+
+#footer-logo-container img {
+    width: 65%;
+}
+
+@media (max-width: 1200px) {
+    footer iframe {
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 992px) {
+    nav {
+        height: auto !important;
+    }
+}

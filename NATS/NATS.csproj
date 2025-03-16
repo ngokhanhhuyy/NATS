@@ -29,4 +29,8 @@
     <EditorConfigFiles Remove="C:\repos\NATS\NATS\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Shared\Components\" />
+  </ItemGroup>
+
 </Project>

@@ -26,15 +26,15 @@ public sealed partial class DataInitializer
             InitializeRoles();
             InitializeUsers();
             IntializeAboutUsIntroduction();
-            InitializeTeamMembers();
+            InitializeMembers();
             InitializeGeneralSettings();
-            InitializeBusinessCertificates();
-            InitializeIntroductionItems();
+            InitializeCertificates();
+            InitializeSummaryItems();
             InitializeCourses();
             InitializeServices();
             InitializeSliderItems();
             InitializePosts();
-            InitializeContactInfo();
+            InitializeContacts();
 
             _context.SaveChanges();
             transaction.Commit();
@@ -233,7 +233,7 @@ public sealed partial class DataInitializer
         }
     }
 
-    private void InitializeTeamMembers()
+    private void InitializeMembers()
     {
         if (!_context.Members.Any())
         {
@@ -277,7 +277,7 @@ public sealed partial class DataInitializer
         }
     }
 
-    private void InitializeBusinessCertificates()
+    private void InitializeCertificates()
     {
         if (!_context.Certificates.Any())
         {
@@ -292,7 +292,7 @@ public sealed partial class DataInitializer
         }
     }
 
-    private void InitializeIntroductionItems()
+    private void InitializeSummaryItems()
     {
         if (!_context.SummaryItems.Any())
         {
@@ -300,20 +300,20 @@ public sealed partial class DataInitializer
             Dictionary<string, string> dataItems = new Dictionary<string, string>
             {
                 {
-                    "Thẩm mỹ"  + Environment.NewLine + "cột sống",
-                    "/images/front-pages/introduction-items/5.jpg"
+                    "Trị liệu" + Environment.NewLine + "cột sống",
+                    "/images/front-pages/summary-items/5.jpg"
                 },
                 {
                     "Đả thông" + Environment.NewLine + "kinh lạc",
-                    "/images/front-pages/introduction-items/6.jpg"
+                    "/images/front-pages/summary-items/6.jpg"
                 },
                 {
                     "Thải độc" + Environment.NewLine + "tế bào",
-                    "/images/front-pages/introduction-items/7.jpg"
+                    "/images/front-pages/summary-items/7.jpg"
                 },
                 {
                     "Nhân số học &" + Environment.NewLine + "Thiền",
-                    "/images/front-pages/introduction-items/8.jpg"
+                    "/images/front-pages/summary-items/8.jpg"
                 }
             };
             foreach (KeyValuePair<string, string> pair in dataItems)
@@ -336,7 +336,7 @@ public sealed partial class DataInitializer
 
     private void InitializeCourses()
     {
-        if (!_context.CatalogItems.Any())
+        if (!_context.CatalogItems.Any(ci => ci.Type == CatalogItemType.Course))
         {
             Faker faker = new Faker("vi");
             List<CatalogItem> courses = new List<CatalogItem>
@@ -396,6 +396,7 @@ public sealed partial class DataInitializer
 
             foreach (CatalogItem course in courses)
             {
+                course.Type = CatalogItemType.Course;
                 course.Detail = faker.Lorem.Paragraph(5) + Environment.NewLine +
                                 faker.Lorem.Paragraph(8) + Environment.NewLine +
                                 faker.Lorem.Paragraph(10);
@@ -408,10 +409,9 @@ public sealed partial class DataInitializer
 
     private void InitializeServices()
     {
-        if (!_context.CatalogItems.Any())
+        if (!_context.CatalogItems.Any(ci => ci.Type == CatalogItemType.Service))
         {
             Faker faker = new Faker("vi");
-
             List<CatalogItem> services = new List<CatalogItem>
             {
                 new CatalogItem
@@ -468,10 +468,12 @@ public sealed partial class DataInitializer
 
             foreach (CatalogItem service in services)
             {
+                service.Type = CatalogItemType.Service;
                 service.Detail = faker.Lorem.Paragraph(5) + Environment.NewLine +
                                 faker.Lorem.Paragraph(8) + Environment.NewLine +
                                 faker.Lorem.Paragraph(10);
-                _context.Add(service);
+
+                _context.CatalogItems.Add(service);
             }
 
             _context.SaveChanges();
@@ -549,7 +551,7 @@ public sealed partial class DataInitializer
         }
     }
     
-    private void InitializeContactInfo()
+    private void InitializeContacts()
     {
         if (!_context.Contacts.Any())
         {

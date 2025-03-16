@@ -14,7 +14,7 @@ else
 
 // Add database context.
 string connectionString = builder.Configuration.GetConnectionString("MySQL");
-builder.Services.AddDbContext<DatabaseContext>(options => options
+builder.Services.AddDbContextFactory<DatabaseContext>(options => options
     .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
     .AddInterceptors(new VietnamTimeInterceptor()));
 
@@ -67,13 +67,13 @@ ValidatorOptions.Global.LanguageManager = new ValidatorLanguageManager {
 // Dependency injection
 builder.Services.AddScoped<SignInManager<User>>();
 builder.Services.AddScoped<RoleManager<Role>>();
-builder.Services.AddScoped<DatabaseContext>();
+builder.Services.AddTransient<DatabaseContext>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGeneralSettingsService, GeneralSettingsService>();
 builder.Services.AddScoped<IAboutUsIntroductionService, AboutUsIntroductionService>();
-builder.Services.AddScoped<MemberService, MemberService>();
+builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<ICertificateService, CertificateService>();
 builder.Services.AddScoped<ISummaryItemService, SummaryItemService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
@@ -118,4 +118,5 @@ app.Use(async (context, next) =>
         context.Response.Redirect("/SignIn");
     }
 });
+app.MapControllerRoute("default", pattern: "{controller=FrontPageHome}/{action=Index}");
 app.Run();

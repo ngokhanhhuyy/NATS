@@ -1,0 +1,103 @@
+@model AboutUsViewModel
+
+<div class="container p-5">
+    <!-- MainContent -->
+    <div class="row g-5 justify-content-center">
+        <div class="col col-md-10 col-12">
+            <div class="fs-2 text-success mb-4">
+                Về chúng tôi
+            </div>
+
+            @{
+                string[] mainContentParagraphs = Model
+                .AboutUsIntroduction
+                .AboutUsContent
+                    .Split(Environment.NewLine)
+                    .ToArray();
+
+                foreach (string paragraph in mainContentParagraphs)
+                {
+                    <p>@paragraph</p>
+                }
+            }
+        </div>
+
+        
+        <div class="col col-md-10 col-12">
+            <img src="@Model.AboutUsIntroduction.ThumbnailUrl" class="w-100 rounded-4 shadow">
+        </div>
+    </div>
+
+    <!-- WhyChooseUsContent -->
+    <div class="row g-5 justify-content-center my-5">
+        <div class="col col-md-10 col-12">
+            <div class="fs-2 text-success mb-4">
+                Tại sao chọn chúng tôi
+            </div>
+            @{
+                string[] whyChooseUsParagraphs = Model
+                    .AboutUsIntroduction
+                    .WhyChooseUsContent
+                    .Split(Environment.NewLine)
+                    .ToArray();
+
+                foreach (string paragraph in whyChooseUsParagraphs)
+                {
+                    <p>@paragraph</p>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- OurCultureContent --> 
+    <div class="row g-5 justify-content-center my-5">
+        <div class="col col-md-10 col-12">
+            <div class="fs-2 text-success mb-4">
+                Sự khác biệt của chúng tôi
+            </div>
+            @{
+                string[] ourDifferenceParagraphs = Model
+                    .AboutUsIntroduction
+                    .OurDifferenceContent
+                    .Split(Environment.NewLine)
+                    .ToArray();
+                foreach (string paragraph in ourDifferenceParagraphs)
+                {
+                    <p>@paragraph</p>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- OurCultureContent --> 
+    <div class="row g-5 justify-content-center my-5">
+        <div class="col col-md-10 col-12">
+            <div class="fs-2 text-success mb-4">
+                Văn hoá của chúng tôi
+            </div>
+            @{
+                string[] ourCultureContentParagraphs = Model
+                    .AboutUsIntroduction
+                    .OurCultureContent
+                    .Split(Environment.NewLine)
+                    .ToArray();
+                foreach (string paragraph in ourCultureContentParagraphs)
+                {
+                    <p>@paragraph</p>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Giới thiệu
+}
+
+@section Title {
+    Giới thiệu
+}
+
+@section Styles {
+    <link asp-append-version="true" rel="stylesheet" href="~/css/front-pages/home.css">
+}
