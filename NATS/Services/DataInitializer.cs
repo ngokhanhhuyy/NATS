@@ -296,40 +296,171 @@ public sealed partial class DataInitializer
     {
         if (!_context.SummaryItems.Any())
         {
-            Faker faker = new Faker("vi");
-            Dictionary<string, string> dataItems = new Dictionary<string, string>
+            List<SummaryItem> items = new List<SummaryItem>
             {
+                new SummaryItem
                 {
-                    "Trị liệu" + Environment.NewLine + "cột sống",
-                    "/images/front-pages/summary-items/5.jpg"
+                    Name = "Trị liệu" + Environment.NewLine + "cột sống",
+                    SummaryContent = string.Join(" ",
+                        "Trị liệu bằng phương pháp nắn chỉnh tạo hình thẩm mỹ ",
+                        "không xâm lấn cột sống, cơ xương khớp."),
+                    DetailContent = string.Join(" ",
+                        "Ngày nay, trị liệu  ằng phương pháp nắn chỉnh không xâm lấn cột ",
+                        "sống cơ xương khớp đang trở nên thịnh hành, được nhiều người bệnh ",
+                        "lựa chọn như một bí quyết chăm sóc sức khỏe, giúp thoát khỏi cơn ",
+                        "đau khó chịu do bệnh lý cột sống, cơ xương khớp gây ra.",
+                        Environment.NewLine,
+                        "1. PHƯƠNG PHÁP NẮN CHỈNH TẠO HÌNH THẨM MỸ KHÔNG XÂM LẤN CỘT SỐNG LÀ ",
+                        "GÌ?",
+                        Environment.NewLine,
+                        "Là phương pháp trị liệu nắn chỉnh bằng tay giúp điều chỉnh đốt sống ",
+                        "bị lệch về đúng vị trí, cải thiện độ thẳng của cột sống và các cơ ",
+                        "xương khớp, giảm chèn ép rễ thần kinh, giảm đau tự nhiên, tăng ",
+                        "cường chức năng của hệ thống thần kinh và tuần hoàn máu trong cột ",
+                        "sống và cơ xương khớp, cải thiện chức năng cơ bản của cơ thể, kích ",
+                        "thích quá trình tự chữa lành của cơ thể mà không phải dùng thuốc ",
+                        "tây hay phẫu thuật.",
+                        Environment.NewLine,
+                        "2. PHƯƠNG PHÁP TRỊ LIỆU NẮN CHỈNH KHÔNG XÂM LẤN CỘT SỐNG CẢI THIỆN ",
+                        "NHỮNG BỆNH NÀO?",
+                        Environment.NewLine,
+                        "Cải thiện những bệnh liên quan đến cột sống, cơ xương khớp bao gồm: ",
+                        "thoát vị đĩa đệm, thoái hóa cột sống, gai cột sống, vẹo cột sống, ",
+                        "đau thần kinh tọa, đau thắt lưng, đau đầu, đau vai, tê tay, đau mắt ",
+                        "cá, đau đầu gối, đau tê bàn chân, viêm thấp khớp, chấn thương thể ",
+                        "thao, các bệnh mãn tính.",
+                        Environment.NewLine,
+                        "3. ƯU ĐIỂM NỔI BẬT CỦA TRỊ LIỆU BẰNG PHƯƠNG PHÁP NẮN CHỈNH KHÔNG ",
+                        "XÂM LẤN CỘT SỐNG, CƠ XƯƠNG KHỚP: CẢI THIỆN BỆNH TẬN GỐC, NGĂN NGỪA ",
+                        "BIẾN CHỨNG NGUY HIỂM. ",
+                        Environment.NewLine,
+                        "So với cách phẫu thuật, uống thuốc Tây hoặc châm cứu, bấm huyệt thì ",
+                        "phương pháp đả thông liên hoàn, nắn chỉnh không xâm lấn cột sống, ",
+                        "cơ xương khớp ưu việt hơn cả, nhờ cơ chế giải quyết chính xác nguồn ",
+                        "gốc gây ra cơn đau. ",
+                        Environment.NewLine,
+                        "PHÙ HỢP VỚI TẤT CẢ CÁC ĐỐI TƯỢNG: Phương pháp đả thông liên hoàn, ",
+                        "nắn chỉnh tạo hình thẩm mỹ không xâm lấn cột sống, cơ xương khớp ",
+                        "hoàn toàn phù hợp với tất cả mọi người như trẻ em, người trẻ tuổi, ",
+                        "người cao tuổi và thậm chí người đã phẫu thuật bị tái phát."),
+                    ThumbnailUrl = "/images/front-pages/summary-items/5.jpg"
                 },
+                new SummaryItem
                 {
-                    "Đả thông" + Environment.NewLine + "kinh lạc",
-                    "/images/front-pages/summary-items/6.jpg"
+                    Name = "Đả thông kinh lạc",
+                    SummaryContent = string.Concat(
+                        "Dưỡng sinh đả thông kinh lạc -",
+                        "bí quyết giữ gìn sức khỏe và chống lão hóa."),
+                    DetailContent = string.Join(" ",
+                        "Dưỡng sinh đả thông kinh lạc - bí quyết giữ gìn sức khỏe và chống",
+                        "lão hóa, đặc biệt hiệu quả với phụ nữ và những người trung niên trở",
+                        "đi. Phương pháp này không chỉ cải thiện sức khỏe mà còn làm cho bạn",
+                        "đẹp từ bên trong.",
+                        Environment.NewLine,
+                        "ĐẢ THÔNG KINH LẠC có tầm quan trọng to lớn trong",
+                        "việc duy trì sự hoạt động bình thường của khí huyết. Chức năng",
+                        "chính của hệ kinh lạc là thống nhất cơ thể, cung cấp dinh dưỡng cho",
+                        "toàn bộ cơ thể và đáp ứng với các tác nhân kích thích từ bên trong",
+                        "và bên ngoài. Kinh lạc được điều hành bởi khí huyết thông qua mạch",
+                        "ẩn và lạc mạch trải rải bên ngoài cơ thể. Quá trình đả thông kinh",
+                        "lạc có tác dụng giúp cải thiện sự lưu thông khí huyết, liên kết các",
+                        "phần khác nhau của cơ thể và tạo sự kết nối giữa các mạch máu.",
+                        Environment.NewLine,
+                        "ĐẢ THÔNG KINH LẠC - BÁCH BỆNH KHÔNG SINH à một nguyên tắc cốt lõi",
+                        "quan trọng trong y học cổ truyền. Nguyên tắc này ám chỉ rằng việc",
+                        "duy trì sự thông kinh lạc, tức là giữ cho các đường lạc mạch và khí",
+                        "huyết trong cơ thể luôn lưu thông mạnh mẽ, là một cách quan trọng để",
+                        "duy trì sức khỏe và ngăn ngừa các bệnh tật. Trong y học cổ truyền,",
+                        "sự cản trở hoặc lưu thông máu không tốt qua các kinh lạc được coi là",
+                        "nguyên nhân gây ra nhiều loại bệnh, từ các triệu chứng nhẹ như mất",
+                        "ngủ, căng thẳng đến các vấn đề sức khỏe nghiêm trọng hơn như đau",
+                        "đầu, rối loạn tiền đình, vấn đề về hệ tiêu hóa, cơ xương khớp...",
+                        Environment.NewLine,
+                        "ĐẢ THÔNG KINH LẠC MANG LẠI NHIỀU LỢI ÍCH CHO SỨC KHỎE: Giúp cải",
+                        "thiện lưu thông khí huyết và tuần hoàn máu trong cơ thể. Điều này có",
+                        "tác dụng kích thích cơ thể hoạt động tốt hơn, cung cấp dưỡng chất và",
+                        "oxi cho các tế bào và các cơ quan. Giảm căng thẳng và mệt mỏi, cải",
+                        "thiện các vấn đề về mạch máu, cải thiện tình trạng đau nửa đầu, rối",
+                        "loạn tiền đình, cải thiện giấc ngủ, cải thiện vấn đề đau nhức cơ",
+                        "xương khớp, tê bì chân tay... Giúp da của bạn trở nên mịn màng,",
+                        "nhuận hồng hơn nhờ tác động trực tiếp lên các huyệt đạo. Giúp điều",
+                        "hòa kinh nguyệt cho phụ nữ. Ngoài ra, thông kinh lạc còn giúp phân",
+                        "hủy các chất béo, giải độc tố, và tăng cường hoạt động của các cơ",
+                        "quan bên trong, giúp cho cơ thể linh hoạt hơn."),
+                    ThumbnailUrl = "/images/front-pages/summary-items/6.jpg"
                 },
+                new SummaryItem
                 {
-                    "Thải độc" + Environment.NewLine + "tế bào",
-                    "/images/front-pages/summary-items/7.jpg"
+                    Name = "Thải độc tế bào",
+                    SummaryContent = string.Join(" ",
+                        "Thải độc cơ thể là quá trình loại bỏ các chất độc hại và cặn bã từ",
+                        "cơ thể để duy trì sức khỏe và chức năng tối ưu của cơ thể."),
+                    DetailContent = string.Join(" ",
+                        "Độc tố trong cơ thể là những chất hóa học gây hại cho sức khỏe cơ",
+                        "thể. Chúng tích tụ nhiều khiến cơ thể bị nhiễm độc, làm phát sinh",
+                        "các bệnh tật: đặc biệt là các bệnh mãn tính như ung thư, gút, tiểu",
+                        "đường, tim mạch,... Quá trình thải độc cơ thể là quá trình loại bỏ",
+                        "các chất độc hại và cặn bã từ cơ thể để duy trì sức khỏe và chức",
+                        "năng tối ưu của cơ thể. Một số phương pháp tự nhiên và lành mạnh để",
+                        "thải độc cho cơ thể như: LIỆU PHÁP THẢI ĐỘC TẾ BÀO loại bỏ kim loại",
+                        "nặng bằng máy ion lượng tử. LIỆU PHÁP THẢI ĐỘC TẾ BÀO bằng các loại",
+                        "thảo dược. LIỆU PHÁP THẢI ĐỘC BẰNG CHẾ ĐỘ ĂN KIÊNG nhằm loại bỏ chất",
+                        "độc từ cơ thể. UỐNG NƯỚC ĐỂ THẢI ĐỘC, Uống đủ lượng nước hàng ngày",
+                        "giúp tăng cường chức năng thận và giảm lượng chất độc hại trong cơ",
+                        "thể. Nước cũng giúp tạo ra nước mồ hôi và nước tiểu, từ đó loại bỏ",
+                        "chất độc qua đường tiêu hóa và tiểu tiện.GIẢM STRESS: Stress có thể",
+                        "ảnh hưởng tiêu cực đến sức khỏe tổng thể và chức năng của các cơ",
+                        "quan trong cơ thể. Các kỹ thuật giảm stress như thiền, yoga, và hít",
+                        "thở sâu có thể giúp cơ thể giảm stress và tăng cường quá trình thải",
+                        "độc tự nhiên."),
+                    ThumbnailUrl = "/images/front-pages/summary-items/7.jpg"
                 },
+                new SummaryItem
                 {
-                    "Nhân số học &" + Environment.NewLine + "Thiền",
-                    "/images/front-pages/summary-items/8.jpg"
+                    Name = "Nhân số học & Tỉnh thức",
+                    SummaryContent = string.Join(" ",
+                        "Thông qua Nhân Số Học, bạn sẽ mở ra một cánh cửa tới việc giải mã",
+                        "bản đồ cuộc đời của mình, thấu hiểu chính mình và những người xung",
+                        "quanh một cách sâu sắc. Khám phá những tiềm năng của bạn để định",
+                        "hướng nghề nghiệp và hoạch định tương lai thành công."),
+                    DetailContent = string.Join(" ",
+                        "Người xưa thường có câu: “Thân tâm an lạc”, có nghĩa là cuộc sống",
+                        "chỉ trọn vẹn khi chúng ta sở hữu một tâm trí an lành bên trong một",
+                        "thân thể khỏe mạnh.Một người có sức khỏe tinh thần tốt sẽ luôn nhìn",
+                        "thấy những điều tích cực trong mọi vấn đề, luôn vui vẻ, mạnh mẽ, sẵn",
+                        "sàng nghênh đón tất thảy mọi điều dù là may mắn hay chông gai phía",
+                        "trước. Sở hữu một tinh thần khỏe mạnh sẽ giúp bạn ăn ngon, ngủ yên,",
+                        "tràn trề năng lượng mỗi ngày để năng suất trong công việc và luôn",
+                        "tự tin, mỉm cười với cuộc đời. Có thể nói, cảm xúc tích cực chính",
+                        "là nền tảng cho phần lớn thành công của mỗi người trong cuộc sống.",
+                        "Ngược lại, một tinh thần bất ổn có thể ảnh hưởng trực tiếp đến sức",
+                        "khỏe thể chất, năng suất trong công việc và các mối quan hệ xung",
+                        "quanh của con người. Những cảm xúc tiêu cực như buồn chán, căng",
+                        "thẳng, lo âu diễn ra thường xuyên trong một khoảng thời gian dài có",
+                        "thể khiến con người rơi vào tình trạng chán ăn, mất ngủ triền miên,",
+                        "hay nghiêm trọng hơn là các căn bệnh liên quan đến đường tiêu hóa,",
+                        "hệ thần kinh,... Thể chất và tinh thần của con người luôn có một sợi",
+                        "dây liên kết vô cùng chặt chẽ. Bởi vậy, chỉ khi tinh thần khỏe mạnh",
+                        "thì sức khỏe thể chất ổn định, cơ thể mới hoạt động “trơn tru” được.",
+                        "Thông qua Nhân Số Học , bạn sẽ mở ra một cánh cửa tới việc giải mã",
+                        "bản đồ cuộc đời của mình, thấu hiểu chính mình , thấu hiểu vợ chồng,",
+                        "bạn bè và những người thân xung quanh một cách sâu sắc. Thực hành",
+                        "sống Tỉnh Thức sẽ giúp bạn chữa lành những vết thương trong tâm hồn",
+                        "và cải thiện các mối quan hệ của mình. Nhân số học giúp bạn định",
+                        "hướng nuôi dạy con và giữ gìn hạnh phúc gia đình. Giúp bạn khám phá",
+                        "số phận và mục đích sống của mình, giúp bạn trở thành một người tự",
+                        "tin và hiểu biết về bản thân hơn. Khám phá những thế mạnh, thách",
+                        "thức, bài học trong cuộc sống, và tiềm năng của bạn để định hướng",
+                        "nghề nghiệp và hoạch định tương lai thành công.Ứng dụng trong việc",
+                        "tuyển dụng và lựa chọn nhân sự phù hợp cho công việc, cũng như trong",
+                        "đàm phán kinh doanh để đạt được thành công hơn.Giúp bạn trở thành",
+                        "một người tự do và làm chủ cuộc đời của mình."),
+                    ThumbnailUrl = "/images/front-pages/summary-items/8.jpg"
                 }
             };
-            foreach (KeyValuePair<string, string> pair in dataItems)
-            {
-                SummaryItem item = new SummaryItem
-                {
-                    Name = pair.Key,
-                    SummaryContent = faker.Lorem.Paragraph(4),
-                    DetailContent = faker.Lorem.Paragraph(12) +
-                            Environment.NewLine +
-                            faker.Lorem.Paragraph(15),
-                    ThumbnailUrl = pair.Value
-                };
-                _context.SummaryItems.Add(item);
-            }
 
+            
+            _context.SummaryItems.AddRange(items);
             _context.SaveChanges();
         }
     }

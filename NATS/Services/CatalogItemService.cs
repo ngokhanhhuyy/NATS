@@ -14,7 +14,8 @@ public class CatalogItemService
 
     /// <inheritdoc />
     public async Task<List<CatalogItemBasicResponseDto>> GetListAsync(
-            CatalogItemType? type = null)
+            CatalogItemType? type = null,
+            int? exceptId = null)
     {
         IQueryable<CatalogItem> query = Context.CatalogItems.OrderBy(ci => ci.Id);
 
@@ -23,16 +24,24 @@ public class CatalogItemService
             query = query.Where(ci => ci.Type == type);
         }
 
+        if (exceptId.HasValue)
+        {
+            query = query.Where(ci => ci.Id != exceptId);
+        }
+
         return await query.Select(ci => new CatalogItemBasicResponseDto(ci)).ToListAsync();
     }
 
     /// <inheritdoc />
-    public async Task<CatalogItemDetailResponseDto> GetDetailAsync(int id)
+    public async Task<CatalogItemDetailResponseDto> GetDetailAsync(
+            int id, CatalogItemType
+            type)
     {
         return await Context.CatalogItems
-            .Include(bs => bs.Photos)
-            .Select(bs => new CatalogItemDetailResponseDto(bs))
-            .SingleOrDefaultAsync(bs => bs.Id == id)
+            .Include(ci => ci.Photos)
+            .Where(ci => ci.Id == id && ci.Type == type)
+            .Select(ci => new CatalogItemDetailResponseDto(ci))
+            .SingleOrDefaultAsync()
             ?? throw new ResourceNotFoundException();
     }
 

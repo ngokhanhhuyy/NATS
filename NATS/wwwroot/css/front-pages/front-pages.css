@@ -21,12 +21,6 @@ nav {
     transition: background-color var(--navbar-transition-duration) ease;
 }
 
-nav.color-transformed {
-    --navbar-background-color: var(--bs-success);
-    --navbar-foreground-color: var(--bs-white);
-    --navbar-logo-img-filter: none;
-}
-
 nav img {
     width: auto;
     height: calc(var(--navbar-height) - 12px);
@@ -43,18 +37,18 @@ nav .navbar-brand span.application-short-name {
     transition: color var(--navbar-transition-duration) ease;
 }
 
-nav button {
+nav button#navbar-toggler-button {
     color: var(--navbar-foreground-color) !important;
     border-color: var(--navbar-foreground-color) !important;
     transition: var(--navbar-transition-duration) ease !important;
 }
 
-nav button:hover {
+nav button#navbar-toggler-button:hover {
     background-color: var(--navbar-foreground-color) !important;
     color: var(--navbar-background-color) !important;
 }
 
-nav.color-transformed button:hover {
+nav.color-transformed button#navbar-toggler-button:hover {
     background-color: var(--navbar-toggler-color);
 }
 
@@ -111,5 +105,9 @@ footer a {
 @media (max-width: 992px) {
     nav {
         height: auto !important;
+    }
+
+    nav .offcanvas {
+        max-width: 300px;
     }
 }

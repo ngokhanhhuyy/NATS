@@ -1,6 +1,6 @@
 using NATS.FrontPages.Models;
 
-namespace NATS.Areas.FrontPages.Controllers;
+namespace NATS.FrontPages.Controllers;
 
 [Area("FrontPages")]
 [Route("/")]

@@ -24,40 +24,5 @@
 }
 
 @section Scripts {
-    <script>
-        /** @@type {HTMLNavElement} */
-        let navBarElement;
-
-        /** @@type {HTMLButtonElement} */
-        let navBarButtonElement;
-            
-        /** @@type {HTMLDivElement} */
-        let topElement;
-
-        // Resolve the variable when the DOM is loaded.
-        document.addEventListener("DOMContentLoaded", () => {
-            navBarElement = document.getElementById("navbar");
-            navBarButtonElement = document.getElementById("navbar-collapse-button");
-            topElement = document.getElementById("sub-page-top");
-        });
-
-        // Detect scrolling and check the top element position relative to the nav bar element.
-        document.addEventListener("scroll", () => {
-            /** @@type {number} */
-            const navBarElementBottom = navBarElement.getBoundingClientRect().bottom;
-
-            /** @@type {HTMLNavElement} */
-            const topElementBottom = topElement.getBoundingClientRect().bottom;
-
-            if (navBarElementBottom > topElementBottom) {
-                navBarElement.classList.add("color-transformed");
-                navBarElement.setAttribute("data-bs-theme", "dark");
-            } else {
-                navBarElement.classList.remove("color-transformed");
-                navBarElement.setAttribute("data-bs-theme", "light");
-            }
-        });
-    </script>
-
     @await RenderSectionAsync("Scripts", required: false)
 }

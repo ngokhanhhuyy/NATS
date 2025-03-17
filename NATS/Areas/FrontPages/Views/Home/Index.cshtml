@@ -123,7 +123,12 @@
                             justify-content-center align-items-start">
                     <div class="fs-2 mb-3">Về chúng tôi</div>
                     <p>@Model.AboutUsIntroduction.AboutUsContent</p>
-                    <a href="#" class="btn btn-outline-light mt-3">
+                    <a
+                        asp-area="FrontPages"
+                        asp-controller="AboutUs"
+                        asp-action="Index"
+                        class="btn btn-outline-light mt-3"
+                    >
                         Tìm hiểu thêm
                     </a>
                 </div>

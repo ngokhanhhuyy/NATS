@@ -12,11 +12,16 @@ public interface ICatalogItemService
     /// (Optional) The type of the catalog items to retrieve. If not specified, the results
     /// will be all available catalog items, regardless their types.
     /// </param>
+    /// <param name="exceptId">
+    /// (Optional) The id of the catalog item that should be excluded from the results.
+    /// </param>
     /// <returns>
     /// A <see cref="Task"/> representing the asynchronous operation, which result is a
     /// <see cref="List{T}"/> of DTOs, containing the basic information of the catalog items.
     /// </returns>
-    Task<List<CatalogItemBasicResponseDto>> GetListAsync(CatalogItemType? type = null);
+    Task<List<CatalogItemBasicResponseDto>> GetListAsync(
+            CatalogItemType? type = null,
+            int? exceptId = null);
 
     /// <summary>
     /// Gets a specific catalog item by given id with detail information, thumbnail url and
@@ -25,14 +30,18 @@ public interface ICatalogItemService
     /// <param name="id">
     /// The id of the catalog item to retrieve.
     /// </param>
+    /// <param name="type">
+    /// The type of the catalog item to retrieve.
+    /// </param>
     /// <returns>
     /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is a DTO
     /// containing the information of the item.
     /// </returns>
     /// <exception cref="ResourceNotFoundException">
-    /// Throws when the catalog item with the given id doesn't exist.
+    /// Throws when the catalog item specified by <paramref name="id"/> and
+    /// <paramref name="type"/> doesn't exist.
     /// </exception>
-    Task<CatalogItemDetailResponseDto> GetDetailAsync(int id);
+    Task<CatalogItemDetailResponseDto> GetDetailAsync(int id, CatalogItemType type);
 
     /// <summary>
     /// Create a new catalog item with the given data.

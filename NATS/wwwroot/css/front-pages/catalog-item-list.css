@@ -1,0 +1,12 @@
+﻿@media (max-width: 768px) {
+    #catalog-item-list-view .catalog-items-row.row {
+        width: fit-content !important;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    #catalog-item-list-view .catalog-items-row.row {
+        width: 100%;
+    }
+}

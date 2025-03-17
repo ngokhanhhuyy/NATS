@@ -1,20 +1,23 @@
 using NATS.FrontPages.Models;
 
-namespace NATS.Areas.FrontPages.Controllers;
+namespace NATS.FrontPages.Controllers;
 
 [Area("FrontPages")]
-[Route("/gioi-thieu")]
+[Route("/ve-chung-toi")]
 public class AboutUsController : Controller
 {
     private readonly IAboutUsIntroductionService _aboutUsIntroductionService;
     private readonly IMemberService _memberService;
+    private readonly ICertificateService _cerificateService;
 
     public AboutUsController(
             IAboutUsIntroductionService aboutusIntroductionService,
-            IMemberService memberService)
+            IMemberService memberService,
+            ICertificateService certificateService)
     {
         _aboutUsIntroductionService = aboutusIntroductionService;
         _memberService = memberService;
+        _cerificateService = certificateService;
     }
 
     [HttpGet]
@@ -26,11 +29,18 @@ public class AboutUsController : Controller
         Task<List<MemberResponseDto>> memberResponseDtosTask;
         memberResponseDtosTask = _memberService.GetListAsync();
 
-        await Task.WhenAll(aboutUsIntroductionResponseDtoTask, memberResponseDtosTask);
+        Task<List<CertificateResponseDto>> certificateResponseDtosTask;
+        certificateResponseDtosTask = _cerificateService.GetListAsync();
+
+        await Task.WhenAll(
+            aboutUsIntroductionResponseDtoTask,
+            memberResponseDtosTask,
+            certificateResponseDtosTask);
 
         AboutUsViewModel model = new AboutUsViewModel(
             aboutUsIntroductionResponseDtoTask.Result,
-            memberResponseDtosTask.Result);
+            memberResponseDtosTask.Result,
+            certificateResponseDtosTask.Result);
 
         return View(model);
     }

@@ -1,14 +1,25 @@
-﻿@{
+﻿@using NATS.FrontPages.Controllers;
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     _currentControllerName = ViewContext.RouteData.Values["controller"].ToString();
+    _currentActionName = ViewContext.RouteData.Values["action"].ToString();
 }
 
 @functions {
     string _currentControllerName;
+    string _currentActionName;
 
-    string ComputeNavBarItemClassName(string correspondingControllerName)
+    string ComputeNavBarItemClassName(string key)
     {
-        if (_currentControllerName == correspondingControllerName)
+        string catalogItemControllerName = nameof(CatalogItemController)
+            .Replace("Controller", "");
+        if (_currentControllerName == catalogItemControllerName &&
+            _currentActionName == key)
+        {
+            return "active";
+        }
+
+        if (_currentControllerName == key)
         {
             return "active";
         }
@@ -35,9 +46,9 @@
         </a>
         <button
             class="navbar-toggler fs-3 me-2 py-2"
-            id="navbar-collapse-button"
+            id="navbar-toggler-button"
             type="button"
-            data-bs-toggle="collapse"
+            data-bs-toggle="offcanvas"
             data-bs-target="#navbar-content"
             aria-controls="navbar-content"
             aria-expanded="false"
@@ -45,7 +56,103 @@
         >
             <i class="bi bi-list"></i>
         </button>
-        <div class="collapse navbar-collapse" id="navbar-content">
+        <div
+            class="offcanvas offcanvas-end"
+            tabindex="-1"
+            id="navbar-content"
+            aria-labelledby="offcanvasNavbarLabel"
+        >
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Điều hướng</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close">
+                </button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end w-100">
+                    <!-- Home -->
+                    <li class="nav-item">
+                        <a
+                            asp-area="FrontPages"
+                            asp-controller="Home"
+                            asp-action="Index"
+                            class="nav-link @ComputeNavBarItemClassName("Home")"
+                        >
+                            Trang chủ
+                        </a>
+                    </li>
+
+                    <!-- SummaryItem -->
+                    <li class="nav-item">
+                        <a
+                            asp-area="FrontPages"
+                            asp-controller="SummaryItem"
+                            asp-action="Index"
+                            class="nav-link @ComputeNavBarItemClassName("SummaryItem")"
+                        >
+                            Giới thiệu
+                        </a>
+                    </li>
+                    
+                    <!-- AboutUsIntroduction -->
+                    <li class="nav-item">
+                        <a
+                            asp-area="FrontPages"
+                            asp-controller="AboutUs"
+                            asp-action="Index"
+                            class="nav-link @ComputeNavBarItemClassName("AboutUs")"
+                        >
+                            Về chúng tôi
+                        </a>
+                    </li>
+                    
+                    <!-- CatalogItem - Services -->
+                    <li class="nav-item">
+                        <a
+                            asp-area="FrontPages"
+                            asp-controller="CatalogItem"
+                            asp-action="ServiceList"
+                            class="nav-link @ComputeNavBarItemClassName("ServiceList")"
+                        >
+                            Dịch vụ
+                        </a>
+                    </li>
+                    
+                    <!-- CatalogItem - Course -->
+                    <li class="nav-item">
+                        <a
+                            asp-area="FrontPages"
+                            asp-controller="CatalogItem"
+                            asp-action="CourseList"
+                            class="nav-link @ComputeNavBarItemClassName("CourseList")"
+                        >
+                            Khoá học
+                        </a>
+                    </li>
+                    
+                    <!-- CatalogItem - Product -->
+                    <li class="nav-item">
+                        <a
+                            asp-area="FrontPages"
+                            asp-controller="CatalogItem"
+                            asp-action="ProductList"
+                            class="nav-link @ComputeNavBarItemClassName("ProductList")"
+                        >
+                            Sản phẩm
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#">Liên hệ</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        @* <div class="collapse navbar-collapse" id="navbar-content">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end w-100">
                 <li class="nav-item">
                     <a
@@ -85,7 +192,7 @@
                     <a class="nav-link" aria-current="page" href="#">Liên hệ</a>
                 </li>
             </ul>
-        </div>
+        </div> *@
     </div>
 </nav>
 

@@ -1,10 +1,10 @@
 @model AboutUsViewModel
 
-<div class="container p-5">
+<div class="container p-5" id="about-us-view">
     <!-- MainContent -->
     <div class="row g-5 justify-content-center">
         <div class="col col-md-10 col-12">
-            <div class="fs-2 text-success mb-4">
+            <div class="fs-2 text-success text-center mb-4">
                 Về chúng tôi
             </div>
 
@@ -31,7 +31,7 @@
     <!-- WhyChooseUsContent -->
     <div class="row g-5 justify-content-center my-5">
         <div class="col col-md-10 col-12">
-            <div class="fs-2 text-success mb-4">
+            <div class="fs-2 text-success text-center mb-4">
                 Tại sao chọn chúng tôi
             </div>
             @{
@@ -52,7 +52,7 @@
     <!-- OurCultureContent --> 
     <div class="row g-5 justify-content-center my-5">
         <div class="col col-md-10 col-12">
-            <div class="fs-2 text-success mb-4">
+            <div class="fs-2 text-success text-center mb-4">
                 Sự khác biệt của chúng tôi
             </div>
             @{
@@ -72,7 +72,7 @@
     <!-- OurCultureContent --> 
     <div class="row g-5 justify-content-center my-5">
         <div class="col col-md-10 col-12">
-            <div class="fs-2 text-success mb-4">
+            <div class="fs-2 text-success text-center mb-4">
                 Văn hoá của chúng tôi
             </div>
             @{
@@ -88,16 +88,80 @@
             }
         </div>
     </div>
+
+    <!-- Members -->
+    <div class="row g-5 justify-content-center my-5">
+        <div class="col col-md-10 col-12">
+            <div class="fs-2 text-success text-center mb-2">
+                Đội ngũ của chúng tôi
+            </div>
+        </div>
+        @foreach (MemberDetailModel member in Model.Members)
+        {
+            <div class="col col-xl-5 col-lg-6 col-md-8 col-sm-10 col-12 d-flex flex-column align-items-center">
+                <img
+                    src="@member.ThumbnailUrl"
+                    class="member-thumbnail rounded-circle shadow flex-shrink-0 mb-3"
+                />
+
+                <!-- FullName -->
+                <span class="fs-4 fw-bold bg-success-subtle border
+                            border-success-subtle rounded
+                            text-success px-2 text-success">
+                    @member.FullName
+                </span>
+
+                <!-- RoleName -->
+                <span class="my-2 text-success">
+                    @member.RoleName
+                </span>
+
+                <!-- Description -->
+                @{
+                    string[] descriptionParagraphs = member
+                    .Description
+                    .Split(Environment.NewLine)
+                    .ToArray();
+
+                    foreach (string paragraph in descriptionParagraphs)
+                    {
+                        <p>@paragraph</p>
+                    }
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Certificates -->
+    <div class="row g-5 justify-content-center my-5">
+        <div class="col col-md-10 col-12">
+            <div class="fs-2 text-success text-center mb-2">
+                Chứng chỉ
+            </div>
+        </div>
+        @foreach (CertificateDetailModel certificate in Model.Certificates)
+        {
+            <div class="col col-xl-5 col-md-10 col-12">
+                <div class="d-flex flex-column justify-content-stretch
+                            align-items-stretch rounded-4 shadow overflow-hidden">
+                    <img src="@certificate.ThumbnailUrl" />
+                    <div class="bg-success p-3 text-center text-white fs-5 fw-bold">
+                        @certificate.Name
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
 @section PageTitle {
-    Giới thiệu
+    Về chúng tôi
 }
 
 @section Title {
-    Giới thiệu
+    Về chúng tôi
 }
 
 @section Styles {
-    <link asp-append-version="true" rel="stylesheet" href="~/css/front-pages/home.css">
+    <link asp-append-version="true" rel="stylesheet" href="~/css/front-pages/about-us.css">
 }

@@ -14,8 +14,12 @@ public class CatalogItemDetailResponseDto
     {
         Id = item.Id;
         Name = item.Name;
+        Type = item.Type;
         Summary = item.Summary;
         Detail = item.Detail;
         ThumbnailUrl = item.ThumbnailUrl;
+        Photos = item.Photos
+            .Select(dto => new CatalogItemDetailPhotoResponseDto(dto))
+            .ToList();
     }
 }

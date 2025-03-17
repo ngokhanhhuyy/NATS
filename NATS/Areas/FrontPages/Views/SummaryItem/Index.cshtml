@@ -1,0 +1,80 @@
+@model SummaryItemListViewModel
+@functions {
+    private string ComputeThumbnailColumnClassName(int index)
+    {
+        return $"order-lg-{index % 2}";
+    }
+
+    private string ComputeDetailColumnClassName(int index)
+    {
+        return $"order-lg-{(index + 1) % 2}";
+    }
+
+    private string ComputeNameClassName(int index)
+    {
+        string className = "text-center";
+        if (index % 2 == 0)
+        {
+            className += " text-lg-start";
+        }
+        else
+        {
+            className += " text-lg-end";
+        }
+
+        return className;
+    }
+}
+
+<div class="container py-4 mt-4" id="summary-item-view">
+    @for (int index = 0; index < Model.Items.Count; index++)
+    {
+        SummaryItemDetailModel item = Model.Items[index];
+        <div class="row g-5 justify-content-center mb-5" id="summary-item-@item.Id">
+            <!-- Thumbnail -->
+            <div class="col col-lg-auto col-md-10 col-12 d-flex justify-content-center
+                        align-items-start
+                        @ComputeThumbnailColumnClassName(index)">
+                <img src="@item.ThumbnailUrl" class="rounded-circle shadow" />
+            </div>
+
+            <div class="col col-lg col-md-10 col-12 @ComputeDetailColumnClassName(index)">
+                <!-- Name -->
+                <div class="fs-2 text-success @ComputeNameClassName(index) mb-3">
+                    @item.Name
+                </div>
+
+                <!-- DetailContent -->
+                @{
+                    string[] paragraphs = item.DetailContent.Split(Environment.NewLine);
+                    foreach (string paragraph in paragraphs)
+                    {
+                        <p>@paragraph</p>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    <style>
+        #summary-item-view img {
+            width: 250px;
+            height: auto;
+            aspect-ratio: 1;
+            object-fit: cover;
+            object-position: 50%;
+        }
+    </style>
+</div>
+
+@section PageTitle {
+    Giới thiệu
+}
+
+@section Title {
+    Giới thiệu
+}
+
+@section Styles {
+    <link asp-append-version="true" rel="stylesheet" href="~/css/front-pages/about-us.css">
+}
