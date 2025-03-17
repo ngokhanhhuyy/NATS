@@ -14,7 +14,7 @@
         string catalogItemControllerName = nameof(CatalogItemController)
             .Replace("Controller", "");
         if (_currentControllerName == catalogItemControllerName &&
-            _currentActionName == key)
+            _currentActionName.Replace("List", "").Replace("Detail", "") == key)
         {
             return "active";
         }
@@ -115,7 +115,7 @@
                             asp-area="FrontPages"
                             asp-controller="CatalogItem"
                             asp-action="ServiceList"
-                            class="nav-link @ComputeNavBarItemClassName("ServiceList")"
+                            class="nav-link @ComputeNavBarItemClassName("Service")"
                         >
                             Dịch vụ
                         </a>
@@ -127,7 +127,7 @@
                             asp-area="FrontPages"
                             asp-controller="CatalogItem"
                             asp-action="CourseList"
-                            class="nav-link @ComputeNavBarItemClassName("CourseList")"
+                            class="nav-link @ComputeNavBarItemClassName("Course")"
                         >
                             Khoá học
                         </a>
@@ -139,14 +139,22 @@
                             asp-area="FrontPages"
                             asp-controller="CatalogItem"
                             asp-action="ProductList"
-                            class="nav-link @ComputeNavBarItemClassName("ProductList")"
+                            class="nav-link @ComputeNavBarItemClassName("Product")"
                         >
                             Sản phẩm
                         </a>
                     </li>
                     
+                    <!-- Enquiry -->
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">Liên hệ</a>
+                        <a
+                            asp-area="FrontPages"
+                            asp-controller="Enquiry"
+                            asp-action="Index"
+                            class="nav-link @ComputeNavBarItemClassName("Enquiry")"
+                        >
+                            Liên hệ
+                        </a>
                     </li>
                 </ul>
             </div>
