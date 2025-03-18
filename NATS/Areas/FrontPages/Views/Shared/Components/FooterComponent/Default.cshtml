@@ -13,39 +13,90 @@
 
         return Uri.EscapeDataString(addressContact.Content);
     }
+    
+    string ComputeContactColumnClassName(ContactDetailModel contact)
+    {
+        if (contact.Type == ContactType.Address)
+        {
+            return "col-xl-10 col-12";
+        }
+
+        return "col-xl-5 col-lg-6 col-12";
+    }
+
+    string ComputeContactIconClassName(ContactDetailModel contact)
+    {
+        Dictionary<ContactType, string> iconClassNamesByType;
+        iconClassNamesByType = new Dictionary<ContactType, string>
+        {
+            { ContactType.PhoneNumber, "bi-telephone-fill" },
+            { ContactType.ZaloNumber, "bi-stop-circle-fill" },
+            { ContactType.Email, "bi-envelope-at-fill" },
+            { ContactType.Address, "bi-geo-alt-fill" }
+        };
+
+        return iconClassNamesByType[contact.Type];
+    }
 }
 
 
 <div class="container text-white">
     <div class="row gx-4 gy-5 justify-content-center align-items-stretch px-3 py-5 pb-4">
-        <!-- Map --> 
-        <div class="col col-xl-4 col-12">
-            @{
-                string encodedAdress = ComputeEncodedAddress();
-                if (encodedAdress != null)
-                {
-                    <iframe 
-                        width="100%"
-                        height="100%"
-                        class="rounded-4 shadow m-0"
-                        style="border:0;"
-                        loading="lazy"
-                        allowfullscreen
-                        src="https://www.google.com/maps?q=@(encodedAdress)&output=embed">
-                    </iframe>
-                }
-            }
+        <!-- Links - Left/Top column --> 
+        <div class="col col-xl-2 col-lg-3 col-sm-6 col-12 links-column">
+            <span class="fw-bold fs-4 opacity-75">
+                Công ty
+            </span>
+    
+            <!-- SummaryItems -->
+            <a asp-area="FrontPages" asp-controller="SummaryItems" asp-action="Index">
+                Giới thiệu
+            </a>
+            
+            <!-- AboutUs -->
+            <a asp-area="FrontPages" asp-controller="AboutUs" asp-action="Index">
+                Về chúng tôi
+            </a>
+            
+    
+            <!-- News -->
+            <a asp-area="FrontPages" asp-controller="Home" asp-action="Index">
+                Tin tức
+            </a>
+            
+            <!-- Enquiry -->
+            <a asp-area="FrontPages" asp-controller="Enquiry" asp-action="Index">
+                Liên hệ
+            </a>
+        </div>
+        
+        <!-- Links - Right/Bottom column --> 
+        <div class="col col-xl-2 col-lg-3 col-sm-6 col-12 links-column">
+            <span class="fw-bold fs-4 opacity-75">
+                Lĩnh vực
+            </span>
+    
+            <!-- Services -->
+            <a asp-area="FrontPages" asp-controller="CatalogItem" asp-action="ServiceList">
+                Dịch vụ
+            </a>
+            
+            <!-- Courses -->
+            <a asp-area="FrontPages" asp-controller="CatalogItem" asp-action="CourseList">
+                Khóa học
+            </a>
         </div>
 
         <!-- Contacts --> 
         <div class="col col-xl-5 col-lg-6 col-12">
+            <span class="fw-bold fs-4 opacity-75">
+                Liên hệ
+            </span>
             @foreach (ContactDetailModel contact in Model.Contacts)
             {
-                <div class="mb-3 d-flex flex-column">
+                <div class="my-3">
                     <!-- Label -->
-                    <span class="fw-bold opacity-50">
-                        @DisplayNames.Get(contact.Type.ToString())
-                    </span>
+                    <i class="bi @ComputeContactIconClassName(contact) me-2"></i>
 
                     <!-- Content -->
                     @switch (contact.Type)
@@ -69,7 +120,13 @@
                             </a>
                             break;
                         case ContactType.Address:
-                            <span>@contact.Content</span>
+                                <a
+                                    href="https://maps.google.com/?q=@ComputeEncodedAddress()"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    @contact.Content
+                                </a>
                             break;
                     }
                 </div>

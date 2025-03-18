@@ -1,0 +1,93 @@
+<div class="container-fluid bg-success">
+    <div class="row justify-content-center p-4 pb-5">
+        <div class="col col-xxl-4 col-xl-5 col-lg-6 col-md-7 col-12">
+            <div class="mb-3 text-white fs-5 d-flex flex-column">
+                <div class="fs-2">Bạn cần tư vấn?</div>
+                <span>Hãy gửi câu hỏi cho chúng tôi</span>
+                <span class="small opacity-75">
+                    * Chúng tôi sẽ không chia sẻ thông tin của bạn.
+                </span>
+            </div>
+
+            <div id="vue-app">
+                <form
+                    class="bg-white rounded-4 shadow p-3 w-100 d-none flex-column
+                            align-items-stretch"
+                    :class="{ 'd-flex': isMounted, 'd-none': !isMounted }"
+                    action="#"
+                    id="enquiry-form"
+                >
+                    <!-- FullName -->
+                    <div class="form-group mb-3">
+                        <div class="form-floating required">
+                            <input
+                                type="text"
+                                class="form-control"
+                                :class="fullNameInputClassName"
+                                id="UserName"
+                                name="UserName"
+                                placeholder=""
+                                maxlength="50"
+                                v-model="model.fullName"
+                            />
+                            <label class="required" for="UserName">Họ và tên</label>
+                        </div>
+                        <div
+                            :class="fullNameValidationMessageClassName"
+                            v-show="isFullNameValid != null"
+                        >
+                            {{ errors.get("fullName") ?? "Hợp lệ" }}
+                        </div>
+                    </div>
+
+                    <!-- PhoneNumber -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="tel"
+                            class="form-control"
+                            id="PhoneNumber"
+                            name="PhoneNumber"
+                            placeholder=""
+                        />
+                        <label class="required" for="PhoneNumber">Số điện thoại</label>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="Email"
+                            name="Email"
+                            placeholder=""
+                        />
+                        <label for="Email">Địa chỉ email</label>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="form-floating mb-3">
+                        <textarea
+                            class="form-control"
+                            id="Content"
+                            name="Content"
+                            placeholder=""
+                        ></textarea>
+                        <label class="required" for="Content">Nội dung</label>
+                    </div>
+
+                    <!-- Submit -->
+                    <button
+                        type="submit"
+                        class="btn btn-outline-success text-success align-self-end"
+                        :disabled="!isMounted"
+                    >
+                        Gửi
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/front-pages/enquiry-form.js" type="module" asp-append-version="true">
+</script>

@@ -1,0 +1,130 @@
+@model ContactViewModel
+@functions
+{
+    ContactDetailModel AddressContact => Model.Contacts
+        .Where(c => c.Type == ContactType.Address)
+        .SingleOrDefault();
+    
+    string ComputeContactColumnClassName(ContactDetailModel contact)
+    {
+        if (contact.Type == ContactType.Address)
+        {
+            return "col-12";
+        }
+
+        return "col col-xl-6 col-12";
+    }
+}
+
+<div class="container-fluid py-5" id="enquiry-view">
+    <div class="container">
+        <div class="row gx-5 gy-4 justify-content-center my-5">
+            <!-- Paragraph -->
+            <div class="col col-md-10 col-sm-11 col-12">
+                <p class="fs-2 text-success mb-5">
+                    Vui lòng liên hệ với chúng tôi để được tư vấn và chăm sóc tận tình.
+                </p>
+                <p>
+                    Chúng tôi sẽ lắng nghe và phản hồi mọi thắc mắc
+                    của Quý khách trong vòng 24 giờ.
+                </p>
+                <p>
+                    Với đội ngũ lương y giàu kinh nghiệm và tận tâm trong lĩnh vực y học cổ
+                    truyền, <b class="text-success">@Model.GeneralSettings.ApplicationName</b>
+                    luôn đồng hành cùng Quý khách trên hành trình phục hồi sức khỏe xương khớp,
+                    giúp cơ thể dẻo dai và khỏe mạnh theo phương pháp tự nhiên, an toàn.
+                </p>
+            </div>
+
+            <!-- Left/Top flex-column -->
+            <div class="col col-xl-6 col-sm-10 col-12 d-flex flex-column">
+                @if (AddressContact != null)
+                {
+                    <iframe 
+                        width="100%"
+                        height="100%"
+                        class="img-thumbnail rounded-4 shadow m-0"
+                        style="border:0;"
+                        loading="lazy"
+                        allowfullscreen
+                        src="https://www.google.com/maps?q=@AddressContact.UriEncodedContent&output=embed">
+                    </iframe>
+                }
+            </div>
+
+            <!-- Right/Bottom flex-column -->
+            <div class="col col-xl-6 col-sm-10 col-12">
+                <div class="row g-3">
+                    @foreach (ContactDetailModel contact in Model.Contacts)
+                    {
+                        <div class="@ComputeContactColumnClassName(contact) d-flex flex-column">
+                            <span class="fw-bold opacity-75">
+                                <i class="bi @contact.IconClassName text-success me-2"></i>
+                                @DisplayNames.Get(contact.Type.ToString())
+                            </span>
+                            @switch (contact.Type)
+                            {
+                                case ContactType.PhoneNumber:
+                                    <a href="tel:@contact.Content">
+                                        @contact.Content
+                                    </a>
+                                    break;
+                                case ContactType.ZaloNumber:
+                                    string zaloUrl = "https://zalo.me/" + contact.Content
+                                        .Replace(" ", "")
+                                        .Replace("+84", "0");
+                                    <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
+                                        @contact.Content
+                                    </a>
+                                    break;
+                                case ContactType.Email:
+                                    <a href="mailto:@contact.Content">
+                                        @contact.Content
+                                    </a>
+                                    break;
+                                case ContactType.Address:
+                                    <a
+                                        href="https://maps.google.com/?q=@contact.UriEncodedContent"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        @contact.Content
+                                    </a>
+                                    break;
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enquiry -->
+<partial name="_EnquiryForm" />
+
+@section PageTitle {
+    Liên hệ
+}
+
+@section Title {
+    Liên hệ
+}
+
+@section Styles {
+    <style>
+        #enquiry-view iframe {
+            min-height: 350px;
+        }
+
+        #enquiry-view a {
+            color: var(--bs-success);
+            text-decoration: none;
+            transition: .2s ease;
+        }
+
+        #enquiry-view a:hover {
+            filter: brightness(150%);
+        }
+    </style>
+}

@@ -77,6 +77,16 @@ footer a {
     color: white !important;
 }
 
+footer a:not(:hover) {
+    text-decoration: none;
+}
+
+footer .links-column a {
+    margin-top: .75rem;
+    margin-bottom: .75rem;
+    display: block;
+}
+
 #sub-page-top {
     background-image:
         linear-gradient(
@@ -97,16 +107,16 @@ footer a {
 }
 
 @media (max-width: 1200px) {
+    nav {
+        height: auto !important;
+    }
+
     footer iframe {
         min-height: 400px;
     }
 }
 
 @media (max-width: 992px) {
-    nav {
-        height: auto !important;
-    }
-
     nav .offcanvas {
         max-width: 300px;
     }
