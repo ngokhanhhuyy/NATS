@@ -1,6 +1,6 @@
 ﻿namespace NATS.Services.Dtos.RequestDtos;
 
-public class GeneralSettingsUpsertRequestDto : IRequestDto
+public class GeneralSettingsUpdateRequestDto : IRequestDto
 {
     public string ApplicationName { get; set; }
     public string ApplicationShortName { get; set; }

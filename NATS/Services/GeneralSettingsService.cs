@@ -3,7 +3,7 @@
 /// <inheritdoc cref="IGeneralSettingsService" />
 public class GeneralSettingsService
     :
-        AbstractUpsertableService<GeneralSettings, GeneralSettingsUpsertRequestDto>,
+        AbstractUpsertableService<GeneralSettings, GeneralSettingsUpdateRequestDto>,
         IGeneralSettingsService
 {
     /// <inheritdoc />
@@ -20,7 +20,7 @@ public class GeneralSettingsService
     }
 
     /// <inheritdoc />
-    public async Task UpdateAsync(GeneralSettingsUpsertRequestDto requestDto)
+    public async Task UpdateAsync(GeneralSettingsUpdateRequestDto requestDto)
     {
         // Fetching the entity from the database.
         GeneralSettings settings = await Context.GeneralSettings.SingleAsync();

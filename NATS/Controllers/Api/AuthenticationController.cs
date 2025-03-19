@@ -1,13 +1,13 @@
-namespace NATS.Controllers;
+namespace NATS.Controllers.Api;
 
 [Route("/Api/Authentication")]
 [ApiController]
-public class ApiAuthenticationController : ControllerBase
+public class AuthenticationController : ControllerBase
 {
     private readonly IAuthenticationService _authenticationService;
     private readonly IValidator<SignInRequestDto> _signInValidator;
 
-    public ApiAuthenticationController(
+    public AuthenticationController(
             IAuthenticationService authenticationService,
             IValidator<SignInRequestDto> signInValidator)
     {

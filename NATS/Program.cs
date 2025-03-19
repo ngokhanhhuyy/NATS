@@ -37,21 +37,16 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.LogoutPath = "/Logout";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.SlidingExpiration = true;
-    options.Events.OnSignedIn = async (context) =>
+    options.Events.OnRedirectToLogin = options.Events.OnRedirectToAccessDenied = (context) =>
     {
-        IAuthorizationService authorizationService = context
-            .HttpContext
-            .RequestServices
-            .GetService<IAuthorizationService>();
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
 
-        string nameIdentifier = context.Principal!.FindFirstValue(ClaimTypes.NameIdentifier);
-        bool parsable = int.TryParse(nameIdentifier, out int userId);
-        if (!parsable)
-        {
-            throw new InvalidOperationException();
-        }
-        
-        await Task.CompletedTask;
+    options.Events.OnRedirectToLogout = (context) =>
+    {
+        context.Response.StatusCode = StatusCodes.Status200OK;
+        return Task.CompletedTask;
     };
 });
 
@@ -101,12 +96,12 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
 // app.UseMiddleware<TrafficMiddleware>();
 app.UseMiddleware<UnderMaintainanceMiddleware>();
-app.UseMiddleware<RequestLoggingMiddleware>();
 app.Use(async (context, next) =>
 {
     try

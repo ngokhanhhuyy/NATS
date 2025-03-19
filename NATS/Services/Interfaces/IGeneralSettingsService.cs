@@ -26,5 +26,5 @@ public interface IGeneralSettingsService
     /// <exception cref="ConcurrencyException">
     /// Throws when there is a concurrency-related conflict occuring during the operation.
     /// </exception>
-    Task UpdateAsync(GeneralSettingsUpsertRequestDto requestDto);
+    Task UpdateAsync(GeneralSettingsUpdateRequestDto requestDto);
 }
