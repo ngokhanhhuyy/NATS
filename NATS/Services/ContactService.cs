@@ -19,6 +19,15 @@ public class ContactService
             .ToListAsync();
     }
 
+    /// <inheritdoc />
+    public async Task<ContactResponseDto> GetSingleAsync(int id)
+    {
+        return await Context.Contacts
+            .Where(c => c.Id == id)
+            .Select(dto => new ContactResponseDto(dto))
+            .SingleOrDefaultAsync()
+            ?? throw GetResourceNotFoundExceptionById(id);
+    }
 
     /// <inheritdoc />
     public async Task<int> CreateAsync(ContactUpsertRequestDto requestDto)

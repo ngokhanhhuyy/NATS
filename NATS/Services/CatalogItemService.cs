@@ -14,32 +14,29 @@ public class CatalogItemService
 
     /// <inheritdoc />
     public async Task<List<CatalogItemBasicResponseDto>> GetListAsync(
-            CatalogItemType? type = null,
-            int? exceptId = null)
+            CatalogItemListRequestDto requestDto)
     {
         IQueryable<CatalogItem> query = Context.CatalogItems.OrderBy(ci => ci.Id);
 
-        if (type.HasValue)
+        if (requestDto.Type.HasValue)
         {
-            query = query.Where(ci => ci.Type == type);
+            query = query.Where(ci => ci.Type == requestDto.Type);
         }
 
-        if (exceptId.HasValue)
+        if (requestDto.ExcludedIds != null)
         {
-            query = query.Where(ci => ci.Id != exceptId);
+            query = query.Where(ci => !requestDto.ExcludedIds.Contains(ci.Id));
         }
 
         return await query.Select(ci => new CatalogItemBasicResponseDto(ci)).ToListAsync();
     }
 
     /// <inheritdoc />
-    public async Task<CatalogItemDetailResponseDto> GetDetailAsync(
-            CatalogItemType type,
-            int id)
+    public async Task<CatalogItemDetailResponseDto> GetDetailAsync(int id)
     {
         return await Context.CatalogItems
             .Include(ci => ci.Photos)
-            .Where(ci => ci.Id == id && ci.Type == type)
+            .Where(ci => ci.Id == id)
             .Select(ci => new CatalogItemDetailResponseDto(ci))
             .SingleOrDefaultAsync()
             ?? throw new ResourceNotFoundException();

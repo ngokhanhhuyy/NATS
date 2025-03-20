@@ -52,7 +52,10 @@ public class CatalogItemController : Controller
     private async Task<IActionResult> CatalogItemList(CatalogItemType type)
     {
         List<CatalogItemBasicResponseDto> responseDtos;
-        responseDtos = await _service.GetListAsync(type);
+        responseDtos = await _service.GetListAsync(new CatalogItemListRequestDto
+        {
+            Type = type
+        });
 
         CatalogItemListViewModel model = new CatalogItemListViewModel(responseDtos, type);
 
@@ -64,10 +67,18 @@ public class CatalogItemController : Controller
         try
         {
             CatalogItemDetailResponseDto detailResponseDto;
-            detailResponseDto = await _service.GetDetailAsync(type, id);
+            detailResponseDto = await _service.GetDetailAsync(id);
+            if (detailResponseDto.Type != type)
+            {
+                return RedirectToAction(type.ToString() + "List");
+            }
 
             List<CatalogItemBasicResponseDto> otherResponseDtos;
-            otherResponseDtos = await _service.GetListAsync(type, id);
+            otherResponseDtos = await _service.GetListAsync(new CatalogItemListRequestDto
+            {
+                Type = type,
+                ExcludedIds = new List<int> { id }
+            });
 
             CatalogItemDetailViewModel model = new CatalogItemDetailViewModel(
                 detailResponseDto,

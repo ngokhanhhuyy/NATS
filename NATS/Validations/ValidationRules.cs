@@ -1,4 +1,4 @@
-namespace NATS.Services.Validations;
+namespace NATS.Validation;
 
 public static class ValidationRules {
     public static class User {

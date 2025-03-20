@@ -1,4 +1,4 @@
-namespace NATS.Services.Validation.Validators;
+namespace NATS.Validation.Validators;
 
 public class SliderItemUpsertValidator : Validator<SliderItemUpsertRequestDto>
 {

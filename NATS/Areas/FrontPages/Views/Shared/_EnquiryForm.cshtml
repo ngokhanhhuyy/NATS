@@ -11,9 +11,8 @@
 
             <div id="vue-app">
                 <form
-                    class="bg-white rounded-4 shadow p-3 w-100 d-none flex-column
-                            align-items-stretch"
-                    :class="{ 'd-flex': isMounted, 'd-none': !isMounted }"
+                    class="bg-white rounded-4 shadow p-3 w-100
+                            d-flex flex-column align-items-stretch"
                     action="#"
                     id="enquiry-form"
                 >
@@ -23,20 +22,12 @@
                             <input
                                 type="text"
                                 class="form-control"
-                                :class="fullNameInputClassName"
                                 id="UserName"
                                 name="UserName"
                                 placeholder=""
                                 maxlength="50"
-                                v-model="model.fullName"
                             />
                             <label class="required" for="UserName">Họ và tên</label>
-                        </div>
-                        <div
-                            :class="fullNameValidationMessageClassName"
-                            v-show="isFullNameValid != null"
-                        >
-                            {{ errors.get("fullName") ?? "Hợp lệ" }}
                         </div>
                     </div>
 
@@ -70,6 +61,7 @@
                             class="form-control"
                             id="Content"
                             name="Content"
+                            style="min-height: 200px"
                             placeholder=""
                         ></textarea>
                         <label class="required" for="Content">Nội dung</label>
@@ -88,6 +80,3 @@
         </div>
     </div>
 </div>
-
-<script src="~/js/front-pages/enquiry-form.js" type="module" asp-append-version="true">
-</script>

@@ -44,8 +44,11 @@ public class HomeController : Controller
         Task<AboutUsIntroductionResponseDto> aboutUsIntroductionResponseDtoTask;
         aboutUsIntroductionResponseDtoTask = _aboutUsIntroductionService.GetAsync();
 
-        Task<List<CatalogItemBasicResponseDto>> serviceResponseDtosTask;
-        serviceResponseDtosTask = _catalogItemService.GetListAsync();
+        CatalogItemListRequestDto catalogItemListRequestDto;
+        catalogItemListRequestDto = new CatalogItemListRequestDto();
+        Task<List<CatalogItemBasicResponseDto>> catalogItemResponseDtosTask;
+        catalogItemResponseDtosTask = _catalogItemService
+            .GetListAsync(catalogItemListRequestDto);
 
         Task<List<ContactResponseDto>> contactResponseDtosTask;
         contactResponseDtosTask = _contactService.GetListAsync();
@@ -65,15 +68,15 @@ public class HomeController : Controller
                 .ToList(),
             AboutUsIntroduction = new AboutUsIntroductionDetailModel(
                 aboutUsIntroductionResponseDtoTask.Result),
-            Services = serviceResponseDtosTask.Result
+            Services = catalogItemResponseDtosTask.Result
                 .Where(dto => dto.Type == CatalogItemType.Service)
                 .Select(dto => new CatalogItemBasicModel(dto))
                 .ToList(),
-            Courses = serviceResponseDtosTask.Result
+            Courses = catalogItemResponseDtosTask.Result
                 .Where(dto => dto.Type == CatalogItemType.Course)
                 .Select(dto => new CatalogItemBasicModel(dto))
                 .ToList(),
-            Products = serviceResponseDtosTask.Result
+            Products = catalogItemResponseDtosTask.Result
                 .Where(dto => dto.Type == CatalogItemType.Product)
                 .Select(dto => new CatalogItemBasicModel(dto))
                 .ToList(),

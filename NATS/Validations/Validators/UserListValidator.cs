@@ -1,4 +1,4 @@
-namespace NATS.Services.Validations.Validators;
+namespace NATS.Validation.Validators;
 
 public class UserListValidator : Validator<UserListRequestDto>
 {

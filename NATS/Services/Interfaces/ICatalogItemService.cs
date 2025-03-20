@@ -8,28 +8,18 @@ public interface ICatalogItemService
     /// <summary>
     /// Get the list of all catalog items with basic information and thumbnail only.
     /// </summary>
-    /// <param name="type">
-    /// (Optional) The type of the catalog items to retrieve. If not specified, the results
-    /// will be all available catalog items, regardless their types.
-    /// </param>
-    /// <param name="exceptId">
-    /// (Optional) The id of the catalog item that should be excluded from the results.
-    /// </param>
+    /// <param name="requestDto">
+    /// A DTO containing the conditions for the results.
     /// <returns>
     /// A <see cref="Task"/> representing the asynchronous operation, which result is a
     /// <see cref="List{T}"/> of DTOs, containing the basic information of the catalog items.
     /// </returns>
-    Task<List<CatalogItemBasicResponseDto>> GetListAsync(
-            CatalogItemType? type = null,
-            int? exceptId = null);
+    Task<List<CatalogItemBasicResponseDto>> GetListAsync(CatalogItemListRequestDto requestDto);
 
     /// <summary>
     /// Gets a specific catalog item by given id with detail information, thumbnail url and
     /// photos.
     /// </summary>
-    /// <param name="type">
-    /// The type of the catalog item to retrieve.
-    /// </param>
     /// <param name="id">
     /// The id of the catalog item to retrieve.
     /// </param>
@@ -38,10 +28,9 @@ public interface ICatalogItemService
     /// containing the information of the item.
     /// </returns>
     /// <exception cref="ResourceNotFoundException">
-    /// Throws when the catalog item specified by <paramref name="id"/> and
-    /// <paramref name="type"/> doesn't exist.
+    /// Throws when the catalog item specified by <paramref name="id"/> doesn't exist.
     /// </exception>
-    Task<CatalogItemDetailResponseDto> GetDetailAsync(CatalogItemType type, int id);
+    Task<CatalogItemDetailResponseDto> GetDetailAsync(int id);
 
     /// <summary>
     /// Create a new catalog item with the given data.

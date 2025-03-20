@@ -1,36 +1,50 @@
 namespace NATS.Controllers.Api;
 
-public class AbstractCatalogItemController : Controller
+[Route("/Api/[controller]")]
+public class CatalogItemController : Controller
 {
-    private readonly CatalogItemType _type;
     private readonly ICatalogItemService _service;
+    private readonly IValidator<CatalogItemListRequestDto> _listValidator;
     private readonly IValidator<CatalogItemUpsertRequestDto> _upsertValidator;
 
-    protected AbstractCatalogItemController(
-            CatalogItemType type,
+    public CatalogItemController(
             ICatalogItemService service,
-            IValidator<CatalogItemUpsertRequestDto> validator)
+            IValidator<CatalogItemListRequestDto> listValidator,
+            IValidator<CatalogItemUpsertRequestDto> upsertValidator)
     {
-        _type = type;
         _service = service;
-        _upsertValidator = validator;
+        _listValidator = listValidator;
+        _upsertValidator = upsertValidator;
     }
 
     [HttpGet]
     [ProducesResponseType<List<CatalogItemBasicResponseDto>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> List()
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> List(CatalogItemListRequestDto requestDto)
     {
-        return Ok(await _service.GetListAsync(_type));
+        ValidationResult validationResult = _listValidator.Validate(requestDto);
+        if (!validationResult.IsValid)
+        {
+            ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
+            return BadRequest(ValidationProblem(ModelState));
+        }
+
+        return Ok(await _service.GetListAsync(requestDto));
     }
 
     [HttpGet("{id:int}")]
     [ProducesResponseType<CatalogItemDetailResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Detail(int id)
+    public async Task<IActionResult> Detail(string typeFromRoute, int id)
     {
         try
         {
-            return Ok(await _service.GetDetailAsync(_type, id));
+            CatalogItemType type = Enum.Parse<CatalogItemType>(typeFromRoute);
+            return Ok(await _service.GetDetailAsync(id));
+        }
+        catch (ArgumentException)
+        {
+            return NotFound();
         }
         catch (ResourceNotFoundException exception)
         {

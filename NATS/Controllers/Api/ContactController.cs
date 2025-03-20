@@ -15,10 +15,26 @@ public class ContactController : Controller
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<List<ContactResponseDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> List()
     {
         return Ok(await _service.GetListAsync());
+    }
+
+    [HttpGet("{id:int}")]
+    [ProducesResponseType<ContactResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Single(int id)
+    {
+        try
+        {
+            return Ok(await _service.GetSingleAsync(id));
+        }
+        catch (ResourceNotFoundException exception)
+        {
+            ModelState.AddModelErrorsFromServiceException(exception);
+            return NotFound(ValidationProblem(ModelState));
+        }
     }
 
     [HttpPost]

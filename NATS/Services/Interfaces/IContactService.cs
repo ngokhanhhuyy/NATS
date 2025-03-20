@@ -15,6 +15,21 @@ public interface IContactService
     Task<List<ContactResponseDto>> GetListAsync();
 
     /// <summary>
+    /// Gets a single contact.
+    /// </summary>
+    /// <param name="id">
+    /// The id of the contact to retrieve.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is a DTO
+    /// containing the information of the contact.
+    /// </returns>
+    /// <exception cref="ResourceNotFoundException">
+    /// Throws when the contact specified by <paramref name="id"/> doesn't exist.
+    /// </exception>
+    Task<ContactResponseDto> GetSingleAsync(int id);
+
+    /// <summary>
     /// Creates a new contact.
     /// </summary>
     /// <param name="requestDto">
