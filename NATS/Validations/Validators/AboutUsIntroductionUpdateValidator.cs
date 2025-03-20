@@ -1,8 +1,9 @@
 namespace NATS.Services.Validations.Validators;
 
-public class AboutUsIntroductionValidator : Validator<AboutUsIntroductionUpsertRequestDto>
+public class AboutUsIntroductionUpdateValidator
+        : Validator<AboutUsIntroductionUpdateRequestDto>
 {
-    public AboutUsIntroductionValidator()
+    public AboutUsIntroductionUpdateValidator()
     {
         RuleFor(dto => dto.ThumbnailFile)
             .Must(IsValidImage)

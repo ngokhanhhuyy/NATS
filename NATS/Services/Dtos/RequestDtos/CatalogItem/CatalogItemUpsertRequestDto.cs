@@ -5,7 +5,6 @@ public class CatalogItemUpsertRequestDto : IHasThumbnailUpsertRequestDto
     public string Name { get; set; }
     public string Summary { get; set; }
     public string Detail { get; set; }
-    public string ThumbnailUrl { get; set; }
     public byte[] ThumbnailFile { get; set; }
     public bool ThumbnailChanged{ get; set; }
     public List<CatalogItemUpsertPhotoRequestDto> Photos { get; set; }

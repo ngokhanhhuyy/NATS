@@ -110,10 +110,6 @@ footer .links-column a {
     nav {
         height: auto !important;
     }
-
-    footer iframe {
-        min-height: 400px;
-    }
 }
 
 @media (max-width: 992px) {

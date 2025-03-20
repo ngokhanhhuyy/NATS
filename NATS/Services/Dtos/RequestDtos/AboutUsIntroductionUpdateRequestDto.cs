@@ -1,6 +1,6 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class AboutUsIntroductionUpsertRequestDto : IHasThumbnailUpsertRequestDto
+public class AboutUsIntroductionUpdateRequestDto : IHasThumbnailUpsertRequestDto
 {
     public byte[] ThumbnailFile { get; set; }
     public bool ThumbnailChanged { get; set; }

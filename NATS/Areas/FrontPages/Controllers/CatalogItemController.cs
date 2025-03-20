@@ -64,7 +64,7 @@ public class CatalogItemController : Controller
         try
         {
             CatalogItemDetailResponseDto detailResponseDto;
-            detailResponseDto = await _service.GetDetailAsync(id, type);
+            detailResponseDto = await _service.GetDetailAsync(type, id);
 
             List<CatalogItemBasicResponseDto> otherResponseDtos;
             otherResponseDtos = await _service.GetListAsync(type, id);

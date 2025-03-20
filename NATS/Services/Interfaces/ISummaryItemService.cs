@@ -47,5 +47,5 @@ public interface ISummaryItemService
     /// <exception cref="ConcurrencyException">
     /// Throws when there is a concurrency-related conflict occuring during the operation.
     /// </exception>
-    Task UpdateAsync(int id, SummaryItemUpsertRequestDto requestDto);
+    Task UpdateAsync(int id, SummaryItemUpdateRequestDto requestDto);
 }

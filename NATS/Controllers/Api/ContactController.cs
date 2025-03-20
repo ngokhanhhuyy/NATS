@@ -1,73 +1,59 @@
-namespace NATS.Controllers;
+namespace NATS.Controllers.Api;
 
-[Route("/api/[controller]")]
-public class SliderItemController : ControllerBase
+[Route("/Api/[controller]")]
+public class ContactController : Controller
 {
-    private readonly ISliderItemService _service;
-    private readonly IValidator<SliderItemUpsertRequestDto> _validator;
+    private readonly IContactService _service;
+    private readonly IValidator<ContactUpsertRequestDto> _validator;
 
-    public SliderItemController(
-            ISliderItemService service,
-            IValidator<SliderItemUpsertRequestDto> validator)
+    public ContactController(
+            IContactService service,
+            IValidator<ContactUpsertRequestDto> validator)
     {
         _service = service;
         _validator = validator;
     }
 
     [HttpGet]
-    [ProducesResponseType<List<SliderItemResponseDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> List()
     {
         return Ok(await _service.GetListAsync());
     }
 
-    [HttpGet("{id:int}")]
-    [ProducesResponseType<SliderItemResponseDto>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Single(int id)
-    {
-        try
-        {
-            return Ok(await _service.GetSingleAsync(id));
-        }
-        catch (ResourceNotFoundException exception)
-        {
-            ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
-        }
-    }
-
     [HttpPost]
-    [ProducesResponseType<int>(StatusCodes.Status201Created)]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create(SliderItemUpsertRequestDto requestDto)
+    public async Task<IActionResult> Create(ContactUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _validator.Validate(requestDto);
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
-            return BadRequest(ValidationProblem(ModelState));
+            return BadRequest(ModelState);
         }
-
+        
         int createdId = await _service.CreateAsync(requestDto);
-        string createdUrl = Url.Action("Single", new { id = createdId });
+        string createdUrl = Url.Action("List", createdId);
         return Created(createdUrl, createdId);
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Update(int id, SliderItemUpsertRequestDto requestDto)
+    public async Task<IActionResult> Update(int id, ContactUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _validator.Validate(requestDto);
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
-            return BadRequest(ValidationProblem(ModelState));
+            return BadRequest(ModelState);
         }
 
         try
@@ -78,19 +64,17 @@ public class SliderItemController : ControllerBase
         catch (ResourceNotFoundException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
+            return NotFound(ModelState);
         }
         catch (ConcurrencyException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return Conflict(ValidationProblem(ModelState));
+            return Conflict(ModelState);
         }
     }
 
     [HttpDelete("{id:int}")]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Delete(int id)
@@ -103,12 +87,12 @@ public class SliderItemController : ControllerBase
         catch (ResourceNotFoundException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
+            return NotFound(ModelState);
         }
         catch (ConcurrencyException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return Conflict(ValidationProblem(ModelState));
+            return Conflict(ModelState);
         }
     }
 }

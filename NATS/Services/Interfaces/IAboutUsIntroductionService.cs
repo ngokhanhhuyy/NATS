@@ -26,5 +26,5 @@ public interface IAboutUsIntroductionService
     /// <exception cref="ConcurrencyException">
     /// Throws when there is a concurreny-related conflict occuring during the operation.
     /// </exception>
-    Task UpdateAsync(AboutUsIntroductionUpsertRequestDto requestDto);
+    Task UpdateAsync(AboutUsIntroductionUpdateRequestDto requestDto);
 }

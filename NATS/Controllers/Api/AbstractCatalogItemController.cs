@@ -1,34 +1,36 @@
-namespace NATS.Controllers;
+namespace NATS.Controllers.Api;
 
-[Route("/api/[controller]")]
-public class SliderItemController : ControllerBase
+public class AbstractCatalogItemController : Controller
 {
-    private readonly ISliderItemService _service;
-    private readonly IValidator<SliderItemUpsertRequestDto> _validator;
+    private readonly CatalogItemType _type;
+    private readonly ICatalogItemService _service;
+    private readonly IValidator<CatalogItemUpsertRequestDto> _upsertValidator;
 
-    public SliderItemController(
-            ISliderItemService service,
-            IValidator<SliderItemUpsertRequestDto> validator)
+    protected AbstractCatalogItemController(
+            CatalogItemType type,
+            ICatalogItemService service,
+            IValidator<CatalogItemUpsertRequestDto> validator)
     {
+        _type = type;
         _service = service;
-        _validator = validator;
+        _upsertValidator = validator;
     }
 
     [HttpGet]
-    [ProducesResponseType<List<SliderItemResponseDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<List<CatalogItemBasicResponseDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> List()
     {
-        return Ok(await _service.GetListAsync());
+        return Ok(await _service.GetListAsync(_type));
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType<SliderItemResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<CatalogItemDetailResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Single(int id)
+    public async Task<IActionResult> Detail(int id)
     {
         try
         {
-            return Ok(await _service.GetSingleAsync(id));
+            return Ok(await _service.GetDetailAsync(_type, id));
         }
         catch (ResourceNotFoundException exception)
         {
@@ -38,32 +40,46 @@ public class SliderItemController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [ProducesResponseType<int>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create(SliderItemUpsertRequestDto requestDto)
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> Create(CatalogItemUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
-        ValidationResult validationResult = _validator.Validate(requestDto);
+        ValidationResult validationResult = _upsertValidator.Validate(requestDto);
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
             return BadRequest(ValidationProblem(ModelState));
         }
 
-        int createdId = await _service.CreateAsync(requestDto);
-        string createdUrl = Url.Action("Single", new { id = createdId });
-        return Created(createdUrl, createdId);
+        try
+        {
+            int createdId = await _service.CreateAsync(requestDto);
+            string detailUrl = Url.Action("Detail", new { id = createdId });
+            return Created(detailUrl, createdId);
+        }
+        catch (ConcurrencyException exception)
+        {
+            ModelState.AddModelErrorsFromServiceException(exception);
+            return Conflict(ValidationProblem(ModelState));
+        }
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Update(int id, SliderItemUpsertRequestDto requestDto)
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> Update(int id, CatalogItemUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
-        ValidationResult validationResult = _validator.Validate(requestDto);
+        ValidationResult validationResult = _upsertValidator.Validate(requestDto);
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
@@ -79,6 +95,11 @@ public class SliderItemController : ControllerBase
         {
             ModelState.AddModelErrorsFromServiceException(exception);
             return NotFound(ValidationProblem(ModelState));
+        }
+        catch (OperationException exception)
+        {
+            ModelState.AddModelErrorsFromServiceException(exception);
+            return UnprocessableEntity(ValidationProblem(ModelState));
         }
         catch (ConcurrencyException exception)
         {

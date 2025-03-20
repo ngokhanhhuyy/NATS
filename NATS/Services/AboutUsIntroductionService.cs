@@ -1,10 +1,11 @@
 namespace NATS.Services;
 
+/// <inheritdoc cref="IAboutUsIntroductionService" />
 public class AboutUsIntroductionService
         :
             AbstractHasThumbnailService<
                 AboutUsIntroduction,
-                AboutUsIntroductionUpsertRequestDto>,
+                AboutUsIntroductionUpdateRequestDto>,
             IAboutUsIntroductionService
 {
     public AboutUsIntroductionService(
@@ -13,6 +14,7 @@ public class AboutUsIntroductionService
     {
     }
 
+    /// <inheritdoc />
     public async Task<AboutUsIntroductionResponseDto> GetAsync()
     {
         return await Context.AboutUsIntroductions
@@ -20,7 +22,8 @@ public class AboutUsIntroductionService
             .SingleAsync();
     }
 
-    public async Task UpdateAsync(AboutUsIntroductionUpsertRequestDto requestDto)
+    /// <inheritdoc />
+    public async Task UpdateAsync(AboutUsIntroductionUpdateRequestDto requestDto)
     {
         // Fetch the entity from the database.
         AboutUsIntroduction introduction = await Context.AboutUsIntroductions.SingleAsync();

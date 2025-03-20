@@ -27,11 +27,11 @@ public interface ICatalogItemService
     /// Gets a specific catalog item by given id with detail information, thumbnail url and
     /// photos.
     /// </summary>
-    /// <param name="id">
-    /// The id of the catalog item to retrieve.
-    /// </param>
     /// <param name="type">
     /// The type of the catalog item to retrieve.
+    /// </param>
+    /// <param name="id">
+    /// The id of the catalog item to retrieve.
     /// </param>
     /// <returns>
     /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is a DTO
@@ -41,7 +41,7 @@ public interface ICatalogItemService
     /// Throws when the catalog item specified by <paramref name="id"/> and
     /// <paramref name="type"/> doesn't exist.
     /// </exception>
-    Task<CatalogItemDetailResponseDto> GetDetailAsync(int id, CatalogItemType type);
+    Task<CatalogItemDetailResponseDto> GetDetailAsync(CatalogItemType type, int id);
 
     /// <summary>
     /// Create a new catalog item with the given data.
@@ -71,12 +71,15 @@ public interface ICatalogItemService
     /// <returns>
     /// A <see cref="Task{T}"/> representing the asynchronous operation.
     /// </returns>
-    /// <exception cref="ConcurrencyException">
-    /// Throws when a concurrency-related conflict occurs during the operation.
+    /// <exception cref="ResourceNotFoundException">
+    /// Throws when the catalog item specified by <paramref name="id"/> doesn't exist.
     /// </exception>
     /// <exception cref="OperationException">
     /// Throws when one or many photos with the specified ids in the
     /// <paramref name="requestDto"/> don't exist in the database.
+    /// </exception>
+    /// <exception cref="ConcurrencyException">
+    /// Throws when a concurrency-related conflict occurs during the operation.
     /// </exception>
     Task UpdateAsync(int id, CatalogItemUpsertRequestDto requestDto);
 
@@ -89,6 +92,9 @@ public interface ICatalogItemService
     /// <returns>
     /// A <see cref="Task{T}"/> reprensenting the asynchronous operation.
     /// </returns>
+    /// <exception cref="ResourceNotFoundException">
+    /// Throws when the catalog item specified by <paramref name="id"/> doesn't exist.
+    /// </exception>
     /// <exception cref="ConcurrencyException">
     /// Throws when a concurrency-related conflict occurs during the operation.
     /// </exception>

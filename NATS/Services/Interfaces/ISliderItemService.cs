@@ -36,8 +36,8 @@ public interface ISliderItemService
     /// A DTO containing the data for the creating operation.
     /// </param>
     /// <returns>
-    /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is a
-    /// the id of the created slider item.
+    /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is the id
+    /// of the created slider item.
     /// </returns>
     Task<int> CreateAsync(SliderItemUpsertRequestDto requestDto);
 
@@ -53,11 +53,11 @@ public interface ISliderItemService
     /// <returns>
     /// A <see cref="Task{T}"/> representing the asynchronous operation.
     /// </returns>
-    /// <exception cref="ConcurrencyException">
-    /// Throws when there is a concurrency-related conflict occuring during the operation.
-    /// </exception>
     /// <exception cref="ResourceNotFoundException">
     /// Throws when the slider item specified by <paramref name="id"/> doesn't exist.
+    /// </exception>
+    /// <exception cref="ConcurrencyException">
+    /// Throws when there is a concurrency-related conflict occuring during the operation.
     /// </exception>
     Task UpdateAsync(int id, SliderItemUpsertRequestDto requestDto);
 
@@ -70,11 +70,11 @@ public interface ISliderItemService
     /// <returns>
     /// A <see cref="Task{T}"/> representing the asynchronous operation.
     /// </returns>
-    /// <exception cref="ConcurrencyException">
-    /// Throws when there is a concurrency-related conflict occuring during the operation.
-    /// </exception>
     /// <exception cref="ResourceNotFoundException">
     /// Throws when the slider item specified by <paramref name="id"/> doesn't exist.
+    /// </exception>
+    /// <exception cref="ConcurrencyException">
+    /// Throws when there is a concurrency-related conflict occuring during the operation.
     /// </exception>
     Task DeleteAsync(int id);
 }

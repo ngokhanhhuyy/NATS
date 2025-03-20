@@ -34,8 +34,8 @@ public class CatalogItemService
 
     /// <inheritdoc />
     public async Task<CatalogItemDetailResponseDto> GetDetailAsync(
-            int id, CatalogItemType
-            type)
+            CatalogItemType type,
+            int id)
     {
         return await Context.CatalogItems
             .Include(ci => ci.Photos)

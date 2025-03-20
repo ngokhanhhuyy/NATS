@@ -3,7 +3,7 @@ namespace NATS.Services;
 /// <inheritdoc cref="ISummaryItemService" />
 public class SummaryItemService
     :
-        AbstractHasThumbnailService<SummaryItem, SummaryItemUpsertRequestDto>,
+        AbstractHasThumbnailService<SummaryItem, SummaryItemUpdateRequestDto>,
         ISummaryItemService
 {
 
@@ -33,7 +33,7 @@ public class SummaryItemService
     }
 
     /// <inheritdoc />
-    public async Task UpdateAsync(int id, SummaryItemUpsertRequestDto requestDto)
+    public async Task UpdateAsync(int id, SummaryItemUpdateRequestDto requestDto)
     {
         // Fetch the entity from the database and ensure it exists.
         SummaryItem item = await Context.SummaryItems
