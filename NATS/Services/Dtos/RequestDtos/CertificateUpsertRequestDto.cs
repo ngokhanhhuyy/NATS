@@ -4,7 +4,6 @@ public class CertificateUpsertRequestDto : IHasThumbnailUpsertRequestDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string PhotoUrl { get; set; }
     public byte[] ThumbnailFile { get; set; }
     public bool ThumbnailChanged { get; set; } = false;
 

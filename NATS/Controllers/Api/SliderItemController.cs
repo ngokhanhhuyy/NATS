@@ -33,7 +33,7 @@ public class SliderItemController : ControllerBase
         catch (ResourceNotFoundException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
+            return NotFound(ModelState);
         }
     }
 
@@ -47,7 +47,7 @@ public class SliderItemController : ControllerBase
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
-            return BadRequest(ValidationProblem(ModelState));
+            return BadRequest(ModelState);
         }
 
         int createdId = await _service.CreateAsync(requestDto);
@@ -67,7 +67,7 @@ public class SliderItemController : ControllerBase
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
-            return BadRequest(ValidationProblem(ModelState));
+            return BadRequest(ModelState);
         }
 
         try
@@ -78,12 +78,11 @@ public class SliderItemController : ControllerBase
         catch (ResourceNotFoundException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
+            return NotFound(ModelState);
         }
-        catch (ConcurrencyException exception)
+        catch (ConcurrencyException)
         {
-            ModelState.AddModelErrorsFromServiceException(exception);
-            return Conflict(ValidationProblem(ModelState));
+            return Conflict();
         }
     }
 
@@ -103,12 +102,11 @@ public class SliderItemController : ControllerBase
         catch (ResourceNotFoundException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
+            return NotFound(ModelState);
         }
-        catch (ConcurrencyException exception)
+        catch (ConcurrencyException)
         {
-            ModelState.AddModelErrorsFromServiceException(exception);
-            return Conflict(ValidationProblem(ModelState));
+            return Conflict();
         }
     }
 }

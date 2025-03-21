@@ -1,28 +1,28 @@
 namespace NATS.Controllers.Api;
 
 [Route("/Api/[controller]")]
-public class ContactController : Controller
+public class CertificateController : ControllerBase
 {
-    private readonly IContactService _service;
-    private readonly IValidator<ContactUpsertRequestDto> _validator;
+    private readonly ICertificateService _service;
+    private readonly IValidator<CertificateUpsertRequestDto> _validator;
 
-    public ContactController(
-            IContactService service,
-            IValidator<ContactUpsertRequestDto> validator)
+    public CertificateController(
+            ICertificateService service,
+            IValidator<CertificateUpsertRequestDto> validator)
     {
         _service = service;
         _validator = validator;
     }
 
     [HttpGet]
-    [ProducesResponseType<List<ContactResponseDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<List<MemberResponseDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> List()
     {
         return Ok(await _service.GetListAsync());
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType<ContactResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<List<MemberResponseDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Single(int id)
     {
@@ -39,9 +39,10 @@ public class ContactController : Controller
 
     [HttpPost]
     [Authorize]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType<int>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create(ContactUpsertRequestDto requestDto)
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Create(CertificateUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _validator.Validate(requestDto);
@@ -50,19 +51,19 @@ public class ContactController : Controller
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
             return BadRequest(ModelState);
         }
-        
+
         int createdId = await _service.CreateAsync(requestDto);
-        string createdUrl = Url.Action("List", createdId);
-        return Created(createdUrl, createdId);
+        return CreatedAtAction("Single", createdId);
     }
 
     [HttpPut("{id:int}")]
     [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<int>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Update(int id, ContactUpsertRequestDto requestDto)
+    public async Task<IActionResult> Update(int id, CertificateUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _validator.Validate(requestDto);
@@ -89,7 +90,9 @@ public class ContactController : Controller
     }
 
     [HttpDelete("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [Authorize]
+    [ProducesResponseType<int>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Delete(int id)

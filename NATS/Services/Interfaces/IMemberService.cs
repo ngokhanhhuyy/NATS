@@ -36,7 +36,8 @@ public interface IMemberService
     /// A DTO containing the data for the creating operation.
     /// </param>
     /// <returns>
-    /// The id of the created member.
+    /// A <see cref="Task"/> representing the asynchronous operation, which result is the id of
+    /// the created member.
     /// </returns>
     Task<int> CreateAsync(MemberUpsertRequestDto requestDto);
 

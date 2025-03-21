@@ -34,7 +34,7 @@ public class AboutUsIntroductionController : ControllerBase
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
-            return BadRequest(ValidationProblem(ModelState));
+            return BadRequest(ModelState);
         }
 
         try
@@ -42,10 +42,9 @@ public class AboutUsIntroductionController : ControllerBase
             await _service.UpdateAsync(requestDto);
             return Ok();
         }
-        catch (ConcurrencyException exception)
+        catch (ConcurrencyException)
         {
-            ModelState.AddModelErrorsFromServiceException(exception);
-            return Conflict(ValidationProblem(ModelState));
+            return Conflict();
         }
     }
 }

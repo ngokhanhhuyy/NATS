@@ -41,10 +41,9 @@ public class GeneralSettingsController : Controller
             await _service.UpdateAsync(requestDto);
             return Ok();
         }
-        catch (ConcurrencyException exception)
+        catch (ConcurrencyException)
         {
-            ModelState.AddModelErrorsFromServiceException(exception);
-            return Conflict(ModelState);
+            return Conflict();
         }
     }
 }

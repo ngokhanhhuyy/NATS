@@ -26,7 +26,7 @@ public class CatalogItemController : Controller
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
-            return BadRequest(ValidationProblem(ModelState));
+            return BadRequest(ModelState);
         }
 
         return Ok(await _service.GetListAsync(requestDto));
@@ -49,7 +49,7 @@ public class CatalogItemController : Controller
         catch (ResourceNotFoundException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
+            return NotFound(ModelState);
         }
     }
 
@@ -66,7 +66,7 @@ public class CatalogItemController : Controller
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
-            return BadRequest(ValidationProblem(ModelState));
+            return BadRequest(ModelState);
         }
 
         try
@@ -75,10 +75,9 @@ public class CatalogItemController : Controller
             string detailUrl = Url.Action("Detail", new { id = createdId });
             return Created(detailUrl, createdId);
         }
-        catch (ConcurrencyException exception)
+        catch (ConcurrencyException)
         {
-            ModelState.AddModelErrorsFromServiceException(exception);
-            return Conflict(ValidationProblem(ModelState));
+            return Conflict();
         }
     }
 
@@ -97,7 +96,7 @@ public class CatalogItemController : Controller
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
-            return BadRequest(ValidationProblem(ModelState));
+            return BadRequest(ModelState);
         }
 
         try
@@ -108,17 +107,16 @@ public class CatalogItemController : Controller
         catch (ResourceNotFoundException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
+            return NotFound(ModelState);
         }
         catch (OperationException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return UnprocessableEntity(ValidationProblem(ModelState));
+            return UnprocessableEntity(ModelState);
         }
-        catch (ConcurrencyException exception)
+        catch (ConcurrencyException)
         {
-            ModelState.AddModelErrorsFromServiceException(exception);
-            return Conflict(ValidationProblem(ModelState));
+            return Conflict();
         }
     }
 
@@ -138,12 +136,11 @@ public class CatalogItemController : Controller
         catch (ResourceNotFoundException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
+            return NotFound(ModelState);
         }
-        catch (ConcurrencyException exception)
+        catch (ConcurrencyException)
         {
-            ModelState.AddModelErrorsFromServiceException(exception);
-            return Conflict(ValidationProblem(ModelState));
+            return Conflict();
         }
     }
 }

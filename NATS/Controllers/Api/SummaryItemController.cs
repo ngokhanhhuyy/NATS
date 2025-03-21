@@ -33,7 +33,7 @@ public class SummaryItemController : ControllerBase
         catch (ResourceNotFoundException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
+            return NotFound(ModelState);
         }
     }
 
@@ -50,7 +50,7 @@ public class SummaryItemController : ControllerBase
         if (!validationResult.IsValid)
         {
             ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
-            return BadRequest(ValidationProblem(ModelState));
+            return BadRequest(ModelState);
         }
 
         try
@@ -61,12 +61,11 @@ public class SummaryItemController : ControllerBase
         catch (ResourceNotFoundException exception)
         {
             ModelState.AddModelErrorsFromServiceException(exception);
-            return NotFound(ValidationProblem(ModelState));
+            return NotFound(ModelState);
         }
-        catch (ConcurrencyException exception)
+        catch (ConcurrencyException)
         {
-            ModelState.AddModelErrorsFromServiceException(exception);
-            return Conflict(ValidationProblem(ModelState));
+            return Conflict();
         }
     }
 }
