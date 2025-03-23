@@ -1,81 +1,11 @@
-﻿@using System.Text.RegularExpressions
-@model HomeViewModel
+﻿@model HomeViewModel
 @{
     Layout = "_Layout";
 }
 
-@functions {
-    List<string> ComputeHotlines(ContactType type)
-    {
-        List<string> hotlines = new List<string>();
-        foreach (ContactDetailModel contact in Model.Contacts)
-        {
-            if (contact.Type == type)
-            {
-                string spacesRemovedContent = contact.Content.Replace(" ", "");
-                string formattedContent = Regex
-                    .Replace(spacesRemovedContent, @"(\d{4})(\d{3})(\d{3})", "$1 $2 $3");
-                hotlines.Add(formattedContent);
-            }
-        }
-
-        return hotlines;
-    }
-}
-
 <div class="container-fluid p-0" id="home-view">
     <!-- SliderItems -->
-    <div id="slider" class="carousel slide overflow-visible m-0 w-100 position-relative">
-        <!-- Photos -->
-        <div class="carousel-inner">
-            @for (int index = 0; index < Model.SliderItems.Count(); index++)
-            {
-                SliderItemDetailModel sliderItem = Model.SliderItems[index];
-                <div class="carousel-item @(index == 0 ? "active" : "")">
-                    <img
-                        src="@sliderItem.ThumbnailUrl"
-                        class="carousel-img d-block w-100"
-                        alt="..."
-                    />
-                </div>
-            }
-        </div>
-
-        <!-- IndicatorButtons -->
-        <div class="carousel-indicators">
-            @for (int index = 0; index < Model.SliderItems.Count(); index++)
-            {
-                <button
-                    type="button"
-                    class="@(index == 0 ? "active" : "")"
-                    data-bs-target="#slider"
-                    data-bs-slide-to="@index"
-                    aria-current="@(index == 0)"
-                    aria-label="Slide @index">
-                </button>
-            }
-        </div>
-
-        <!-- CarouoselControlButtons -->
-        <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#slider"
-            data-bs-slide="prev"
-        >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#slider"
-            data-bs-slide="next"
-        >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
+    <partial name="_SliderItemList" model="Model.SliderItems" />
 
     <!-- ApplicationName -->
     <div
@@ -95,6 +25,7 @@
                     <img
                         class="rounded-circle summary-item-thumbnail mb-3 shadow"
                         src="@summaryItem.ThumbnailUrl"
+                        alt="@summaryItem.Name"
                     >
 
                     <span class="fs-3 text-center text-success mb-3">
@@ -116,6 +47,7 @@
                     <img
                         src="@Model.AboutUsIntroduction.ThumbnailUrl"
                         class="w-100 rounded-3"
+                        alt="Về chúng tôi"
                     />
                 </div>
                 <div class="col-xl col-lg-8 col p-4 pt-3 d-flex flex-column
@@ -151,5 +83,5 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/front-pages/home.css">
+    <link rel="stylesheet" href="~/css/front-pages/home.css" asp-append-version="true">
 }

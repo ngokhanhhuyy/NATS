@@ -15,7 +15,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="906859bb-e68b-47c5-b55b-4e77815ff55d" name="Changes" comment="" />
+    <list default="true" id="906859bb-e68b-47c5-b55b-4e77815ff55d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/CatalogItemController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/CatalogItemController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/FooterComponent/Default.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/FooterComponent/Default.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Controllers/Api/CatalogItemController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Controllers/Api/CatalogItemController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Services/CatalogItemService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Services/CatalogItemService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Services/DataInitializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Services/DataInitializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Services/Dtos/RequestDtos/CatalogItem/CatalogItemListRequestDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Services/Dtos/RequestDtos/CatalogItem/CatalogItemListRequestDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Services/Dtos/ResponseDtos/CatalogItem/CatalogItemDetailResponseDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Services/Dtos/ResponseDtos/CatalogItem/CatalogItemDetailResponseDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/css/front-pages/front-pages.css" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/wwwroot/css/front-pages/front-pages.css" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -61,7 +71,13 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Language Defaults",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.NATS: IIS Express">
@@ -145,6 +161,8 @@
       <updated>1741601415024</updated>
       <workItem from="1741601419187" duration="184000" />
       <workItem from="1741601888927" duration="10253000" />
+      <workItem from="1742654787231" duration="4321000" />
+      <workItem from="1742714889076" duration="16210000" />
     </task>
     <servers />
   </component>

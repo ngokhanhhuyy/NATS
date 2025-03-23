@@ -121,9 +121,9 @@ public sealed partial class DataInitializer
                 }
             };
 
-            string description;
             foreach (KeyValuePair<User, (string Password, string RoleName)> pair in users)
             {
+                string description;
                 IdentityResult result = _userManager
                     .CreateAsync(pair.Key, pair.Value.Password)
                     .GetAwaiter()

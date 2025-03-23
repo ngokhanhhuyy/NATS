@@ -1,174 +1,17 @@
-﻿@using NATS.FrontPages.Controllers;
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    _currentControllerName = ViewContext.RouteData.Values["controller"].ToString();
-    _currentActionName = ViewContext.RouteData.Values["action"].ToString();
-}
-
-@functions {
-    string _currentControllerName;
-    string _currentActionName;
-
-    string ComputeNavBarItemClassName(string key)
-    {
-        string catalogItemControllerName = nameof(CatalogItemController)
-            .Replace("Controller", "");
-        if (_currentControllerName == catalogItemControllerName &&
-            _currentActionName.Replace("List", "").Replace("Detail", "") == key)
-        {
-            return "active";
-        }
-
-        if (_currentControllerName == key)
-        {
-            return "active";
-        }
-
-        return string.Empty;
-    }
 }
 
 <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-xl fixed-top shadow fs-5" id="navbar" data-bs-theme="light">
-    <div class="container">
-        <!-- Main logo -->
-        <a
-            asp-area="FrontPages"
-            asp-controller="Home"
-            asp-action="Index"
-            class="navbar-brand d-flex align-items-center"
-        >
-            <img
-                src="/images/main-logo-transparent-white-without-text.png"
-                class="me-2 flex-shrink-0"
-            />
-            <span class="fs-2 application-short-name">NATS</span>
-        </a>
-        <button
-            class="navbar-toggler fs-3 me-2 py-2"
-            id="navbar-toggler-button"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#navbar-content"
-            aria-controls="navbar-content"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-        >
-            <i class="bi bi-list"></i>
-        </button>
-        <div
-            class="offcanvas offcanvas-end"
-            tabindex="-1"
-            id="navbar-content"
-            aria-labelledby="offcanvasNavbarLabel"
-        >
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Điều hướng</h5>
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="offcanvas"
-                    aria-label="Close">
-                </button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end w-100">
-                    <!-- Home -->
-                    <li class="nav-item">
-                        <a
-                            asp-area="FrontPages"
-                            asp-controller="Home"
-                            asp-action="Index"
-                            class="nav-link @ComputeNavBarItemClassName("Home")"
-                        >
-                            Trang chủ
-                        </a>
-                    </li>
+@await Component.InvokeAsync("NavigationBarComponent")
 
-                    <!-- SummaryItem -->
-                    <li class="nav-item">
-                        <a
-                            asp-area="FrontPages"
-                            asp-controller="SummaryItem"
-                            asp-action="Index"
-                            class="nav-link @ComputeNavBarItemClassName("SummaryItem")"
-                        >
-                            Giới thiệu
-                        </a>
-                    </li>
-                    
-                    <!-- AboutUsIntroduction -->
-                    <li class="nav-item">
-                        <a
-                            asp-area="FrontPages"
-                            asp-controller="AboutUs"
-                            asp-action="Index"
-                            class="nav-link @ComputeNavBarItemClassName("AboutUs")"
-                        >
-                            Về chúng tôi
-                        </a>
-                    </li>
-                    
-                    <!-- CatalogItem - Services -->
-                    <li class="nav-item">
-                        <a
-                            asp-area="FrontPages"
-                            asp-controller="CatalogItem"
-                            asp-action="ServiceList"
-                            class="nav-link @ComputeNavBarItemClassName("Service")"
-                        >
-                            Dịch vụ
-                        </a>
-                    </li>
-                    
-                    <!-- CatalogItem - Course -->
-                    <li class="nav-item">
-                        <a
-                            asp-area="FrontPages"
-                            asp-controller="CatalogItem"
-                            asp-action="CourseList"
-                            class="nav-link @ComputeNavBarItemClassName("Course")"
-                        >
-                            Khoá học
-                        </a>
-                    </li>
-                    
-                    <!-- CatalogItem - Product -->
-                    <li class="nav-item">
-                        <a
-                            asp-area="FrontPages"
-                            asp-controller="CatalogItem"
-                            asp-action="ProductList"
-                            class="nav-link @ComputeNavBarItemClassName("Product")"
-                        >
-                            Sản phẩm
-                        </a>
-                    </li>
-                    
-                    <!-- Enquiry -->
-                    <li class="nav-item">
-                        <a
-                            asp-area="FrontPages"
-                            asp-controller="Contact"
-                            asp-action="Index"
-                            class="nav-link @ComputeNavBarItemClassName("Contact")"
-                        >
-                            Liên hệ
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
-
+<!-- MainContent -->
 <main class="flex-fill h-100">
     @RenderBody()
 </main>
 
-<footer class="container-fluid bg-dark" id="footer">
-    @await Component.InvokeAsync("FooterComponent")
-</footer>
+<!-- Footer -->
+@await Component.InvokeAsync("FooterComponent")
 
 @section PageTitle {
     @await RenderSectionAsync("PageTitle", required: true)

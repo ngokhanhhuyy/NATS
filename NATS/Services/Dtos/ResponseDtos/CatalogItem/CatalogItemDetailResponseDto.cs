@@ -9,8 +9,9 @@ public class CatalogItemDetailResponseDto
     public string Detail { get; set; }
     public string ThumbnailUrl { get; set; }
     public List<CatalogItemDetailPhotoResponseDto> Photos { get; set; }
+    public List<CatalogItemBasicResponseDto> OtherItems { get; set; }
 
-    public CatalogItemDetailResponseDto(CatalogItem item)
+    public CatalogItemDetailResponseDto(CatalogItem item, List<CatalogItem> otherItems)
     {
         Id = item.Id;
         Name = item.Name;
@@ -20,6 +21,9 @@ public class CatalogItemDetailResponseDto
         ThumbnailUrl = item.ThumbnailUrl;
         Photos = item.Photos
             .Select(dto => new CatalogItemDetailPhotoResponseDto(dto))
+            .ToList();
+        OtherItems = otherItems
+            .Select(dto => new CatalogItemBasicResponseDto(dto))
             .ToList();
     }
 }

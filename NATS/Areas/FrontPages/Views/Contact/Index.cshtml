@@ -2,8 +2,7 @@
 @functions
 {
     ContactDetailModel AddressContact => Model.Contacts
-        .Where(c => c.Type == ContactType.Address)
-        .SingleOrDefault();
+        .SingleOrDefault(c => c.Type == ContactType.Address);
     
     string ComputeContactColumnClassName(ContactDetailModel contact)
     {
@@ -13,6 +12,12 @@
         }
 
         return "col col-xl-6 col-12";
+    }
+
+    string ComputeIframeSrc()
+    {
+        return "https://www.google.com/" +
+               $"maps?q={AddressContact.UriEncodedContent}&output=embed";
     }
 }
 
@@ -30,7 +35,15 @@
                 </p>
                 <p>
                     Với đội ngũ lương y giàu kinh nghiệm và tận tâm trong lĩnh vực y học cổ
-                    truyền, <b class="text-success">@Model.GeneralSettings.ApplicationName</b>
+                    truyền,
+                    <a
+                        asp-area="FrontPages"
+                        asp-controller="Home"
+                        asp-action="Index"
+                        class="text-success"
+                    >
+                        @Model.GeneralSettings.ApplicationName
+                    </a>
                     luôn đồng hành cùng Quý khách trên hành trình phục hồi sức khỏe xương khớp,
                     giúp cơ thể dẻo dai và khỏe mạnh theo phương pháp tự nhiên, an toàn.
                 </p>
@@ -47,7 +60,7 @@
                         style="border:0;"
                         loading="lazy"
                         allowfullscreen
-                        src="https://www.google.com/maps?q=@AddressContact.UriEncodedContent&output=embed">
+                        src="@ComputeIframeSrc()">
                     </iframe>
                 }
             </div>

@@ -3,8 +3,7 @@
     string ComputeEncodedAddress()
     {
         ContactDetailModel addressContact = Model.Contacts
-            .Where(c => c.Type == ContactType.Address)
-            .FirstOrDefault();
+            .FirstOrDefault(c => c.Type == ContactType.Address);
 
         if (addressContact == null)
         {
@@ -12,16 +11,6 @@
         }
 
         return Uri.EscapeDataString(addressContact.Content);
-    }
-    
-    string ComputeContactColumnClassName(ContactDetailModel contact)
-    {
-        if (contact.Type == ContactType.Address)
-        {
-            return "col-xl-10 col-12";
-        }
-
-        return "col-xl-5 col-lg-6 col-12";
     }
 
     string ComputeContactIconClassName(ContactDetailModel contact)
@@ -39,86 +28,87 @@
     }
 }
 
-<div class="container text-white">
-    <div class="row gx-4 gy-5 justify-content-center align-items-stretch px-3 py-5 pb-4">
-        <!-- Links - Left/Top column --> 
-        <div class="col col-xl-2 col-lg-3 col-sm-6 col-12 links-column">
-            <span class="fw-bold fs-4 opacity-75">
-                Công ty
-            </span>
-    
-            <!-- SummaryItems -->
-            <a asp-area="FrontPages" asp-controller="SummaryItems" asp-action="Index">
-                Giới thiệu
-            </a>
-            
-            <!-- AboutUs -->
-            <a asp-area="FrontPages" asp-controller="AboutUs" asp-action="Index">
-                Về chúng tôi
-            </a>
-            
-    
-            <!-- News -->
-            <a asp-area="FrontPages" asp-controller="Home" asp-action="Index">
-                Tin tức
-            </a>
-            
-            <!-- Enquiry -->
-            <a asp-area="FrontPages" asp-controller="Enquiry" asp-action="Index">
-                Liên hệ
-            </a>
-        </div>
+<footer class="container-fluid bg-dark" id="footer">
+    <div class="container text-white">
+        <div class="row gx-4 gy-5 justify-content-center align-items-stretch px-3 py-5 pb-4">
+            <!-- Links - Left/Top column --> 
+            <div class="col col-xl-2 col-lg-3 col-sm-6 col-12 links-column">
+                <span class="fw-bold fs-4 opacity-75">
+                    Công ty
+                </span>
         
-        <!-- Links - Right/Bottom column --> 
-        <div class="col col-xl-2 col-lg-3 col-sm-6 col-12 links-column">
-            <span class="fw-bold fs-4 opacity-75">
-                Lĩnh vực
-            </span>
-    
-            <!-- Services -->
-            <a asp-area="FrontPages" asp-controller="CatalogItem" asp-action="ServiceList">
-                Dịch vụ
-            </a>
+                <!-- SummaryItems -->
+                <a asp-area="FrontPages" asp-controller="SummaryItem" asp-action="Index">
+                    Giới thiệu
+                </a>
+                
+                <!-- AboutUs -->
+                <a asp-area="FrontPages" asp-controller="AboutUs" asp-action="Index">
+                    Về chúng tôi
+                </a>
+                
+        
+                <!-- News -->
+                <a asp-area="FrontPages" asp-controller="Home" asp-action="Index">
+                    Tin tức
+                </a>
+                
+                <!-- Enquiry -->
+                <a asp-area="FrontPages" asp-controller="Contact" asp-action="Index">
+                    Liên hệ
+                </a>
+            </div>
             
-            <!-- Courses -->
-            <a asp-area="FrontPages" asp-controller="CatalogItem" asp-action="CourseList">
-                Khóa học
-            </a>
-        </div>
+            <!-- Links - Right/Bottom column --> 
+            <div class="col col-xl-2 col-lg-3 col-sm-6 col-12 links-column">
+                <span class="fw-bold fs-4 opacity-75">
+                    Lĩnh vực
+                </span>
+        
+                <!-- Services -->
+                <a asp-area="FrontPages" asp-controller="CatalogItem" asp-action="ServiceList">
+                    Dịch vụ
+                </a>
+                
+                <!-- Courses -->
+                <a asp-area="FrontPages" asp-controller="CatalogItem" asp-action="CourseList">
+                    Khóa học
+                </a>
+            </div>
 
-        <!-- Contacts --> 
-        <div class="col col-xl-5 col-lg-6 col-12">
-            <span class="fw-bold fs-4 opacity-75">
-                Liên hệ
-            </span>
-            @foreach (ContactDetailModel contact in Model.Contacts)
-            {
-                <div class="my-3">
-                    <!-- Label -->
-                    <i class="bi @ComputeContactIconClassName(contact) me-2"></i>
+            <!-- Contacts --> 
+            <div class="col col-xl-5 col-lg-6 col-12">
+                <span class="fw-bold fs-4 opacity-75">
+                    Liên hệ
+                </span>
+                @foreach (ContactDetailModel contact in Model.Contacts)
+                {
+                    <div class="my-3">
+                        <!-- Label -->
+                        <i class="bi @ComputeContactIconClassName(contact) me-2"></i>
 
-                    <!-- Content -->
-                    @switch (contact.Type)
-                    {
-                        case ContactType.PhoneNumber:
-                            <a href="tel:@contact.Content">
-                                @contact.Content
-                            </a>
-                            break;
-                        case ContactType.ZaloNumber:
-                            string zaloUrl = "https://zalo.me/" + contact.Content
-                                .Replace(" ", "")
-                                .Replace("+84", "0");
-                            <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
-                                @contact.Content
-                            </a>
-                            break;
-                        case ContactType.Email:
-                            <a href="mailto:@contact.Content">
-                                @contact.Content
-                            </a>
-                            break;
-                        case ContactType.Address:
+                        <!-- Content -->
+                        @switch (contact.Type)
+                        {
+                            case ContactType.PhoneNumber:
+                                <a href="tel:@contact.Content">
+                                    @contact.Content
+                                </a>
+                                break;
+                            case ContactType.ZaloNumber:
+                                string zaloUrl = "https://zalo.me/" + contact.Content
+                                    .Replace(" ", "")
+                                    .Replace("+84", "0");
+                                <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
+                                    @contact.Content
+                                </a>
+                                break;
+                            case ContactType.Email:
+                                <a href="mailto:@contact.Content">
+                                    @contact.Content
+                                </a>
+                                break;
+                            case ContactType.Address:
                                 <a
                                     href="https://maps.google.com/?q=@ComputeEncodedAddress()"
                                     target="_blank"
@@ -126,32 +116,36 @@
                                 >
                                     @contact.Content
                                 </a>
-                            break;
-                    }
+                                break;
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- Logo -->
+            <div class="col d-flex flex-column justify-content-center align-items-center">
+                <div
+                    class="border border-4 rounded-circle d-flex
+                            justify-content-center align-items-center"
+                    id="footer-logo-container"
+                >
+                    <img
+                        src="/images/main-logo-transparent-white.png"
+                        alt=""
+                    />
                 </div>
-            }
-        </div>
-
-        <!-- Logo -->
-        <div class="col d-flex flex-column justify-content-center align-items-center">
-            <div
-                class="border border-4 rounded-circle d-flex
-                        justify-content-center align-items-center"
-                id="footer-logo-container"
-            >
-                <img src="/images/main-logo-transparent-white.png">
+                
+                <div class="fw-bold fs-5 text-center mt-3">
+                    @Model.GeneralSettings.ApplicationName
+                </div>
             </div>
-            
-            <div class="fw-bold fs-5 text-center mt-3">
-                @Model.GeneralSettings.ApplicationName
-            </div>
-        </div>
 
-        <!-- Copyright -->
-        <div class="col col-12 text-center">
-            Bản quyền © thuộc Ngô Khánh Huy
-            <a href="https://facebook.com/huy.nino.97">@@ngokhanhhuyy</a><br/>
-            @DateTime.UtcNow.ToApplicationTime().ToVietnameseString()
+            <!-- Copyright -->
+            <div class="col col-12 text-center">
+                Bản quyền ©@DateTime.UtcNow.ToApplicationTime().Year
+                thuộc về
+                <a href="https://facebook.com/huy.nino.97" class="fw-bold">Ngô Khánh Huy</a>
+            </div>
         </div>
     </div>
-</div>
+</footer>

@@ -35,16 +35,11 @@ public class CatalogItemController : Controller
     [HttpGet("{id:int}")]
     [ProducesResponseType<CatalogItemDetailResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Detail(string typeFromRoute, int id)
+    public async Task<IActionResult> Detail(int id)
     {
         try
         {
-            CatalogItemType type = Enum.Parse<CatalogItemType>(typeFromRoute);
             return Ok(await _service.GetDetailAsync(id));
-        }
-        catch (ArgumentException)
-        {
-            return NotFound();
         }
         catch (ResourceNotFoundException exception)
         {

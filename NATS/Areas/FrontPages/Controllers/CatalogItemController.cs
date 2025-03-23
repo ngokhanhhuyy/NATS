@@ -77,7 +77,6 @@ public class CatalogItemController : Controller
             otherResponseDtos = await _service.GetListAsync(new CatalogItemListRequestDto
             {
                 Type = type,
-                ExcludedIds = new List<int> { id }
             });
 
             CatalogItemDetailViewModel model = new CatalogItemDetailViewModel(

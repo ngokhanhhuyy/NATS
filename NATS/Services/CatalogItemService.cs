@@ -6,10 +6,13 @@ public class CatalogItemService
             AbstractHasThumbnailService<CatalogItem, CatalogItemUpsertRequestDto>,
             ICatalogItemService
 {
+    private readonly IDbContextFactory<DatabaseContext> _contextFactory;
     public CatalogItemService(
             DatabaseContext context,
+            IDbContextFactory<DatabaseContext> contextFactory,
             IPhotoService photoService) : base(context, photoService)
     {
+        _contextFactory = contextFactory;
     }
 
     /// <inheritdoc />
@@ -23,11 +26,6 @@ public class CatalogItemService
             query = query.Where(ci => ci.Type == requestDto.Type);
         }
 
-        if (requestDto.ExcludedIds != null)
-        {
-            query = query.Where(ci => !requestDto.ExcludedIds.Contains(ci.Id));
-        }
-
         return await query.Select(ci => new CatalogItemBasicResponseDto(ci)).ToListAsync();
     }
 
@@ -37,7 +35,11 @@ public class CatalogItemService
         return await Context.CatalogItems
             .Include(ci => ci.Photos)
             .Where(ci => ci.Id == id)
-            .Select(ci => new CatalogItemDetailResponseDto(ci))
+            .Select(ci => new CatalogItemDetailResponseDto(
+                ci,
+                Context.CatalogItems
+                    .Where(oci => oci.Id != id && oci.Type == ci.Type)
+                    .ToList()))
             .SingleOrDefaultAsync()
             ?? throw new ResourceNotFoundException();
     }

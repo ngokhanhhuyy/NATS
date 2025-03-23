@@ -23,7 +23,11 @@
         <div class="col col-xl-4 col-md-5 col-10">
             @if (Model.ThumbnailUrl != null)
             {
-                <img src="@Model.ThumbnailUrl" class="w-100 img-thumbnail rounded-4 shadow" />
+                <img
+                    src="@Model.ThumbnailUrl"
+                    class="w-100 img-thumbnail rounded-4 shadow"
+                    alt="@Model.Name"
+                />
             }
         </div>
 
@@ -44,10 +48,14 @@
     @if (Model.Photos.Count > 0)
     {
         <div class="row g-4 justify-content-center my-4">
-            @foreach (CatalogItemDetailPhotoModel photo in Model.Photos)
+            @for (int index = 0; index < Model.Photos.Count; index++)
             {
+                CatalogItemDetailPhotoModel photo = Model.Photos[index];
                 <div class="col col-md-7 col-sm-10 col-12">
-                    <img src="@photo.Url" class="w-100 rounded-4 shadow">
+                    <img
+                        src="@photo.Url"
+                        class="w-100 rounded-4 shadow"
+                        alt="@Model.Name - Hình ảnh @index">
                 </div>
             }
         </div>
@@ -120,5 +128,5 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/front-pages/catalog-item-list.css">
+    <link rel="stylesheet" href="/css/front-pages/catalog-item-list.css">
 }

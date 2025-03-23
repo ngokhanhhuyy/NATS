@@ -3,7 +3,6 @@
 }
 
 nav {
-    --navbar-background-color: white;
     --navbar-logo-img-filter:
         brightness(0)
         saturate(100%)
@@ -30,10 +29,10 @@ nav img {
 }
 
 nav .navbar-brand span.application-short-name {
-    font-family: Arial;
+    font-family: Arial, serif;
     color: var(--navbar-foreground-color);
     transform: scaleX(110%);
-    transform-origin: 0% 0%;
+    transform-origin: 0;
     transition: color var(--navbar-transition-duration) ease;
 }
 
@@ -46,10 +45,6 @@ nav button#navbar-toggler-button {
 nav button#navbar-toggler-button:hover {
     background-color: var(--navbar-foreground-color) !important;
     color: var(--navbar-background-color) !important;
-}
-
-nav.color-transformed button#navbar-toggler-button:hover {
-    background-color: var(--navbar-toggler-color);
 }
 
 nav .navbar-nav {
@@ -93,7 +88,7 @@ footer .links-column a {
             to right,
             rgba(var(--bs-success-rgb), 0.85) 0%,
             rgba(var(--bs-success-rgb), 0.85) 100%),
-        url("/images/front-pages/sub-page-top.webp");
+        url("../../images/front-pages/sub-page-title-container-background.webp");
 }
 
 #footer-logo-container {
