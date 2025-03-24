@@ -14,10 +14,11 @@ public class SummaryItemController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int? focusedItemIndex = null)
     {
         List<SummaryItemResponseDto> responseDtos = await _service.GetListAsync();
-        SummaryItemListViewModel model = new SummaryItemListViewModel(responseDtos);
+        SummaryItemListViewModel model;
+        model = new SummaryItemListViewModel(responseDtos, focusedItemIndex);
 
         return View(model);
     }

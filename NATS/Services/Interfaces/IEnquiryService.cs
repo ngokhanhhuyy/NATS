@@ -45,7 +45,7 @@ public interface IEnquiryService
     /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is the id
     /// of the created enquiry.
     /// </returns>
-    Task<int> CreateAsync(EnquiryUpsertRequestDto requestDto);
+    Task<int> CreateAsync(EnquiryCreateRequestDto requestDto);
 
     /// <summary>
     /// Marks an existing enquiry, specified by id, as completed.

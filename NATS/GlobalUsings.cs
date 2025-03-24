@@ -4,6 +4,7 @@ global using System.Globalization;
 global using System.Security.Claims;
 global using System.Text;
 global using System.Reflection;
+global using System.Diagnostics.CodeAnalysis;
 
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Storage;
@@ -42,3 +43,4 @@ global using ValidationFailure = FluentValidation.Results.ValidationFailure;
 
 global using ImageMagick;
 global using Bogus;
+global using JetBrains.Annotations;

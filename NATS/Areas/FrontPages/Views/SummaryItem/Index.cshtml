@@ -26,16 +26,21 @@
     }
 }
 
-<div class="container py-4 mt-4" id="summary-item-view">
+<div class="container p-4 mt-4" id="summary-item-view">
     @for (int index = 0; index < Model.Items.Count; index++)
     {
         SummaryItemDetailModel item = Model.Items[index];
-        <div class="row g-5 justify-content-center mb-5" id="summary-item-@item.Id">
+        <div class="row g-5 justify-content-center mb-5 item-row" id="summary-item-@item.Id">
             <!-- Thumbnail -->
-            <div class="col col-lg-auto col-md-10 col-12 d-flex justify-content-center
-                        align-items-start
-                        @ComputeThumbnailColumnClassName(index)">
-                <img src="@item.ThumbnailUrl" class="rounded-circle shadow" />
+            <div
+                class="col col-lg-auto col-md-11 col-12 d-flex justify-content-center
+                        align-items-start @ComputeThumbnailColumnClassName(index)"
+            >
+                <img
+                    src="@item.ThumbnailUrl"
+                    class="rounded-circle shadow"
+                    alt="@item.Name"
+                />
             </div>
 
             <div class="col col-lg col-md-10 col-12 @ComputeDetailColumnClassName(index)">
@@ -55,20 +60,7 @@
             </div>
         </div>
     }
-
-    <style>
-        #summary-item-view img {
-            width: 250px;
-            height: auto;
-            aspect-ratio: 1;
-            object-fit: cover;
-            object-position: 50%;
-        }
-    </style>
 </div>
-
-<!-- Enquiry -->
-<partial name="_EnquiryForm" />
 
 @section PageTitle {
     Giới thiệu
@@ -79,5 +71,60 @@
 }
 
 @section Styles {
-    <link asp-append-version="true" rel="stylesheet" href="~/css/front-pages/about-us.css">
+    <style>
+        #summary-item-view img {
+            width: 250px;
+            height: auto;
+            aspect-ratio: 1;
+            object-fit: cover;
+            object-position: 50%;
+        }
+        
+        .item-row {
+            border-radius: 1rem;
+            border: 1px solid transparent;
+            scroll-margin-top: 2rem;
+        }
+        
+        .item-row[id="summary-item-@Model.FocusedId"] {
+            transform-origin: 50% 50%;
+            animation-name: focus-animation;
+            animation-iteration-count: 5;
+            animation-duration: .5s;
+        }
+        
+        @@keyframes focus-animation {
+            0% {
+                transform: scale(100%);
+            }
+            
+            50% {
+                transform: scale(102%);
+            }
+            
+            100% {
+                transform: scale(100%);
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    @if (Model.FocusedId.HasValue)
+    {
+        bool doesFocusedIdExist = Model.Items
+            .Select(i => i.Id)
+            .Contains(Model.FocusedId.Value);
+        if (doesFocusedIdExist)
+        {
+            
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const /** @@type {HTMLDivElement} */ itemElement = document
+                        .getElementById("summary-item-@Model.FocusedId");
+                    itemElement.scrollIntoView({ behavior: "smooth", block: "start" });
+                });
+            </script>
+        }
+    }
 }

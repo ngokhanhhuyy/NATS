@@ -35,9 +35,15 @@
                         <div class="card-body d-flex flex-column flex-fill
                                     justify-content-between align-items-start">
                             <!-- Title -->
-                            <h5 class="card-title text-success">
+                            <a
+                                asp-area="FrontPages"
+                                asp-controller="CatalogItem"
+                                asp-action="@(catalogItem.Type.ToString() + "Detail")"
+                                asp-route-id="@catalogItem.Id"
+                                class="card-title fs-5"
+                            >
                                 @catalogItem.Name
-                            </h5>
+                            </a>
 
                             <!-- Summary -->
                             <span>@catalogItem.Summary</span>
@@ -75,5 +81,24 @@ else
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/front-pages/catalog-item-list.css">
+    <style>
+        #catalog-item-list-view .card-title {
+            color: var(--bs-success);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        @@media (max-width: 768px) {
+            #catalog-item-list-view .catalog-items-row.row {
+                width: fit-content !important;
+                justify-content: center;
+            }
+        }
+        
+        @@media (max-width: 576px) {
+            #catalog-item-list-view .catalog-items-row.row {
+                width: 100%;
+            }
+        }
+    </style>
 }

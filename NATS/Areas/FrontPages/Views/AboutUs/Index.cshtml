@@ -1,6 +1,6 @@
 @model AboutUsViewModel
 
-<div class="container p-5" id="about-us-view">
+<div class="container p-4" id="about-us-view">
     <!-- MainContent -->
     <div class="row g-5 justify-content-center">
         <div class="col col-md-10 col-12">
@@ -21,10 +21,13 @@
                 }
             }
         </div>
-
         
         <div class="col col-md-10 col-12">
-            <img src="@Model.AboutUsIntroduction.ThumbnailUrl" class="w-100 rounded-4 shadow">
+            <img
+                src="@Model.AboutUsIntroduction.ThumbnailUrl"
+                class="w-100 rounded-4 shadow"
+                alt="Về chúng tôi"
+            />
         </div>
     </div>
 
@@ -96,12 +99,14 @@
                 Đội ngũ của chúng tôi
             </div>
         </div>
-        @foreach (MemberDetailModel member in Model.Members)
+        @foreach (var member in Model.Members)
         {
-            <div class="col col-xl-5 col-lg-6 col-md-8 col-sm-10 col-12 d-flex flex-column align-items-center">
+            <div class="col col-xl-5 col-lg-6 col-md-8 col-sm-10 col-12
+                        d-flex flex-column align-items-center">
                 <img
                     src="@member.ThumbnailUrl"
                     class="member-thumbnail rounded-circle shadow flex-shrink-0 mb-3"
+                    alt="@member.FullName"
                 />
 
                 <!-- FullName -->
@@ -119,15 +124,15 @@
                 <!-- Description -->
                 @{
                     string[] descriptionParagraphs = member
-                    .Description
-                    .Split(Environment.NewLine)
-                    .ToArray();
+                        .Description
+                        .Split(Environment.NewLine)
+                        .ToArray();
 
                     foreach (string paragraph in descriptionParagraphs)
                     {
                         <p>@paragraph</p>
                     }
-                }
+                } 
             </div>
         }
     </div>
@@ -144,7 +149,7 @@
             <div class="col col-xl-5 col-md-10 col-12">
                 <div class="d-flex flex-column justify-content-stretch
                             align-items-stretch rounded-4 shadow overflow-hidden">
-                    <img src="@certificate.ThumbnailUrl" />
+                    <img src="@certificate.ThumbnailUrl" alt="@certificate.Name" />
                     <div class="bg-success p-3 text-center text-white fs-5 fw-bold">
                         @certificate.Name
                     </div>

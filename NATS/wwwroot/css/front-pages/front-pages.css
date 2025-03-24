@@ -101,6 +101,10 @@ footer .links-column a {
     width: 65%;
 }
 
+#enquiry-form form button[type="submit"]:hover {
+    color: white !important;
+}
+
 @media (max-width: 1200px) {
     nav {
         height: auto !important;

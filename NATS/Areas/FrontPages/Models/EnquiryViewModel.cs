@@ -1,17 +1,25 @@
 namespace NATS.FrontPages.Models;
 
-public class ContactViewModel
+public class EnquiryViewModel
 {
-    public List<ContactDetailModel> Contacts { get; set; }
-    public GeneralSettingsDetailModel GeneralSettings { get; set; }
+    public string FullName { get; set; }
+    public string PhoneNumber { get; set; }
+    public string Email { get; set; }
+    public string Content { get; set; }
+    public bool IsValidated { get; set; }
 
-    public ContactViewModel(
-            List<ContactResponseDto> contactResponseDtos,
-            GeneralSettingsResponseDto generalSettingsResponseDtos)
+    public EnquiryCreateRequestDto ToRequestDto()
     {
-        Contacts = contactResponseDtos
-            .Select(dto => new ContactDetailModel(dto))
-            .ToList();
-        GeneralSettings = new GeneralSettingsDetailModel(generalSettingsResponseDtos);
+        EnquiryCreateRequestDto requestDto = new EnquiryCreateRequestDto
+        {
+            FullName = FullName,
+            PhoneNumber = PhoneNumber,
+            Email = Email,
+            Content = Content
+        };
+
+        requestDto.TransformValues();
+
+        return requestDto;
     }
 }

@@ -1,4 +1,6 @@
-<div class="container-fluid bg-success">
+@model EnquiryViewModel
+
+<div class="container-fluid bg-success" id="enquiry-form">
     <div class="row justify-content-center p-4 pb-5">
         <div class="col col-xxl-4 col-xl-5 col-lg-6 col-md-7 col-12">
             <div class="mb-3 text-white fs-5 d-flex flex-column">
@@ -8,75 +10,74 @@
                     * Chúng tôi sẽ không chia sẻ thông tin của bạn.
                 </span>
             </div>
-
-            <div id="vue-app">
-                <form
-                    class="bg-white rounded-4 shadow p-3 w-100
-                            d-flex flex-column align-items-stretch"
-                    action="#"
-                    id="enquiry-form"
-                >
-                    <!-- FullName -->
-                    <div class="form-group mb-3">
-                        <div class="form-floating required">
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="UserName"
-                                name="UserName"
-                                placeholder=""
-                                maxlength="50"
-                            />
-                            <label class="required" for="UserName">Họ và tên</label>
-                        </div>
-                    </div>
-
-                    <!-- PhoneNumber -->
-                    <div class="form-floating mb-3">
+            
+            <form
+                asp-area="FrontPages"
+                asp-controller="Enquiry"
+                asp-action="Create"
+                method="post"
+                class="bg-white rounded-4 shadow p-3 w-100
+                        d-flex flex-column align-items-stretch"
+            >
+                <!-- FullName -->
+                <div class="form-group mb-3">
+                    <div class="form-floating required">
                         <input
+                            asp-for="FullName"
+                            type="text"
+                            placeholder=""
+                            maxlength="50"
+                        />
+                        <label class="required" asp-for="FullName">Họ và tên</label>
+                    </div>
+                </div>
+
+                <!-- PhoneNumber -->
+                <div class="form-group mb-3">
+                    <div class="form-floating required">
+                        <input
+                            asp-for="PhoneNumber"
                             type="tel"
-                            class="form-control"
-                            id="PhoneNumber"
-                            name="PhoneNumber"
                             placeholder=""
+                            maxlength="15"
                         />
-                        <label class="required" for="PhoneNumber">Số điện thoại</label>
+                        <label class="required" asp-for="PhoneNumber">Số điện thoại</label>
                     </div>
+                </div>
 
-                    <!-- Email -->
-                    <div class="form-floating mb-3">
+                <!-- Email -->
+                <div class="form-group mb-3">
+                    <div class="form-floating">
                         <input
+                            asp-for="Email"
                             type="email"
-                            class="form-control"
-                            id="Email"
-                            name="Email"
                             placeholder=""
+                            maxlength="255"
                         />
-                        <label for="Email">Địa chỉ email</label>
+                        <label asp-for="Email">Địa chỉ email</label>
                     </div>
+                </div>
 
-                    <!-- Content -->
-                    <div class="form-floating mb-3">
+                <!-- Content -->
+                <div class="form-group mb-3">
+                    <div class="form-floating required">
                         <textarea
-                            class="form-control"
-                            id="Content"
-                            name="Content"
+                            asp-for="Content"
                             style="min-height: 200px"
                             placeholder=""
                         ></textarea>
-                        <label class="required" for="Content">Nội dung</label>
+                        <label class="required" asp-for="Content">Nội dung</label>
                     </div>
+                </div>
 
-                    <!-- Submit -->
-                    <button
-                        type="submit"
-                        class="btn btn-outline-success text-success align-self-end"
-                        :disabled="!isMounted"
-                    >
-                        Gửi
-                    </button>
-                </form>
-            </div>
+                <!-- Submit -->
+                <button
+                    type="submit"
+                    class="btn btn-outline-success text-success align-self-end"
+                >
+                    Gửi
+                </button>
+            </form>
         </div>
     </div>
 </div>

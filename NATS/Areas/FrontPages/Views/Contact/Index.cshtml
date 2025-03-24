@@ -16,12 +16,12 @@
 
     string ComputeIframeSrc()
     {
-        return "https://www.google.com/" +
-               $"maps?q={AddressContact.UriEncodedContent}&output=embed";
+        string endcodedContent = AddressContact.UriEncodedContent;
+        return $"https://www.google.com/maps?q={endcodedContent}&output=embed";
     }
 }
 
-<div class="container-fluid py-5" id="enquiry-view">
+<div class="container-fluid py-5" id="contact-view">
     <div class="container">
         <div class="row gx-5 gy-4 justify-content-center my-5">
             <!-- Paragraph -->
@@ -113,9 +113,6 @@
     </div>
 </div>
 
-<!-- Enquiry -->
-<partial name="_EnquiryForm" />
-
 @section PageTitle {
     Liên hệ
 }
@@ -126,17 +123,17 @@
 
 @section Styles {
     <style>
-        #enquiry-view iframe {
+        #contact-view iframe {
             min-height: 350px;
         }
 
-        #enquiry-view a {
+        #contact-view a {
             color: var(--bs-success);
             text-decoration: none;
             transition: .2s ease;
         }
 
-        #enquiry-view a:hover {
+        #contact-view a:hover {
             filter: brightness(150%);
         }
     </style>

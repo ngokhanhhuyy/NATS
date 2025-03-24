@@ -3,7 +3,7 @@ namespace NATS.Services;
 /// <inheritdoc/>
 public class EnquiryService
     :
-        AbstractUpsertableService<Enquiry, EnquiryUpsertRequestDto>,
+        AbstractUpsertableService<Enquiry, EnquiryCreateRequestDto>,
         IEnquiryService
 {
     
@@ -36,7 +36,7 @@ public class EnquiryService
     }
     
     /// <inheritdoc/>
-    public async Task<int> CreateAsync(EnquiryUpsertRequestDto requestDto)
+    public async Task<int> CreateAsync(EnquiryCreateRequestDto requestDto)
     {
         Enquiry enquiry = new Enquiry
         {

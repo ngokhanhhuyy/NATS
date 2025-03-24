@@ -1,6 +1,6 @@
 namespace NATS.Services.Dtos.RequestDtos;
 
-public class EnquiryUpsertRequestDto : IRequestDto
+public class EnquiryCreateRequestDto : IRequestDto
 {
     public string FullName { get; set; }
     public string PhoneNumber { get; set; }

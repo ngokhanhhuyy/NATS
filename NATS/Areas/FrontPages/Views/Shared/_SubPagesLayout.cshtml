@@ -1,5 +1,19 @@
+@using NATS.FrontPages.Controllers
 @{
     Layout = "_Layout";
+    _currentControllerName = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+@functions {
+    string _currentControllerName;
+
+    bool IsEnquiryController
+    {
+        get
+        {
+            string enquiryControllerName = nameof(EnquiryController).Replace("Controller", "");
+            return _currentControllerName == enquiryControllerName;
+        }
+    }
 }
 
 <div
@@ -14,6 +28,11 @@
 </div>
 
 @RenderBody()
+
+@if (!IsEnquiryController)
+{
+    <partial name="_EnquiryForm" model="new EnquiryViewModel()" />
+}
 
 @section PageTitle {
     @await RenderSectionAsync("PageTitle", required: true)

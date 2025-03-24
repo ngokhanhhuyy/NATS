@@ -14,7 +14,8 @@
       "launchBrowser": false,
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH": "1"
       },
       "hotReloadEnabled": false
     },
@@ -24,8 +25,10 @@
       "launchBrowser": false,
       "applicationUrl": "https://localhost:7235;http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH": "1"
+      },
+      "hotReloadEnabled": false
     },
     "IIS Express": {
       "commandName": "IISExpress",

@@ -1,0 +1,75 @@
+@{
+    Layout = "_SubPagesLayout";
+}
+
+<div
+    class="modal fade"
+    id="enquiry-sent-notification-modal"
+    tabindex="-1"
+    aria-labelledby="enquiry-sent-notification-modal-header"
+    aria-hidden="true"
+    data-bs-backdrop="static"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1
+                    class="modal-title fs-5 text-success"
+                    id="enquiry-sent-notification-modal-header"
+                >
+                    Câu hỏi được gửi thành công
+                </h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                Cảm ơn bạn đã gửi câu hỏi cho chúng tôi.
+                Chúng tôi sẽ phản hồi theo thông tin liên lạc bạn đã cung cấp trong thời gian
+                sớm nhất.
+            </div>
+            <div class="modal-footer">
+                <a
+                    asp-area="FrontPages"
+                    asp-controller="Home"
+                    asp-action="Index"
+                    type="button"
+                    class="btn btn-success"
+                    data-bs-dismiss="modal"
+                >
+                    Về trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Gửi câu hỏi
+}
+
+@section Title {
+    Gửi câu hỏi
+}
+
+@section Scripts {
+    <script type="module">
+        import { Modal } from "bootstrap";
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            /** @@type {HTMLDivElement} */
+            const modalElement = document.getElementById("enquiry-sent-notification-modal");
+
+            /** @@type {Modal} */
+            const modal = new Modal(modalElement);
+            modal.show();
+
+            modalElement.addEventListener("hidden.bs.modal", () => {
+                window.location = "@Url.Action("Index", "Home", new { area = "FrontPages" })";
+            });
+        });
+    </script>
+}
