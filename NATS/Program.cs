@@ -1,15 +1,22 @@
+using System.Text.Json;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+// Add controllers.
+IMvcBuilder mvcBuilder = builder.Services
+    .AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+    });
 if (environment == Environments.Development)
 {
-    builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-}
-else
-{
-    builder.Services.AddControllersWithViews()
-        .AddRazorRuntimeCompilation();
+    mvcBuilder.AddRazorRuntimeCompilation();
 }
 
 // Add database context.
@@ -37,11 +44,17 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.LogoutPath = "/Logout";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.SlidingExpiration = true;
-    options.Events.OnRedirectToLogin = options.Events.OnRedirectToAccessDenied = (context) =>
+    
+    Func<RedirectContext<CookieAuthenticationOptions>,Task> authRedirectInterceptor;
+    authRedirectInterceptor = (context) =>
     {
         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
         return Task.CompletedTask;
     };
+    
+
+    options.Events.OnRedirectToLogin = authRedirectInterceptor;
+    options.Events.OnRedirectToAccessDenied = authRedirectInterceptor;
 
     options.Events.OnRedirectToLogout = (context) =>
     {

@@ -9,7 +9,8 @@ public interface IEnquiryService
     /// Gets a list of all enquiries.
     /// </summary>
     /// <returns>
-    /// A list of objects containing the data of the enquiries.
+    /// A <see cref="Task"/> representing the asynchronous operation which result is a
+    /// <see cref="List{T}"/> of DTOs containing the information of the enquiries.
     /// </returns>
     Task<List<EnquiryResponseDto>> GetListAsync();
 
@@ -20,7 +21,8 @@ public interface IEnquiryService
     /// The id of the enquiry to retrieve.
     /// </param>
     /// <returns>
-    /// The number of incompleted enquiries.
+    /// A <see cref="Task{T}"/> presenting the asynchronous operation, which result is a DTO
+    /// containing the information of the enquiry.
     /// </returns>
     /// <exception cref="ResourceNotFoundException">
     /// Throws when the enquiry specified by <paramref name="id"/> doesn't exist.
@@ -31,7 +33,8 @@ public interface IEnquiryService
     /// Gets the number of enquiries that has not been completed yet.
     /// </summary>
     /// <returns>
-    /// The number of incompleted enquiries.
+    /// A <see cref="Task{T}"/> representing the asynchronous operation, which result is the
+    /// number of incompleted enquiries.
     /// </returns>
     Task<int> GetIncompletedCountAsync();
 
@@ -54,7 +57,7 @@ public interface IEnquiryService
     /// The id of the enquiry to mark.
     /// </param>
     /// <returns>
-    /// The id of the updated enquiry.
+    /// A <see cref="Task{T}"/> representing the asynchronous operation.
     /// </returns>
     /// <exception cref="ResourceNotFoundException">
     /// Throws when the enquiry with the specified <paramref name="id"/> doesn't exist.
