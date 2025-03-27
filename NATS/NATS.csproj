@@ -34,20 +34,4 @@
     <Folder Include="Views\Shared\Components\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\alert.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\base-component.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\button.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\carousel.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\collapse.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\dropdown.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\modal.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\offcanvas.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\popover.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\scrollspy.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\tab.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\toast.d.ts" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\types\tooltip.d.ts" />
-  </ItemGroup>
-
 </Project>
