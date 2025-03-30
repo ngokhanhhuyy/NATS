@@ -16,8 +16,8 @@
     </div>
 
     <!-- SummaryItems -->
-    <div class="container my-5">
-        <div class="row g-3">
+    <div class="container">
+        <div class="row g-3 p-3">
             @foreach (SummaryItemDetailModel summaryItem in Model.SummaryItems)
             {
                 <a
@@ -45,19 +45,19 @@
     </div>
 
     <!-- AboutUsIntroduction -->
-    <div class="container-fluid bg-success text-white fs-5 my-5 shadow">
-        <div class="container">
-            <div class="row justify-content-center align-items-stretch">
-                <div class="col col-xl-6 col-lg-8 col-12 overflow-hidden
-                            d-flex align-items-center p-4">
+    <div class="container-fluid bg-success text-white fs-5 shadow p-0">
+        <div class="container p-0">
+            <div class="row g-0 p-3 justify-content-center align-items-stretch">
+                <div class="col col-xl-6 col-lg-8 col-12 d-flex align-items-start m-3">
                     <img
                         src="@Model.AboutUsIntroduction.ThumbnailUrl"
                         class="w-100 rounded-3"
                         alt="Về chúng tôi"
                     />
                 </div>
-                <div class="col-xl col-lg-8 col p-4 pt-3 d-flex flex-column
-                            justify-content-center align-items-start">
+                
+                <div class="col-xl col-lg-8 col d-flex flex-column
+                            justify-content-center align-items-start m-3">
                     <div class="fs-2 mb-3">Về chúng tôi</div>
                     <p>@Model.AboutUsIntroduction.AboutUsContent</p>
                     <a
@@ -74,7 +74,7 @@
     </div>
 
     <!-- CatalogItems -->
-    <div class="container my-5 px-3" id="catalog-item-container">
+    <div class="container mt-3" id="catalog-item-container">
         <partial name="_CatalogItemList" model="Model.Services" />
         <partial name="_CatalogItemList" model="Model.Courses" />
         <partial name="_CatalogItemList" model="Model.Products" />

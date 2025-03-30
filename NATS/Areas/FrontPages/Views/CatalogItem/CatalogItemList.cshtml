@@ -18,8 +18,8 @@
 
 @if (Model.Items.Count > 0)
 {
-    <div class="container py-5 h-100" id="catalog-item-list-view">
-        <div class="row g-4 catalog-items-row">
+    <div class="container h-100" id="catalog-item-list-view">
+        <div class="row g-3 px-3 py-4 catalog-items-row">
             @foreach (CatalogItemBasicModel catalogItem in Model.Items)
             {
                 <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-10 col-10

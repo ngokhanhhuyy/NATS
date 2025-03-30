@@ -1,28 +1,38 @@
-@model AboutUsViewModel
+@model AboutUsIntroductionViewModel
+@{
+    AboutUsIntroductionContentPartialViewModel mainContentModel;
+    mainContentModel = new AboutUsIntroductionContentPartialViewModel
+    {
+        Title = DisplayNames.AboutUs,
+        Content = Model.AboutUsIntroduction.AboutUsContent
+    };
+    
+    AboutUsIntroductionContentPartialViewModel whyChooseUsContent;
+    whyChooseUsContent = new AboutUsIntroductionContentPartialViewModel
+    {
+        Title = DisplayNames.WhyChooseUs,
+        Content = Model.AboutUsIntroduction.WhyChooseUsContent
+    };
+    
+    AboutUsIntroductionContentPartialViewModel ourDifferenceModel;
+    ourDifferenceModel = new AboutUsIntroductionContentPartialViewModel
+    {
+        Title = DisplayNames.OurDifference,
+        Content = Model.AboutUsIntroduction.OurDifferenceContent
+    };
+    
+    AboutUsIntroductionContentPartialViewModel ourCultureModel;
+    ourCultureModel = new AboutUsIntroductionContentPartialViewModel
+    {
+        Title = DisplayNames.OurCulture,
+        Content = Model.AboutUsIntroduction.OurCultureContent
+    };
+}
 
 <div class="container p-4" id="about-us-view">
-    <!-- MainContent -->
-    <div class="row g-5 justify-content-center">
-        <div class="col col-md-10 col-12">
-            <div class="fs-2 text-success text-center mb-4">
-                Về chúng tôi
-            </div>
-
-            @{
-                string[] mainContentParagraphs = Model
-                .AboutUsIntroduction
-                .AboutUsContent
-                    .Split(Environment.NewLine)
-                    .ToArray();
-
-                foreach (string paragraph in mainContentParagraphs)
-                {
-                    <p>@paragraph</p>
-                }
-            }
-        </div>
-        
-        <div class="col col-md-10 col-12">
+    <!-- Thumbnail -->
+    <div class="row justify-content-center px-3 py-3 mb-4">
+        <div class="col col-xl-6 col-lg-7 col-md-8 col-12 order-lg-0 order-1">
             <img
                 src="@Model.AboutUsIntroduction.ThumbnailUrl"
                 class="w-100 rounded-4 shadow"
@@ -30,75 +40,30 @@
             />
         </div>
     </div>
+    
+    
+	<div class="row gx-5 gy-3 px-5 py-3 justify-content-center">
+        <!-- MainContent -->
+        <partial name="_Content" model="mainContentModel" />
 
-    <!-- WhyChooseUsContent -->
-    <div class="row g-5 justify-content-center my-5">
-        <div class="col col-md-10 col-12">
-            <div class="fs-2 text-success text-center mb-4">
-                Tại sao chọn chúng tôi
-            </div>
-            @{
-                string[] whyChooseUsParagraphs = Model
-                    .AboutUsIntroduction
-                    .WhyChooseUsContent
-                    .Split(Environment.NewLine)
-                    .ToArray();
+        <!-- WhyChooseUsContent -->
+        <partial name="_Content" model="whyChooseUsContent" />
 
-                foreach (string paragraph in whyChooseUsParagraphs)
-                {
-                    <p>@paragraph</p>
-                }
-            }
-        </div>
-    </div>
+        <!-- OurDifferenceContent --> 
+        <partial name="_Content" model="ourDifferenceModel" />
 
-    <!-- OurCultureContent --> 
-    <div class="row g-5 justify-content-center my-5">
-        <div class="col col-md-10 col-12">
-            <div class="fs-2 text-success text-center mb-4">
-                Sự khác biệt của chúng tôi
-            </div>
-            @{
-                string[] ourDifferenceParagraphs = Model
-                    .AboutUsIntroduction
-                    .OurDifferenceContent
-                    .Split(Environment.NewLine)
-                    .ToArray();
-                foreach (string paragraph in ourDifferenceParagraphs)
-                {
-                    <p>@paragraph</p>
-                }
-            }
-        </div>
-    </div>
-
-    <!-- OurCultureContent --> 
-    <div class="row g-5 justify-content-center my-5">
-        <div class="col col-md-10 col-12">
-            <div class="fs-2 text-success text-center mb-4">
-                Văn hoá của chúng tôi
-            </div>
-            @{
-                string[] ourCultureContentParagraphs = Model
-                    .AboutUsIntroduction
-                    .OurCultureContent
-                    .Split(Environment.NewLine)
-                    .ToArray();
-                foreach (string paragraph in ourCultureContentParagraphs)
-                {
-                    <p>@paragraph</p>
-                }
-            }
-        </div>
+        <!-- OurCultureContent --> 
+        <partial name="_Content" model="ourCultureModel" />
     </div>
 
     <!-- Members -->
-    <div class="row g-5 justify-content-center my-5">
-        <div class="col col-md-10 col-12">
-            <div class="fs-2 text-success text-center mb-2">
+    <div class="row gx-5 gy-3 justify-content-center mt-2">
+        <div class="col col-lg-12 col-md-10 col-12">
+            <h2 class="text-success text-center fw-normal">
                 Đội ngũ của chúng tôi
-            </div>
+            </h2>
         </div>
+        
         @foreach (var member in Model.Members)
         {
             <div class="col col-xl-5 col-lg-6 col-md-8 col-sm-10 col-12
@@ -138,11 +103,11 @@
     </div>
 
     <!-- Certificates -->
-    <div class="row g-5 justify-content-center my-5">
+    <div class="row gx-5 gy-3 justify-content-center my-2">
         <div class="col col-md-10 col-12">
-            <div class="fs-2 text-success text-center mb-2">
+            <h2 class="text-success text-center fw-normal">
                 Chứng chỉ
-            </div>
+            </h2>
         </div>
         @foreach (CertificateDetailModel certificate in Model.Certificates)
         {
@@ -168,5 +133,11 @@
 }
 
 @section Styles {
-    <link asp-append-version="true" rel="stylesheet" href="~/css/front-pages/about-us.css">
+    <style>
+        #about-us-view .member-thumbnail {
+            width: 150px;
+            height: auto;
+            aspect-ratio: 1;
+        }
+    </style>
 }

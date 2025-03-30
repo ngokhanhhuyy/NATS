@@ -37,7 +37,7 @@ public class AboutUsController : Controller
             memberResponseDtosTask,
             certificateResponseDtosTask);
 
-        AboutUsViewModel model = new AboutUsViewModel(
+        AboutUsIntroductionViewModel model = new AboutUsIntroductionViewModel(
             aboutUsIntroductionResponseDtoTask.Result,
             memberResponseDtosTask.Result,
             certificateResponseDtosTask.Result);

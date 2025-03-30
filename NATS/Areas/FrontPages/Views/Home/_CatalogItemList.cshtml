@@ -22,9 +22,9 @@
     }
 }
 
-<div class="row g-4 align-items-stretch mt-5 catalog-items-row">
-    <div class="col col-12 fs-2 text-success text-center mb-2">
-        @ComputeTitle()
+<div class="row g-3 p-3 align-items-stretch catalog-items-row">
+    <div class="col col-12 text-center">
+        <h2 class="text-success">@ComputeTitle()</h2>
     </div>
 
     @foreach (CatalogItemBasicModel catalogItem in Model)
