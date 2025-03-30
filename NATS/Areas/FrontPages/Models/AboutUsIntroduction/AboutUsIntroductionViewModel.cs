@@ -1,14 +1,14 @@
 namespace NATS.FrontPages.Models;
 
-public class AboutUsViewModel
+public class AboutUsIntroductionViewModel
 {
     public AboutUsIntroductionDetailModel AboutUsIntroduction { get; set; }
     public List<MemberDetailModel> Members { get; set; }
     public List<CertificateDetailModel> Certificates { get; set; }
 
-    public AboutUsViewModel() { }
+    public AboutUsIntroductionViewModel() { }
 
-    public AboutUsViewModel(
+    public AboutUsIntroductionViewModel(
             AboutUsIntroductionResponseDto aboutUsIntroductionResponseDto,
             List<MemberResponseDto> memberResponseDtos,
             List<CertificateResponseDto> certificateResponseDtos)
