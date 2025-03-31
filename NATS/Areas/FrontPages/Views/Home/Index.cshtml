@@ -2,16 +2,24 @@
 @{
     Layout = "_Layout";
 }
+@functions {
+    string ComputeSummaryItemDetailLink(SummaryItemDetailModel summaryItem)
+    {
+        return Url.Action("Index", "SummaryItem", new
+        {
+            area = "FrontPages",
+            id = summaryItem.Id
+        });
+    }
+}
 
 <div class="container-fluid p-0" id="home-view">
     <!-- SliderItems -->
     <partial name="_SliderItemList" model="Model.SliderItems" />
 
     <!-- ApplicationName -->
-    <div
-        class="container-fluid text-center text-white fw-bold p-2 mb-3 shadow"
-        id="application-name-container"
-    >
+    <div class="container-fluid text-center text-white fw-bold
+                p-2 mb-3 shadow application-name-container">
         @Model.GeneralSettings.ApplicationName
     </div>
 
@@ -21,12 +29,9 @@
             @foreach (SummaryItemDetailModel summaryItem in Model.SummaryItems)
             {
                 <a
-                    asp-area="FrontPages"
-                    asp-controller="SummaryItem"
-                    asp-action="Index"
-                    asp-route-focusedItemIndex="@summaryItem.Id"
+                    href="@ComputeSummaryItemDetailLink(summaryItem)"
                     class="col col-xl-3 col-md-6 col-12 p-3 summary-item-link
-                            d-flex flex-column align-items-center"
+                        d-flex flex-column align-items-center"
                 >
                     <img
                         class="rounded-circle summary-item-thumbnail mb-3 shadow"
@@ -62,7 +67,7 @@
                     <p>@Model.AboutUsIntroduction.AboutUsContent</p>
                     <a
                         asp-area="FrontPages"
-                        asp-controller="AboutUs"
+                        asp-controller="AboutUsIntroduction"
                         asp-action="Index"
                         class="btn btn-outline-light mt-3"
                     >
@@ -86,94 +91,4 @@
 
 @section PageTitle {
     Trang chủ
-}
-
-@section Styles {
-    <style>
-        #home-view .carousel-background {
-            --blur-radius: 25px;
-            background: rgba(var(--bs-success-rgb), 0.5);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: calc(100% + var(--blur-radius) * 4);
-            height: calc(100% + var(--blur-radius) * 4);
-            transform: translate(-50%, -50%);
-            filter: blur(var(--blur-radius));
-            transition: opacity 1s ease;
-        }
-    
-        #home-view .carousel-background::after {
-            content: "";
-            background: rgba(var(--bs-success-rgb), 0.5);
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-        }
-    
-        #home-view #carousel-container {
-            width: 100%;
-            max-width: 1400px;
-            margin: auto;
-        }
-    
-        #home-view #slider {
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-        }
-    
-        #home-view .carousel-img {
-            max-height: 750px;
-            object-fit: cover;
-        }
-    
-        #home-view #application-name-container {
-            background-color: rgb(20, 112, 70);
-            font-size: 1.4em;
-        }
-        
-        #home-view .summary-item-link {
-            color: unset;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    
-        #home-view .summary-item-thumbnail {
-            width: 150px;
-            height: 150px;
-            aspect-ratio: 1;
-        }
-    
-        #home-view .catalog-item-thumbnail {
-            width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
-            object-position: 50% 50%;
-        }
-    
-        #home-view textarea {
-            min-height: 200px;
-        }
-    
-        #home-view button[type="submit"]:hover {
-            color: white !important;
-        }
-    
-        @@media (max-width: 768px) {
-            #home-view .catalog-items-row.row {
-                width: fit-content !important;
-                justify-content: center;
-            }
-        }
-    
-        @@media (max-width: 576px) {
-            #home-view .company-name {
-                font-size: 1.0em;
-            }
-    
-            #home-view .catalog-items-row.row {
-                width: 100%;
-            }
-        }
-    </style>
 }

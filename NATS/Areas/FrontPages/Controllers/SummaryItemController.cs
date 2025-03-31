@@ -13,12 +13,12 @@ public class SummaryItemController : Controller
         _service = service;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Index(int? focusedItemIndex = null)
+    [HttpGet("{id:int?}")]
+    public async Task<IActionResult> Index(int? id = null)
     {
         List<SummaryItemResponseDto> responseDtos = await _service.GetListAsync();
         SummaryItemListViewModel model;
-        model = new SummaryItemListViewModel(responseDtos, focusedItemIndex);
+        model = new SummaryItemListViewModel(responseDtos, id);
 
         return View(model);
     }

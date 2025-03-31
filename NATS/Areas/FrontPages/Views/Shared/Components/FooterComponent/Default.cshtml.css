@@ -1,0 +1,23 @@
+a {
+    color: white !important;
+}
+
+a:not(:hover) {
+    text-decoration: none;
+}
+
+.links-column a {
+    margin-top: .25rem;
+    margin-bottom: .25rem;
+    display: block;
+}
+
+.footer-logo-container {
+    width: 150px;
+    height: auto;
+    aspect-ratio: 1;
+}
+
+.footer-logo-container img {
+    width: 65%;
+}

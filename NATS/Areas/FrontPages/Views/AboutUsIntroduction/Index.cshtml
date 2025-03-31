@@ -1,0 +1,134 @@
+@model AboutUsIntroductionViewModel
+@functions {
+    void RenderParagraph(string content)
+    {
+        string[] paragraphs = content.Split(Environment.NewLine).ToArray();
+        foreach (string paragraph in paragraphs)
+        {
+            <p>@paragraph</p>
+        }
+    }
+    
+    void RenderContent(string title, string content)
+    {
+        <div class="col col-lg-6 col-md-10 col-12">
+            <h2 class="text-success text-center fw-normal mb-3">
+                @title
+            </h2>
+
+            @{ RenderParagraph(content); }
+        </div>
+    }
+}
+
+<div class="container p-4" id="about-us-view">
+    <!-- Thumbnail -->
+    <div class="row justify-content-center px-3 py-3 mb-4">
+        <div class="col col-xl-6 col-lg-7 col-md-8 col-12 order-lg-0 order-1">
+            <img
+                src="@Model.AboutUsIntroduction.ThumbnailUrl"
+                class="w-100 rounded-4 shadow"
+                alt="Về chúng tôi"
+            />
+        </div>
+    </div>
+
+
+    <div class="row gx-5 gy-3 justify-content-center">
+        @{
+            AboutUsIntroductionDetailModel aboutUs = Model.AboutUsIntroduction;
+
+            <!-- AboutUsContent -->
+            RenderContent(DisplayNames.AboutUs, aboutUs.AboutUsContent);
+
+            <!-- WhyChooseUsContent -->
+            RenderContent(DisplayNames.WhyChooseUs, aboutUs.WhyChooseUsContent);
+
+            <!-- OurDifferenceContent -->
+            RenderContent(DisplayNames.OurDifference, aboutUs.OurDifferenceContent);
+
+            <!-- OurCultureContent -->
+            RenderContent(DisplayNames.OurCulture, aboutUs.OurCultureContent);
+        }
+    </div>
+    
+    <!-- Members -->
+    <div class="row gx-5 gy-3 justify-content-center mt-2">
+        <div class="col col-lg-12 col-md-10 col-12">
+            <h2 class="text-success text-center fw-normal">
+                Đội ngũ của chúng tôi
+            </h2>
+        </div>
+
+        @foreach (var member in Model.Members)
+        {
+            <div class="col col-xl-5 col-lg-6 col-md-8 col-sm-10 col-12
+                        d-flex flex-column align-items-center">
+                <img
+                    src="@member.ThumbnailUrl"
+                    class="member-thumbnail rounded-circle shadow flex-shrink-0 mb-3"
+                    alt="@member.FullName"
+                />
+
+                <!-- FullName -->
+                <span class="fs-4 fw-bold bg-success-subtle border border-success-subtle
+                            rounded text-success px-2 text-success">
+                    @member.FullName
+                </span>
+
+                <!-- RoleName -->
+                <span class="my-2 text-success">
+                    @member.RoleName
+                </span>
+
+                <!-- Description -->
+                @{ RenderParagraph(member.Description); }
+            </div>
+        }
+    </div>
+
+    <!-- Certificates -->
+    <div class="row gx-5 gy-3 justify-content-center my-2">
+        <div class="col col-md-10 col-12">
+            <h2 class="text-success text-center fw-normal">
+                Chứng chỉ
+            </h2>
+        </div>
+        
+        @foreach (CertificateDetailModel certificate in Model.Certificates)
+        {
+            <div class="col col-xl-5 col-md-10 col-12">
+                <div class="d-flex flex-column justify-content-stretch align-items-stretch">
+                    <img
+                        class="rounded-top-3 shadow"
+                        src="@certificate.ThumbnailUrl"
+                        alt="@certificate.Name"
+                    />
+                    
+                    <div class="bg-success-subtle text-center text-success border
+                                border-success fs-5 fw-bold px-3 py-2 shadow rounded-bottom-3">
+                        @certificate.Name
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section PageTitle {
+    Về chúng tôi
+}
+
+@section Title {
+    Về chúng tôi
+}
+
+@section Styles {
+    <style>
+        #about-us-view .member-thumbnail {
+            width: 150px;
+            height: auto;
+            aspect-ratio: 1;
+        }
+    </style>
+}

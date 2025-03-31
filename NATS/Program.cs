@@ -14,9 +14,10 @@ IMvcBuilder mvcBuilder = builder.Services
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
     });
+
 if (environment == Environments.Development)
 {
-    mvcBuilder.AddRazorRuntimeCompilation();
+    // mvcBuilder.AddRazorRuntimeCompilation();
 }
 
 // Add database context.

@@ -20,11 +20,26 @@
 
         return catalogItem.ThumbnailUrl;
     }
+
+    private string ComputeActionName(CatalogItemBasicModel catalogItem)
+    {
+        switch (catalogItem.Type)
+        {
+            case CatalogItemType.Service:
+                return "ServiceDetail";
+            case CatalogItemType.Course:
+                return "CourseDetail";
+            case CatalogItemType.Product:
+                return "ProductDetail";
+            default:
+                return string.Empty;
+        }
+    }
 }
 
 <div class="row g-3 p-3 align-items-stretch catalog-items-row">
     <div class="col col-12 text-center">
-        <h2 class="text-success">@ComputeTitle()</h2>
+        <h2 class="text-success fw-normal">@ComputeTitle()</h2>
     </div>
 
     @foreach (CatalogItemBasicModel catalogItem in Model)
@@ -34,7 +49,7 @@
             <div class="card h-100 shadow-sm">
                 <img
                     src="@ComputeThumbnailUrl(catalogItem)"
-                    class="card-img-top catalog-item-thumbnail"
+                    class="card-img-top"
                     alt="@catalogItem.Name"
                 />
 
@@ -43,8 +58,16 @@
                     <h5 class="card-title">
                         @catalogItem.Name
                     </h5>
-
-                    <a href="#" class="btn btn-outline-success mt-2">Chi tiết</a>
+                        
+                    <a
+                        asp-area="FrontPages"
+                        asp-controller="CatalogItem"
+                        asp-action="@ComputeActionName(catalogItem)"
+                        asp-route-id="@catalogItem.Id"
+                        class="btn btn-outline-success mt-2"
+                    >
+                        Chi tiết
+                    </a>
                 </div>
             </div>
         </div>

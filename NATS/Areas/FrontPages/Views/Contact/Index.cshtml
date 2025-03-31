@@ -4,26 +4,62 @@
     ContactDetailModel AddressContact => Model.Contacts
         .SingleOrDefault(c => c.Type == ContactType.Address);
     
-    string ComputeContactColumnClassName(ContactDetailModel contact)
-    {
-        if (contact.Type == ContactType.Address)
-        {
-            return "col-12";
-        }
-
-        return "col col-xl-6 col-12";
-    }
-
     string ComputeIframeSrc()
     {
         string endcodedContent = AddressContact.UriEncodedContent;
         return $"https://www.google.com/maps?q={endcodedContent}&output=embed";
     }
+
+    void RenderContact(ContactDetailModel contact)
+    {
+        string className = "col col-xl-6 col-12";
+        if (contact.Type == ContactType.Address)
+        {
+            className = "col-12";
+        }
+        
+        <div class="@className d-flex flex-column">
+            <span class="fw-bold opacity-75">
+                <i class="bi @contact.IconClassName text-success me-2"></i>
+                @DisplayNames.Get(contact.Type.ToString())
+            </span>
+            @switch (contact.Type)
+            {
+                case ContactType.PhoneNumber:
+                    <a href="tel:@contact.Content">
+                        @contact.Content
+                    </a>
+                    break;
+                case ContactType.ZaloNumber:
+                    string zaloUrl = "https://zalo.me/" + contact.Content
+                        .Replace(" ", "")
+                        .Replace("+84", "0");
+                    <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
+                        @contact.Content
+                    </a>
+                    break;
+                case ContactType.Email:
+                    <a href="mailto:@contact.Content">
+                        @contact.Content
+                    </a>
+                    break;
+                case ContactType.Address:
+                    <a
+                        href="https://maps.google.com/?q=@contact.UriEncodedContent"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        @contact.Content
+                    </a>
+                    break;
+            }
+        </div>
+    }
 }
 
-<div class="container-fluid py-5" id="contact-view">
+<div class="container-fluid py-4" id="contact-view">
     <div class="container">
-        <div class="row gx-5 gy-4 justify-content-center my-5">
+        <div class="row gx-5 gy-4 px-5 py-4 justify-content-center">
             <!-- Paragraph -->
             <div class="col col-md-10 col-sm-11 col-12">
                 <p class="fs-2 text-success mb-5">
@@ -70,42 +106,7 @@
                 <div class="row g-3">
                     @foreach (ContactDetailModel contact in Model.Contacts)
                     {
-                        <div class="@ComputeContactColumnClassName(contact) d-flex flex-column">
-                            <span class="fw-bold opacity-75">
-                                <i class="bi @contact.IconClassName text-success me-2"></i>
-                                @DisplayNames.Get(contact.Type.ToString())
-                            </span>
-                            @switch (contact.Type)
-                            {
-                                case ContactType.PhoneNumber:
-                                    <a href="tel:@contact.Content">
-                                        @contact.Content
-                                    </a>
-                                    break;
-                                case ContactType.ZaloNumber:
-                                    string zaloUrl = "https://zalo.me/" + contact.Content
-                                        .Replace(" ", "")
-                                        .Replace("+84", "0");
-                                    <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
-                                        @contact.Content
-                                    </a>
-                                    break;
-                                case ContactType.Email:
-                                    <a href="mailto:@contact.Content">
-                                        @contact.Content
-                                    </a>
-                                    break;
-                                case ContactType.Address:
-                                    <a
-                                        href="https://maps.google.com/?q=@contact.UriEncodedContent"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        @contact.Content
-                                    </a>
-                                    break;
-                            }
-                        </div>
+                        RenderContact(contact);
                     }
                 </div>
             </div>
@@ -119,22 +120,4 @@
 
 @section Title {
     Liên hệ
-}
-
-@section Styles {
-    <style>
-        #contact-view iframe {
-            min-height: 350px;
-        }
-
-        #contact-view a {
-            color: var(--bs-success);
-            text-decoration: none;
-            transition: .2s ease;
-        }
-
-        #contact-view a:hover {
-            filter: brightness(150%);
-        }
-    </style>
 }

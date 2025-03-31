@@ -16,70 +16,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="906859bb-e68b-47c5-b55b-4e77815ff55d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Models/AboutUsIntroduction/AboutUsIntroductionContentPartialViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/AboutUs/_Content.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Contact/Index.cshtml.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/Index.cshtml.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_CatalogItemList.cshtml.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_SliderItemList.cshtml.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/FooterComponent/Default.cshtml.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_EnquiryForm.cshtml.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_SubPagesLayout.cshtml.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/AboutUsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/AboutUsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Models/AboutUsViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Models/AboutUsIntroduction/AboutUsIntroductionViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/AboutUs/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/AboutUs/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/CatalogItem/CatalogItemList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/CatalogItem/CatalogItemList.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/AboutUsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/AboutUsIntroductionController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/SummaryItemController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/SummaryItemController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Models/AboutUsIntroduction/AboutUsIntroductionContentPartialViewModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Models/AboutUsIntroduction/AboutUsIntroductionViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Models/AboutUsIntroductionViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/AboutUs/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/AboutUsIntroduction/Index.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/AboutUs/_Content.cshtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Contact/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Contact/Index.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/Index.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_CatalogItemList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_CatalogItemList.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_SliderItemList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_SliderItemList.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/FooterComponent/Default.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/FooterComponent/Default.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/NavigationBarComponent/Default.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/NavigationBarComponent/Default.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_Layout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_EnquiryForm.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_EnquiryForm.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_SubPagesLayout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_SubPagesLayout.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NATS/NATS.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/NATS.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/arrow_large_left.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/arrow_large_right.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/arrow_left.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/arrow_left2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/arrow_right.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/arrow_right2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/arrowleft.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/arrowright.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/arrows.psd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/black50.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/boxed_bgtile.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/bullet.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/bullet_boxed.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/bullets.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/bullets.psd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/bullets2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/coloredbg.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/grain.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/gridtile.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/gridtile_3x3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/gridtile_3x3_white.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/gridtile_white.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/large_left.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/large_right.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/loader.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/loader2.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/navigdots.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/navigdots_bgtile.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/shadow1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/shadow2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/shadow3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/small_arrows.psd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/small_left.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/small_left_boxed.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/small_right.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/small_right_boxed.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/timer.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/timerdot.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/transparent.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/assets/white50.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/css/front-pages/about-us.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/wwwroot/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Views/Shared/_Layout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/css/front-pages/front-pages.css" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/wwwroot/css/front-pages/front-pages.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DpaMonitoringSettings">
+    <option name="firstShow" value="false" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="package.json" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -99,6 +76,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/FooterComponent/Default.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/NATS/Services/ContactService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/NATS/Services/Dtos/RequestDtos/SliderItem/SliderItemUpsertRequestDto.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/NATS/Services/Interfaces/IGeneralSettingsService.cs" root0="FORCE_HIGHLIGHTING" />
@@ -116,9 +94,11 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;.NET Launch Settings Profile.NATS: IIS Express.executor&quot;: &quot;Debug&quot;,
+    &quot;.NET Launch Settings Profile.NATS: http.executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;v2&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -134,7 +114,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.NATS: IIS Express">
+  <component name="RunManager" selected=".NET Launch Settings Profile.NATS: http">
     <configuration name="NATS: FTPProfile" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
       <riderPublish configuration="Release" platform="Any CPU" publish_profile="FTPProfile.pubxml" pubxml_path="$PROJECT_DIR$/NATS/Properties/PublishProfiles/FTPProfile.pubxml" user_name="wu8b25xz7osf" uuid_high="3370490737021568718" uuid_low="-5982175220513549920" />
       <method v="2" />
@@ -223,6 +203,7 @@
       <workItem from="1742980951680" duration="6465000" />
       <workItem from="1743261285478" duration="4526000" />
       <workItem from="1743275861026" duration="3055000" />
+      <workItem from="1743446006129" duration="8259000" />
     </task>
     <servers />
   </component>

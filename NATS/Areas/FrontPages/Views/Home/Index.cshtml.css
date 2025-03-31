@@ -1,0 +1,29 @@
+.application-name-container {
+    background-color: rgb(20, 112, 70);
+    font-size: 1.4em;
+}
+
+.summary-item-link {
+    color: unset;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.summary-item-thumbnail {
+    width: 150px;
+    height: 150px;
+    aspect-ratio: 1;
+}
+
+.catalog-item-thumbnail {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: 50% 50%;
+}
+
+@media (max-width: 576px) {
+    .application-name-container {
+        font-size: 1.0em;
+    }
+}

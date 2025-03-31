@@ -1,20 +1,24 @@
 @model FooterViewModel
 @functions {
-    string ComputeEncodedAddress()
+    string EncodedAddress
     {
-        ContactDetailModel addressContact = Model.Contacts
-            .FirstOrDefault(c => c.Type == ContactType.Address);
-
-        if (addressContact == null)
+        get
         {
-            return null;
-        }
+            ContactDetailModel addressContact = Model.Contacts
+                .FirstOrDefault(c => c.Type == ContactType.Address);
 
-        return Uri.EscapeDataString(addressContact.Content);
+            if (addressContact == null)
+            {
+                return null;
+            }
+
+            return Uri.EscapeDataString(addressContact.Content);
+        }
     }
 
-    string ComputeContactIconClassName(ContactDetailModel contact)
+    void RenderContact(ContactDetailModel contact)
     {
+
         Dictionary<ContactType, string> iconClassNamesByType;
         iconClassNamesByType = new Dictionary<ContactType, string>
         {
@@ -23,8 +27,43 @@
             { ContactType.Email, "bi-envelope-at-fill" },
             { ContactType.Address, "bi-geo-alt-fill" }
         };
+        
+        <div class="my-2">
+            <!-- Label -->
+            <i class="bi @iconClassNamesByType[contact.Type] me-2"></i>
 
-        return iconClassNamesByType[contact.Type];
+            <!-- Content -->
+            @switch (contact.Type)
+            {
+                case ContactType.PhoneNumber:
+                    <a href="tel:@contact.Content">
+                        @contact.Content
+                    </a>
+                    break;
+                case ContactType.ZaloNumber:
+                    string zaloUrl = "https://zalo.me/" + contact.Content
+                        .Replace(" ", "")
+                        .Replace("+84", "0");
+                    <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
+                        @contact.Content
+                    </a>
+                    break;
+                case ContactType.Email:
+                    <a href="mailto:@contact.Content">
+                        @contact.Content
+                    </a>
+                    break;
+                case ContactType.Address:
+                    <a
+                        href="https://maps.google.com/?q=@EncodedAddress"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        @contact.Content
+                    </a>
+                    break;
+            }
+        </div>
     }
 }
 
@@ -38,23 +77,23 @@
                 </span>
         
                 <!-- SummaryItems -->
-                <a asp-area="FrontPages" asp-controller="SummaryItem" asp-action="Index">
+                <a href="@Url.Action("Index", "SummaryItem")">
                     Giới thiệu
                 </a>
                 
                 <!-- AboutUs -->
-                <a asp-area="FrontPages" asp-controller="AboutUs" asp-action="Index">
+                <a href="@Url.Action("Index", "AboutUsIntroduction")">
                     Về chúng tôi
                 </a>
                 
         
                 <!-- News -->
-                <a asp-area="FrontPages" asp-controller="Home" asp-action="Index">
+                <a href="@Url.Action("Index", "Home")">
                     Tin tức
                 </a>
                 
-                <!-- Enquiry -->
-                <a asp-area="FrontPages" asp-controller="Contact" asp-action="Index">
+                <!-- Contact -->
+                <a href="@Url.Action("Index", "Contact")">
                     Liên hệ
                 </a>
             </div>
@@ -66,12 +105,12 @@
                 </span>
         
                 <!-- Services -->
-                <a asp-area="FrontPages" asp-controller="CatalogItem" asp-action="ServiceList">
+                <a href="@Url.Action("ServiceList", "CatalogItem")">
                     Dịch vụ
                 </a>
                 
                 <!-- Courses -->
-                <a asp-area="FrontPages" asp-controller="CatalogItem" asp-action="CourseList">
+                <a href="@Url.Action("CourseList", "CatalogItem")">
                     Khóa học
                 </a>
             </div>
@@ -81,54 +120,17 @@
                 <span class="fw-bold fs-4 opacity-75">
                     Liên hệ
                 </span>
+                
                 @foreach (ContactDetailModel contact in Model.Contacts)
                 {
-                    <div class="my-3">
-                        <!-- Label -->
-                        <i class="bi @ComputeContactIconClassName(contact) me-2"></i>
-
-                        <!-- Content -->
-                        @switch (contact.Type)
-                        {
-                            case ContactType.PhoneNumber:
-                                <a href="tel:@contact.Content">
-                                    @contact.Content
-                                </a>
-                                break;
-                            case ContactType.ZaloNumber:
-                                string zaloUrl = "https://zalo.me/" + contact.Content
-                                    .Replace(" ", "")
-                                    .Replace("+84", "0");
-                                <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
-                                    @contact.Content
-                                </a>
-                                break;
-                            case ContactType.Email:
-                                <a href="mailto:@contact.Content">
-                                    @contact.Content
-                                </a>
-                                break;
-                            case ContactType.Address:
-                                <a
-                                    href="https://maps.google.com/?q=@ComputeEncodedAddress()"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    @contact.Content
-                                </a>
-                                break;
-                        }
-                    </div>
+                    RenderContact(contact);
                 }
             </div>
 
             <!-- Logo -->
             <div class="col d-flex flex-column justify-content-center align-items-center">
-                <div
-                    class="border border-4 rounded-circle d-flex
-                            justify-content-center align-items-center"
-                    id="footer-logo-container"
-                >
+                <div class="border border-4 rounded-circle d-flex justify-content-center
+                            align-items-center footer-logo-container">
                     <img
                         src="/images/main-logo-transparent-white.png"
                         alt=""

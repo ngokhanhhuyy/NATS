@@ -1,0 +1,13 @@
+iframe {
+    min-height: 350px;
+}
+
+a {
+    color: var(--bs-success);
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+a:hover {
+    filter: brightness(150%);
+}

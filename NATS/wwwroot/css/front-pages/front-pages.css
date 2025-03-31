@@ -68,39 +68,6 @@ main {
     margin-top: var(--navbar-height);
 }
 
-footer a {
-    color: white !important;
-}
-
-footer a:not(:hover) {
-    text-decoration: none;
-}
-
-footer .links-column a {
-    margin-top: .75rem;
-    margin-bottom: .75rem;
-    display: block;
-}
-
-#sub-page-top {
-    background-image:
-        linear-gradient(
-            to right,
-            rgba(var(--bs-success-rgb), 0.85) 0%,
-            rgba(var(--bs-success-rgb), 0.85) 100%),
-        url("../../images/front-pages/sub-page-title-container-background.webp");
-}
-
-#footer-logo-container {
-    width: 150px;
-    height: auto;
-    aspect-ratio: 1;
-}
-
-#footer-logo-container img {
-    width: 65%;
-}
-
 #enquiry-form form button[type="submit"]:hover {
     color: white !important;
 }

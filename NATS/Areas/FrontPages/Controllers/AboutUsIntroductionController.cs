@@ -4,13 +4,13 @@ namespace NATS.FrontPages.Controllers;
 
 [Area("FrontPages")]
 [Route("/ve-chung-toi")]
-public class AboutUsController : Controller
+public class AboutUsIntroductionController : Controller
 {
     private readonly IAboutUsIntroductionService _aboutUsIntroductionService;
     private readonly IMemberService _memberService;
     private readonly ICertificateService _cerificateService;
 
-    public AboutUsController(
+    public AboutUsIntroductionController(
             IAboutUsIntroductionService aboutusIntroductionService,
             IMemberService memberService,
             ICertificateService certificateService)

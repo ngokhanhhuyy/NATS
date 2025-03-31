@@ -1,0 +1,36 @@
+.carousel-background {
+    --blur-radius: 25px;
+    background: rgba(var(--bs-success-rgb), 0.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% + var(--blur-radius) * 4);
+    height: calc(100% + var(--blur-radius) * 4);
+    transform: translate(-50%, -50%);
+    filter: blur(var(--blur-radius));
+    transition: opacity 1s ease;
+}
+
+.carousel-background::after {
+    content: "";
+    background: rgba(var(--bs-success-rgb), 0.5);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+
+.carousel-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+}
+
+.slide {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+}
+
+.carousel-img {
+    max-height: 750px;
+    object-fit: cover;
+}

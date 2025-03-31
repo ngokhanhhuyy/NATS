@@ -33,48 +33,8 @@
   <ItemGroup>
     <Folder Include="Views\Shared\Components\" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\assets\arrowleft.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\arrowright.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\arrows.psd" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\arrow_large_left.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\arrow_large_right.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\arrow_left.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\arrow_left2.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\arrow_right.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\arrow_right2.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\black50.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\boxed_bgtile.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\bullet.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\bullets.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\bullets.psd" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\bullets2.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\bullet_boxed.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\coloredbg.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\grain.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\gridtile.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\gridtile_3x3.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\gridtile_3x3_white.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\gridtile_white.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\large_left.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\large_right.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\loader.gif" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\loader2.gif" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\navigdots.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\navigdots_bgtile.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\shadow1.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\shadow2.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\shadow3.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\small_arrows.psd" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\small_left.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\small_left_boxed.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\small_right.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\small_right_boxed.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\timer.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\timerdot.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\transparent.jpg" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\white50.png" />
+    <Watch Include="**\*.cshtml;*.razor;*.js;*.css" Exclude="**\obj\**\*;bin\**\*" />
   </ItemGroup>
-
 </Project>

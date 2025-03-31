@@ -1,0 +1,19 @@
+.card-img-top {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: 50% 50%;
+}
+
+@media (max-width: 768px) {
+    .row {
+        width: fit-content !important;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .row {
+        width: 100%;
+    }
+}
