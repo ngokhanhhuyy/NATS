@@ -15,35 +15,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="906859bb-e68b-47c5-b55b-4e77815ff55d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Contact/Index.cshtml.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/Index.cshtml.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_CatalogItemList.cshtml.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_SliderItemList.cshtml.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/FooterComponent/Default.cshtml.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_EnquiryForm.cshtml.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_SubPagesLayout.cshtml.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/AboutUsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/AboutUsIntroductionController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/SummaryItemController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Controllers/SummaryItemController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Models/AboutUsIntroduction/AboutUsIntroductionContentPartialViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Models/AboutUsIntroduction/AboutUsIntroductionViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Models/AboutUsIntroductionViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/AboutUs/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/AboutUsIntroduction/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/AboutUs/_Content.cshtml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Contact/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Contact/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_CatalogItemList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_CatalogItemList.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_SliderItemList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Home/_SliderItemList.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/FooterComponent/Default.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/FooterComponent/Default.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/NavigationBarComponent/Default.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/NavigationBarComponent/Default.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_EnquiryForm.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_EnquiryForm.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_SubPagesLayout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/_SubPagesLayout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/NATS.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/NATS.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Views/Shared/_Layout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/css/front-pages/front-pages.css" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/wwwroot/css/front-pages/front-pages.css" afterDir="false" />
-    </list>
+    <list default="true" id="906859bb-e68b-47c5-b55b-4e77815ff55d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -203,8 +175,17 @@
       <workItem from="1742980951680" duration="6465000" />
       <workItem from="1743261285478" duration="4526000" />
       <workItem from="1743275861026" duration="3055000" />
-      <workItem from="1743446006129" duration="8259000" />
+      <workItem from="1743446006129" duration="8392000" />
     </task>
+    <task id="LOCAL-00001" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1743455167244</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1743455167244</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,6 +195,8 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
