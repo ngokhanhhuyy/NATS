@@ -25,8 +25,9 @@ public class SliderItemService
     public async Task<SliderItemResponseDto> GetSingleAsync(int id)
     {
         return await Context.SliderItems
+            .Where(sliderItem => sliderItem.Id == id)
             .Select(sliderItem => new SliderItemResponseDto(sliderItem))
-            .SingleOrDefaultAsync(sliderItem => sliderItem.Id == id)
+            .SingleOrDefaultAsync()
             ?? throw GetResourceNotFoundExceptionById(id);
     }
 
