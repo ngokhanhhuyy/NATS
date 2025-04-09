@@ -64,6 +64,8 @@ public abstract class AbstractHasThumbnailService<TEntity, TUpsertRequestDto>
                 PhotoUrlsToBeDeletedWhenFailure.Add(entity.ThumbnailUrl);
             }
         }
+        
+        await base.SaveUpdatedEntityAsync(entity, requestDto);
     }
 
     /// <inheritdoc/>
