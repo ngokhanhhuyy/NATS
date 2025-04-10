@@ -531,6 +531,12 @@ public sealed partial class DataInitializer
                 course.Detail = faker.Lorem.Paragraph(5) + Environment.NewLine +
                                 faker.Lorem.Paragraph(8) + Environment.NewLine +
                                 faker.Lorem.Paragraph(10);
+
+                foreach (CatalogItemPhoto photo in course.Photos ?? [])
+                {
+                    photo.Description = faker.Lorem.Sentences(3);
+                }
+
                 _context.Add(course);
             }
 
@@ -603,6 +609,11 @@ public sealed partial class DataInitializer
                 service.Detail = faker.Lorem.Paragraph(5) + Environment.NewLine +
                                 faker.Lorem.Paragraph(8) + Environment.NewLine +
                                 faker.Lorem.Paragraph(10);
+
+                foreach (CatalogItemPhoto photo in service.Photos ?? [])
+                {
+                    photo.Description = faker.Lorem.Sentences(3);
+                }
 
                 _context.CatalogItems.Add(service);
             }

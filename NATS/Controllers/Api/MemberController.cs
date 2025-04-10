@@ -42,7 +42,7 @@ public class MemberController : ControllerBase
     [ProducesResponseType<int>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Create(MemberUpsertRequestDto requestDto)
+    public async Task<IActionResult> Create([FromBody] MemberUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _validator.Validate(requestDto);
@@ -63,7 +63,9 @@ public class MemberController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Update(int id, MemberUpsertRequestDto requestDto)
+    public async Task<IActionResult> Update(
+            int id,
+            [FromBody] MemberUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _validator.Validate(requestDto);

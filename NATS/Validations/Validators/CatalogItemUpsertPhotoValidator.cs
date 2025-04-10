@@ -4,6 +4,10 @@ public class CatalogItemUpsertPhotoValidator : Validator<CatalogItemUpsertPhotoR
 {
     public CatalogItemUpsertPhotoValidator()
     {
+        RuleFor(dto => dto.Description)
+            .MaximumLength(255)
+            .WithName(DisplayNames.Description);
+        
         RuleSet("Create", () =>
         {
             RuleFor(dto => dto.File)
