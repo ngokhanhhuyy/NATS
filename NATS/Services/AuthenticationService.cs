@@ -26,10 +26,7 @@ public class AuthenticationService : IAuthenticationService
         string errorMessage;
         if (user == null)
         {
-            errorMessage = ErrorMessages.NotFoundByProperty
-                .ReplaceResourceName(DisplayNames.User)
-                .ReplacePropertyName(DisplayNames.UserName)
-                .ReplaceAttemptedValue(requestDto.UserName);
+            errorMessage = ErrorMessages.NotFound.ReplaceResourceName(DisplayNames.User);
             throw new OperationException(nameof(requestDto.UserName), errorMessage);
         }
 

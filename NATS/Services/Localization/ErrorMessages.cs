@@ -24,14 +24,14 @@ public static class ErrorMessages
     // Error messages for business operations
     public const string Undefined = "Đã xảy ra lỗi không xác định.";
     public const string UniqueDuplicated = "{PropertyName} đã tồn tại.";
-    public const string NotFound = "{EntityName} không tồn tại.";
-    public const string NotFoundByProperty = "{EntityName} có {PropertyName} '{PropertyValue}' không tồn tại.";
+    public const string NotFound = "{ResourceName} không tồn tại.";
+    public const string NotFoundByProperty = "{ResourceName} có {PropertyName} '{AttemptedValue}' không tồn tại.";
     public const string ImageFormatNotAllowed = "Hình ảnh có định dạng không được hỗ trợ.";
     public const string Incorrect = "{PropertyName} không chính xác";
     public const string MismatchedWith = "{PropertyName} không khớp với {ComparisonPropertyName}";
     public const string InvalidUserNamePattern = "{PropertyName} chỉ được chứa chữ cái hoặc chữ số.";
-    public const string NotAvailable = "{EntityName} hiện đang không khả dụng.";
-    public const string NotAvailableByProperty = "{EntityName} có {PropertyName} '{PropertyValue}' hiện đang không khả dụng.";
+    public const string NotAvailable = "{ResourceName} hiện đang không khả dụng.";
+    public const string NotAvailableByProperty = "{ResourceName} có {PropertyName} '{AttemptedValue}' hiện đang không khả dụng.";
 
     // Error messages for concurrency conflicts.
     public const string ConcurrencyConflict = "Dữ liệu đã bị chỉnh sửa bởi thiết bị/người dùng khác trong quá trình cập nhật.";
