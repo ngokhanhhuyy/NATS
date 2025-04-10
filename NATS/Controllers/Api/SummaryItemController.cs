@@ -43,7 +43,9 @@ public class SummaryItemController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Update(int id, SummaryItemUpdateRequestDto requestDto)
+    public async Task<IActionResult> Update(
+            int id,
+            [FromBody] SummaryItemUpdateRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _validator.Validate(requestDto);

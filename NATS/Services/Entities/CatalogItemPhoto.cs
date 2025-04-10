@@ -10,6 +10,10 @@ public class CatalogItemPhoto
     [Required]
     public string Url { get; set; }
 
+    [Column("description")]
+    [StringLength(255)]
+    public string Description { get; set; }
+
     // Foreign keys
     [Column("item_id")]
     [Required]

@@ -52,6 +52,9 @@ public class SliderItemService
             .SingleOrDefaultAsync(i => i.Id == id)
             ?? throw GetResourceNotFoundExceptionById(id);
 
+        // Update properties.
+        sliderItem.Title = requestDto.Title;
+
         // Save changes.
         await base.SaveUpdatedEntityAsync(sliderItem, requestDto);
     }

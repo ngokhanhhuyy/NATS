@@ -27,8 +27,9 @@ public class SummaryItemService
     public async Task<SummaryItemResponseDto> GetSingleAsync(int id)
     {
         return await Context.SummaryItems
+            .Where(ii => ii.Id == id)
             .Select(summaryItem => new SummaryItemResponseDto(summaryItem))
-            .SingleOrDefaultAsync(ii => ii.Id == id)
+            .SingleOrDefaultAsync()
             ?? throw GetResourceNotFoundExceptionById(id);
     }
 

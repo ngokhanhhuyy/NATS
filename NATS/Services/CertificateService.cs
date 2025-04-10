@@ -24,8 +24,9 @@ public class CertificateService
     public async Task<CertificateResponseDto> GetSingleAsync(int id)
     {
         return await Context.Certificates
+            .Where(c => c.Id == id)
             .Select(certificate => new CertificateResponseDto(certificate))
-            .SingleOrDefaultAsync(c => c.Id == id)
+            .SingleOrDefaultAsync()
             ?? throw new ResourceNotFoundException(
                 nameof(Certificate),
                 nameof(id),

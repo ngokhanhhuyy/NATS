@@ -27,8 +27,9 @@ public class MemberService
     {
         // Fetch the entity from the database and ensure it exists.
         return await Context.Members
+            .Where(tm => tm.Id == id)
             .Select(member => new MemberResponseDto(member))
-            .SingleOrDefaultAsync(tm => tm.Id == id)
+            .SingleOrDefaultAsync()
             ?? throw GetResourceNotFoundExceptionById(id);
     }
 

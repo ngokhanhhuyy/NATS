@@ -40,7 +40,7 @@ public class SliderItemController : ControllerBase
     [HttpPost]
     [ProducesResponseType<int>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create(SliderItemUpsertRequestDto requestDto)
+    public async Task<IActionResult> Create([FromBody] SliderItemUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _validator.Validate(requestDto);
@@ -60,7 +60,9 @@ public class SliderItemController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Update(int id, SliderItemUpsertRequestDto requestDto)
+    public async Task<IActionResult> Update(
+            int id,
+            [FromBody] SliderItemUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _validator.Validate(requestDto);
