@@ -20,12 +20,12 @@ public class CssUniqueIdHelper
             char[] characters = new char[idLength];
             for (int index = 0; index < idLength; index++)
             {
-                characters[index] = _characters[_random.Next(0, idLength)];
+                characters[index] = _characters[_random.Next(0, _characters.Length)];
             }
 
             id = new string(characters);
         }
-        while (!_generatedIds.Contains(id));
+        while (_generatedIds.Contains(id));
 
         return id;
     }

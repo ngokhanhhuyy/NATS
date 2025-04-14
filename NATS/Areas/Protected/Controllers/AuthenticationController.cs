@@ -3,7 +3,7 @@ using NATS.Protected.Models;
 namespace NATS.Protected.Controllers;
 
 [Area("Protected")]
-[Route("/quan-tri")]
+[Route("quan-tri")]
 public class AuthenticationController : Controller
 {
     private readonly IAuthenticationService _authenticationService;
@@ -11,6 +11,7 @@ public class AuthenticationController : Controller
     private readonly IValidator<SignInRequestDto> _signInValidator;
 
     public const string SignInRouteName = "ProtectedSignIn";
+    public const string SignOutRouteName = "ProtectedSignOut";
 
     public AuthenticationController(
             IAuthenticationService authenticationService,
@@ -22,7 +23,7 @@ public class AuthenticationController : Controller
         _signInValidator = signInValidator;
     }
 
-    [HttpGet("/dang-nhap", Name = SignInRouteName)]
+    [HttpGet("dang-nhap", Name = SignInRouteName)]
     [AllowAnonymous]
     public async Task<IActionResult> SignIn()
     {
@@ -37,10 +38,13 @@ public class AuthenticationController : Controller
         return View(model);
     }
 
-    [HttpPost("/dang-nhap", Name = SignInRouteName)]
+    [HttpPost("dang-nhap", Name = SignInRouteName)]
     [AllowAnonymous]
     public async Task<IActionResult> SignIn(SignInViewModel model)
     {
+        GeneralSettingsResponseDto generalSettingsResponseDto;
+        generalSettingsResponseDto = await _generalSettingsService.GetAsync();
+        model.GeneralSettings = new GeneralSettingsDetailModel(generalSettingsResponseDto);
         SignInRequestDto requestDto = model.ToRequestDto();
 
         // Validate data from the request.
@@ -55,13 +59,7 @@ public class AuthenticationController : Controller
         try
         {
             await _authenticationService.SignInAsync(requestDto);
-
-            GeneralSettingsResponseDto generalSettingsResponseDto;
-            generalSettingsResponseDto = await _generalSettingsService.GetAsync();
-
-            model.GeneralSettings = new GeneralSettingsDetailModel(generalSettingsResponseDto);
-
-            return RedirectToRoute("ProtectedDashboard");
+            return RedirectToRoute(DashboardController.DashboardRouteName);
         }
         catch (OperationException exception)
         {
@@ -69,5 +67,13 @@ public class AuthenticationController : Controller
             model.Password = string.Empty;
             return View(model);
         }
+    }
+
+    [HttpPost("dang-xuat", Name = SignOutRouteName)]
+    [Authorize]
+    public new async Task<IActionResult> SignOut()
+    {
+        await _authenticationService.SignOutAsync();
+        return Ok();
     }
 }

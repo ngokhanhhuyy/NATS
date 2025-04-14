@@ -55,6 +55,11 @@ nav .navbar-nav .nav-item .nav-link {
     border-radius: 8px;
 }
 
+nav .navbar-nav .nav-item .nav-link.active {
+    background-color: var(--bs-success) !important;
+    color: var(--bs-white);
+}
+
 @media (max-width: 1200px) {
     nav {
         height: auto !important;

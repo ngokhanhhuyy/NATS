@@ -1,0 +1,22 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid flex-fill d-flex flex-column w-100">
+    <div class="body-container flex-fill">
+        @RenderBody()
+    </div>
+</div>
+
+
+@section PageTitle {
+    @await RenderSectionAsync("PageTitle", required: true)
+}
+
+@section Styles {
+    @await RenderSectionAsync("Styles", required: false)
+}
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

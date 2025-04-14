@@ -24,6 +24,8 @@
                 novalidate
                 class="bg-white p-3 w-100"
             >
+
+                @Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName)
                 <!-- UserName -->
                 <div class="form-group mb-3">
                     <div class="form-floating">
@@ -33,23 +35,19 @@
                         </label>
                     </div>
 
-                    <span class="is-invalid">
-                        @Html.ValidationMessageFor(m => m.UserName)
-                    </span>
+                    <span asp-validation-for="UserName"></span>
                 </div>
 
                 <!-- Password -->
                 <div class="form-group mb-3">
                     <div class="form-floating">
-                        <input asp-for="Password" type="text" placeholder="" />
+                        <input asp-for="Password" type="password" placeholder="" />
                         <label for="@Html.IdFor(m => m.Password)">
                             @Html.DisplayNameFor(m => m.Password)
                         </label>
                     </div>
 
-                    <span class="is-invalid">
-                        @Html.ValidationMessageFor(m => m.Password)
-                    </span>
+                    <span asp-validation-for="Password"></span>
                 </div>
 
                 <button type="submit" class="btn btn-success w-100">

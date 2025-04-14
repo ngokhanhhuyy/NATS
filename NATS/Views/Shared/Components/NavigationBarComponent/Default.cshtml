@@ -1,47 +1,87 @@
+@inject CssUniqueIdHelper IdGenerator
+@using Microsoft.AspNetCore.Components;
 @using NATS.Public.Controllers;
 @model NavigationBarViewModel
 @{
-    _currentControllerName = ViewContext.RouteData.Values["controller"]?.ToString();
-    _currentActionName = ViewContext.RouteData.Values["action"]?.ToString();
+    UniqueId = IdGenerator.GenerateId();
 }
 
 @functions {
-    string _currentControllerName;
-    string _currentActionName;
+    private string UniqueId { get; set; }
 
-    string ComputeNavBarItemClassName(string key)
+    private string CurrentControllerName
     {
-        string catalogItemControllerName = nameof(CatalogItemController)
-            .Replace("Controller", "");
-        if (_currentControllerName == catalogItemControllerName &&
-            _currentActionName.Replace("List", "").Replace("Detail", "") == key)
+        get => ViewContext.RouteData.Values["controller"]?.ToString();
+    }
+
+    private string CurrentActionName => ViewContext.RouteData.Values["action"]?.ToString();
+
+    private string ClassName
+    {
+        get
+        {
+            if (!Context.Request.Path.StartsWithSegments("/quan-tri")) {
+                return "shadow";
+            }
+
+            return "border-bottom border-success-subtle";
+        }
+    }
+
+    private List<(string, string, string)> Items
+    {
+        get
+        {
+            string currentPath = Context.Request.Path;
+            if (currentPath.StartsWith("/quan-tri"))
+            {
+                return new List<(string, string, string)>
+                {
+                    (Url.GetProtectedDashboardRoutePath(), "Dashboard", "Bảng điều khiển"),
+                };
+            }
+
+            return new List<(string, string, string)>
+            {
+                (Url.GetPublicSummaryItemListRoutePath(), "SummaryItem", "Giới thiệu"),
+                (
+                    Url.GetPublicAboutUsIntroductionRoutePath(),
+                    "AboutUsIntroduction",
+                    "Về chúng tôi"
+                ),
+                (Url.GetPublicServiceListRoutePath(), "Services", "Dịch vụ"),
+                (Url.GetPublicCourseListRoutePath(), "Course", "Khoá học"),
+                (Url.GetPublicEnquiryRoutePath(), "Contact", "Liên hệ")
+            };
+        }
+    }
+
+    private string ComputeNavBarItemClassName(string key)
+    {
+        string catalogItemControllerName;
+        catalogItemControllerName = nameof(CatalogItemController).Replace("Controller", "");
+        if (CurrentControllerName == catalogItemControllerName &&
+            CurrentActionName.Replace("List", "").Replace("Detail", "") == key)
         {
             return "active";
         }
 
-        if (_currentControllerName == key)
+        if (CurrentControllerName == key)
         {
             return "active";
         }
 
         return string.Empty;
     }
-
-    Task RenderLink(string url, string key, string text)
-    {
-        <li class="nav-item">
-            <a href="@url" class="nav-link @ComputeNavBarItemClassName(key)">
-                @text
-            </a>
-        </li>
-        
-        return Task.CompletedTask;
-    }
 }
 
-@if (_currentControllerName != "Authentication")
+@if (CurrentControllerName != "Authentication")
 {
-    <nav class="navbar navbar-expand-xl fixed-top shadow fs-5" id="navbar" data-bs-theme="light">
+    <nav
+        class="navbar navbar-expand-xl fixed-top fs-5 @ClassName"
+        id="navbar"
+        data-bs-theme="light"
+    >
         <div class="container">
             <!-- Main logo -->
             <a
@@ -89,65 +129,107 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end w-100">
                         <!-- Home -->
-                        @{
-                            await RenderLink(
-                                Url.GetPublicHomeRoutePath(),
-                                "Home",
-                                "Trang chủ");
-                        }
+                        <li class="nav-item">
+                            <a
+                                href="@Url.GetPublicHomeRoutePath()"
+                                class="nav-link @ComputeNavBarItemClassName("Home")"
+                            >
+                                Trang chủ
+                            </a>
+                        </li>
 
-                        <!-- SummaryItem -->
-                        @{
-                            await RenderLink(
-                                Url.GetPublicSummaryItemListRoutePath(),
-                                "SummaryItem",
-                                "Giới thiệu");
-                        }
-                        
-                        <!-- AboutUsIntroduction -->
-                        @{
-                            await RenderLink(
-                                Url.GetPublicAboutUsIntroductionRoutePath(),
-                                "AboutUsIntroduction",
-                                "Về chúng tôi");
-                        }
-                        
-                        <!-- CatalogItem - Services -->
-                        @{
-                            await RenderLink(
-                                Url.GetPublicServiceListRoutePath(),
-                                "Services",
-                                "Dịch vụ");
-                        }
-                        
-                        <!-- CatalogItem - Course -->
-                        @{
-                            await RenderLink(Url.GetPublicCourseListRoutePath(),
-                                "Course",
-                                "Khoá học");
-                        }
-                        
-                        @* <!-- CatalogItem - Product --> *@
-                        @* <li class="nav-item"> *@
-                        @*     <a *@
-                        @*         asp-area="FrontPages" *@
-                        @*         asp-controller="CatalogItem" *@
-                        @*         asp-action="ProductList" *@
-                        @*         class="nav-link @ComputeNavBarItemClassName("Product")" *@
-                        @*     > *@
-                        @*         Sản phẩm *@
-                        @*     </a> *@
-                        @* </li> *@
-                        
-                        <!-- Enquiry -->
-                        @{
-                            await RenderLink(Url.GetPublicEnquiryRoutePath(),
-                                "Contact",
-                                "Liên hệ");
+                        @for (int index = 0; index < Items.Count; index++)
+                        {
+                            (string Url, string Key, string Text) item;
+                            item = Items[index];
+
+                            <li class="nav-item">
+                                <a
+                                    href="@item.Url"
+                                    class="nav-link @ComputeNavBarItemClassName(item.Key)"
+                                >
+                                    @item.Text
+                                </a>
+                            </li>
                         }
                     </ul>
                 </div>
             </div>
         </div>
     </nav>
+    <style>
+        nav[data] {
+            --navbar-logo-img-filter:
+                brightness(0)
+                saturate(100%)
+                invert(39%)
+                sepia(90%)
+                saturate(393%)
+                hue-rotate(100deg)
+                brightness(88%)
+                contrast(89%);
+            --navbar-transition-duration: 0.3s;
+            --navbar-background-color: var(--bs-white);
+            --navbar-foreground-color: var(--bs-success);
+            background: var(--navbar-background-color);
+            height: var(--navbar-height);
+            transition: background-color var(--navbar-transition-duration) ease;
+        }
+
+        nav img {
+            width: auto;
+            height: calc(var(--navbar-height) - 12px);
+            padding: 5px;
+            filter: var(--navbar-logo-img-filter);
+            transition: filter var(--navbar-transition-duration) ease;
+        }
+
+        nav .navbar-brand span.application-short-name {
+            font-family: Arial, serif;
+            color: var(--navbar-foreground-color);
+            transform: scaleX(110%);
+            transform-origin: 0;
+            transition: color var(--navbar-transition-duration) ease;
+        }
+
+        nav button#navbar-toggler-button {
+            color: var(--navbar-foreground-color) !important;
+            border-color: var(--navbar-foreground-color) !important;
+            transition: var(--navbar-transition-duration) ease !important;
+        }
+
+        nav button#navbar-toggler-button:hover {
+            background-color: var(--navbar-foreground-color) !important;
+            color: var(--navbar-background-color) !important;
+        }
+
+        nav ::deep .navbar-nav {
+            --bs-nav-link-color: var(--navbar-foreground-color) !important;
+            --bs-nav-link-hover-color: var(--navbar-foreground-color) !important;
+            --bs-navbar-active-color: var(--navbar-foreground-color) !important;
+        }
+
+        nav .navbar-nav .nav-item .nav-link {
+            margin-right: 15px;
+            padding: 3px 10px;
+            border-radius: 8px;
+        }
+
+        nav .navbar-nav .nav-item .nav-link.active {
+            background-color: var(--bs-success) !important;
+            color: var(--bs-white);
+        }
+
+        @@media (max-width: 1200px) {
+            nav {
+                height: auto !important;
+            }
+        }
+
+        @@media (max-width: 992px) {
+            nav .offcanvas {
+                max-width: 300px;
+            }
+        }
+    </style>
 }

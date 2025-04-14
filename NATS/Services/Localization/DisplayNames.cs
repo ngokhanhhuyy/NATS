@@ -65,6 +65,7 @@ public static class DisplayNames
     public const string Detail = "Chi tiết";
     public const string Index = "Thứ tự";
     public const string SliderItem = "Trình chiếu ảnh";
+    public const string SummaryItem = "Giới thiệu";
     public const string Post = "Bài viết";
     public const string PostCategory = "Chuyên mục bài viết";
     public const string CreatedDateTime = "Tạo vào lúc";
