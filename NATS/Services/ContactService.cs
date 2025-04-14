@@ -6,6 +6,7 @@ public class ContactService
             AbstractUpsertableService<Contact, ContactUpsertRequestDto>,
             IContactService
 {
+    private List<ContactResponseDto> _responseDtos;
     
     public ContactService(DatabaseContext context) : base(context)
     {
@@ -14,9 +15,11 @@ public class ContactService
     /// <inheritdoc />
     public async Task<List<ContactResponseDto>> GetListAsync()
     {
-        return await Context.Contacts
+        _responseDtos ??=  await Context.Contacts
             .Select(contact => new ContactResponseDto(contact))
             .ToListAsync();
+
+        return _responseDtos;
     }
 
     /// <inheritdoc />

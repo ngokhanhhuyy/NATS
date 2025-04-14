@@ -16,4 +16,9 @@ public class SummaryItemDetailModel
         DetailContent = responseDto.DetailContent;
         ThumbnailUrl = responseDto.ThumbnailUrl;
     }
+
+    public string GetPublicDetailRouteName(IUrlHelper urlHelper)
+    {
+        return urlHelper.GetPublicSummaryItemListRoutePath(Id);
+    }
 }

@@ -1,0 +1,44 @@
+@using NATS.Public.Controllers
+@{
+    Layout = "_Layout";
+    _currentControllerName = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+@functions {
+    string _currentControllerName;
+
+    bool IsEnquiryController
+    {
+        get
+        {
+            string enquiryControllerName = nameof(EnquiryController).Replace("Controller", "");
+            return _currentControllerName == enquiryControllerName;
+        }
+    }
+}
+
+<div class="container-fluid bg-success-subtle text-white border-bottom border-success p-5">
+    <div class="container p-3">
+        <span class="fs-1">
+            @await RenderSectionAsync("Title", required: true)
+        </span>
+    </div>
+</div>
+
+@RenderBody()
+
+@if (!IsEnquiryController)
+{
+    <partial name="_EnquiryForm" model="new EnquiryViewModel()" />
+}
+
+@section PageTitle {
+    @await RenderSectionAsync("PageTitle", required: true)
+}
+
+@section Styles {
+    @await RenderSectionAsync("Styles", required: false)
+}
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

@@ -11,7 +11,7 @@ public class CatalogItemPhoto
     public string Url { get; set; }
 
     [Column("description")]
-    [StringLength(255)]
+    [StringLength(255)] 
     public string Description { get; set; }
 
     // Foreign keys

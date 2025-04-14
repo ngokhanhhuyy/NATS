@@ -54,7 +54,7 @@ public class CatalogItemController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Create(CatalogItemUpsertRequestDto requestDto)
+    public async Task<IActionResult> Create([FromBody] CatalogItemUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _upsertValidator.Validate(requestDto);
@@ -84,7 +84,9 @@ public class CatalogItemController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public async Task<IActionResult> Update(int id, CatalogItemUpsertRequestDto requestDto)
+    public async Task<IActionResult> Update(
+            int id,
+            [FromBody] CatalogItemUpsertRequestDto requestDto)
     {
         requestDto.TransformValues();
         ValidationResult validationResult = _upsertValidator.Validate(requestDto);

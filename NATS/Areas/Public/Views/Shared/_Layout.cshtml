@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- MainContent -->
+<main class="flex-fill h-100 fade-animation fade-animation-reverse">
+    @RenderBody()
+</main>
+
+<!-- Footer -->
+@await Component.InvokeAsync(typeof(NATS.Public.Components.FooterComponent))
+
+@section PageTitle {
+    @await RenderSectionAsync("PageTitle", required: true)
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/public/public.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+}
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

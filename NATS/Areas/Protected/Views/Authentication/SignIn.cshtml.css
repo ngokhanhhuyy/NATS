@@ -1,0 +1,32 @@
+.container-fluid {
+    background-color: var(--bs-success);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+.form-container {
+    background-color: var(--bs-white);
+    border: 1px solid var(--bs-success);
+    overflow: hidden;
+    width: 350px;
+}
+  
+.logo-container {
+    background: transparent;
+    width: 250px;
+    height: 250px;
+    padding: 3rem;
+    border: 5px solid var(--bs-success);
+    overflow: visible;
+    border-radius: 50%;
+    filter:
+        brightness(0)
+        saturate(100%)
+        invert(38%)
+        sepia(74%)
+        saturate(430%)
+        hue-rotate(100deg)
+        brightness(94%)
+        contrast(95%);
+}

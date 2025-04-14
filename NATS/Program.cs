@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using NATS.Helpers;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +94,7 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IEnquiryService, EnquiryService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<ITrafficService, TrafficService>();
+builder.Services.AddScoped<CssUniqueIdHelper>();
 
 WebApplication app = builder.Build();
 DataInitializer dataInitializer;

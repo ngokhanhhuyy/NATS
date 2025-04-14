@@ -15,9 +15,12 @@ public class CatalogItemUpsertRequestDto : IHasThumbnailUpsertRequestDto
         Summary = Summary.ToNullIfEmpty();
         Detail = Detail.ToNullIfEmpty();
 
-        foreach (CatalogItemUpsertPhotoRequestDto photo in Photos)
+        if (Photos != null)
         {
-            photo.TransformValues();
+            foreach (CatalogItemUpsertPhotoRequestDto photo in Photos)
+            {
+                photo.TransformValues();
+            }
         }
     }
 }

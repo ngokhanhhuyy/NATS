@@ -6,6 +6,8 @@ public class GeneralSettingsService
         AbstractUpsertableService<GeneralSettings, GeneralSettingsUpdateRequestDto>,
         IGeneralSettingsService
 {
+    private GeneralSettingsResponseDto _responseDto;
+    
     /// <inheritdoc />
     public GeneralSettingsService(DatabaseContext context) : base(context)
     {
@@ -14,9 +16,11 @@ public class GeneralSettingsService
     /// <inheritdoc />
     public async Task<GeneralSettingsResponseDto> GetAsync()
     {
-        return await Context.GeneralSettings
+        _responseDto ??= await Context.GeneralSettings
             .Select(gs => new GeneralSettingsResponseDto(gs))
             .SingleAsync();
+
+        return _responseDto;
     }
 
     /// <inheritdoc />

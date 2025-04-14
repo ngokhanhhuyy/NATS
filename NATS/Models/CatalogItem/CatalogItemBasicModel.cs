@@ -16,4 +16,17 @@ public class CatalogItemBasicModel
         Summary = responseDto.Summary;
         ThumbnailUrl = responseDto.ThumbnailUrl;
     }
+
+    public string GetPublicDetailRoutePath(IUrlHelper urlHelper)
+    {
+        switch (Type)
+        {
+            case CatalogItemType.Service:
+                return urlHelper.GetPublicServiceDetailRoutePath(Id);
+            case CatalogItemType.Course:
+                return urlHelper.GetPublicCourseDetailRoutePath(Id);
+            default:
+                throw new NotImplementedException();
+        }
+    }
 }

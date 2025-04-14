@@ -24,6 +24,7 @@ public class CatalogItem : IHasThumbnailEntity
     public string Detail { get; set; }
 
     [Column("thumbnail_url")]
+    [StringLength(255)]
     public string ThumbnailUrl { get; set; }
 
     // Navigation property

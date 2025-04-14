@@ -1,0 +1,153 @@
+@using NATS.Public.Controllers;
+@model NavigationBarViewModel
+@{
+    _currentControllerName = ViewContext.RouteData.Values["controller"]?.ToString();
+    _currentActionName = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+@functions {
+    string _currentControllerName;
+    string _currentActionName;
+
+    string ComputeNavBarItemClassName(string key)
+    {
+        string catalogItemControllerName = nameof(CatalogItemController)
+            .Replace("Controller", "");
+        if (_currentControllerName == catalogItemControllerName &&
+            _currentActionName.Replace("List", "").Replace("Detail", "") == key)
+        {
+            return "active";
+        }
+
+        if (_currentControllerName == key)
+        {
+            return "active";
+        }
+
+        return string.Empty;
+    }
+
+    Task RenderLink(string url, string key, string text)
+    {
+        <li class="nav-item">
+            <a href="@url" class="nav-link @ComputeNavBarItemClassName(key)">
+                @text
+            </a>
+        </li>
+        
+        return Task.CompletedTask;
+    }
+}
+
+@if (_currentControllerName != "Authentication")
+{
+    <nav class="navbar navbar-expand-xl fixed-top shadow fs-5" id="navbar" data-bs-theme="light">
+        <div class="container">
+            <!-- Main logo -->
+            <a
+                href="@Url.GetPublicHomeRoutePath()"
+                class="navbar-brand d-flex align-items-center"
+            >
+                <img
+                    src="/images/main-logo-transparent-white-without-text-small.png"
+                    class="me-2 flex-shrink-0"
+                    alt="@Model.GeneralSettings.ApplicationName"
+                />
+                <span class="fs-2 application-short-name">
+                    @Model.GeneralSettings.ApplicationShortName
+                </span>
+            </a>
+            
+            <button
+                class="navbar-toggler fs-3 me-2 py-2"
+                id="navbar-toggler-button"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#navbar-content"
+                aria-controls="navbar-content"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <i class="bi bi-list"></i>
+            </button>
+            
+            <div
+                class="offcanvas offcanvas-end"
+                tabindex="-1"
+                id="navbar-content"
+                aria-labelledby="offcanvasNavbarLabel"
+            >
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Điều hướng</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="offcanvas"
+                        aria-label="Close">
+                    </button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end w-100">
+                        <!-- Home -->
+                        @{
+                            await RenderLink(
+                                Url.GetPublicHomeRoutePath(),
+                                "Home",
+                                "Trang chủ");
+                        }
+
+                        <!-- SummaryItem -->
+                        @{
+                            await RenderLink(
+                                Url.GetPublicSummaryItemListRoutePath(),
+                                "SummaryItem",
+                                "Giới thiệu");
+                        }
+                        
+                        <!-- AboutUsIntroduction -->
+                        @{
+                            await RenderLink(
+                                Url.GetPublicAboutUsIntroductionRoutePath(),
+                                "AboutUsIntroduction",
+                                "Về chúng tôi");
+                        }
+                        
+                        <!-- CatalogItem - Services -->
+                        @{
+                            await RenderLink(
+                                Url.GetPublicServiceListRoutePath(),
+                                "Services",
+                                "Dịch vụ");
+                        }
+                        
+                        <!-- CatalogItem - Course -->
+                        @{
+                            await RenderLink(Url.GetPublicCourseListRoutePath(),
+                                "Course",
+                                "Khoá học");
+                        }
+                        
+                        @* <!-- CatalogItem - Product --> *@
+                        @* <li class="nav-item"> *@
+                        @*     <a *@
+                        @*         asp-area="FrontPages" *@
+                        @*         asp-controller="CatalogItem" *@
+                        @*         asp-action="ProductList" *@
+                        @*         class="nav-link @ComputeNavBarItemClassName("Product")" *@
+                        @*     > *@
+                        @*         Sản phẩm *@
+                        @*     </a> *@
+                        @* </li> *@
+                        
+                        <!-- Enquiry -->
+                        @{
+                            await RenderLink(Url.GetPublicEnquiryRoutePath(),
+                                "Contact",
+                                "Liên hệ");
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+}

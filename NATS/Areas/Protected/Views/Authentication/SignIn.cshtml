@@ -1,0 +1,65 @@
+@model SignInViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid flex-fill">
+    <div class="row w-100 justify-content-center align-items-center">
+        <div class="col col-sm-auto col-12 p-0 m-sm-4 m-0 rounded-4 shadow form-container">
+            <!-- Header -->
+            <div class="d-flex justify-content-center align-items-center p-4 pb-2">
+                <div class="logo-container">
+                    <img
+                        src="/images/main-logo-transparent-white.png"
+                        alt="@Model.GeneralSettings.ApplicationName"
+                        class="logo w-100 h-100"
+                    />
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form
+                action="@Url.GetSignInRoutePath()"
+                method="post"
+                novalidate
+                class="bg-white p-3 w-100"
+            >
+                <!-- UserName -->
+                <div class="form-group mb-3">
+                    <div class="form-floating">
+                        <input asp-for="UserName" type="text" placeholder="" />
+                        <label for="@Html.IdFor(m => m.UserName)">
+                            @Html.DisplayNameFor(m => m.UserName)
+                        </label>
+                    </div>
+
+                    <span class="is-invalid">
+                        @Html.ValidationMessageFor(m => m.UserName)
+                    </span>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group mb-3">
+                    <div class="form-floating">
+                        <input asp-for="Password" type="text" placeholder="" />
+                        <label for="@Html.IdFor(m => m.Password)">
+                            @Html.DisplayNameFor(m => m.Password)
+                        </label>
+                    </div>
+
+                    <span class="is-invalid">
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </span>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">
+                    Đăng nhập
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Đăng nhập
+}
