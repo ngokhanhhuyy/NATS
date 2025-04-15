@@ -9,6 +9,7 @@ public class DashboardController : Controller
 {
     private readonly ITrafficService _trafficService;
 
+    [System.Diagnostics.CodeAnalysis.NotNull]
     public const string DashboardRouteName = "ProtectedDashboard";
 
     public DashboardController(ITrafficService trafficService)

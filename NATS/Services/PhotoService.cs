@@ -23,7 +23,7 @@ public class PhotoService : IPhotoService
         }
 
         // Determine the path where the image would be saved.
-        string path = Path.Combine(_environment.WebRootPath, "images", "data");
+        string path = Path.Combine(_environment.WebRootPath, "images", "upload");
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
@@ -33,7 +33,7 @@ public class PhotoService : IPhotoService
             .ToString("HH_mm_ss_fff__dd_MM_yyyy") + Guid.NewGuid() + ".jpg";
         string filePath = Path.Combine(path, fileName);
         await image.WriteAsync(filePath);
-        return "/" + Path.Combine("images", "data", fileName);
+        return "/" + Path.Combine("images", "upload", fileName);
     }
 
     /// <inheritdoc />

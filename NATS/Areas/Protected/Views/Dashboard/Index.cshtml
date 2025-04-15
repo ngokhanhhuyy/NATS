@@ -1,8 +1,72 @@
-@{
-    Layout = "_Layout";
+@functions {
+    private List<(string, string)> Items => new List<(string, string)>
+    {
+        (
+            Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName),
+            "Trình chiếu ảnh"
+        ),
+        (
+            Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName),
+            "Giới thiệu"
+        ),
+        (
+            Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName),
+            "Về chúng tôi"
+        ),
+        (
+            Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName),
+            "Đội ngũ"
+        ),
+        (
+            Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName),
+            "Chứng chỉ"
+        ),
+        (
+            Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName),
+            "Liên hệ"
+        ),
+        (
+            Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName),
+            "Câu hỏi"
+        ),
+        (
+            Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName),
+            "Dịch vụ"
+        ),
+        (
+            Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName),
+            "Khoá học"
+        ),
+    };
 }
 
-<h1>Dashboard</h1>
+<div class="row g-3">
+    <div class="col col-12">
+        <div class="d-flex flex-column filter-shadow-sm">
+            <div class="bg-success-subtle border border-success rounded-top-3 p-2 px-3">
+                <span class="small fw-bold text-success">LƯỢT TRUY CẬP</span>
+            </div>
+            <div
+                class="flex-fill border border-top-0 border-success-subtle bg-white
+                        rounded-bottom-3 d-flex justify-content-center align-items-center"
+                style="min-height: 500px"
+            >
+                <h2 class="fw-bold opacity-25">
+                    BIỂU ĐỒ
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    @foreach ((string Url, string DisplayName) item in Items)
+    {
+        <div class="col col-lg-3 col-md-4 col-6">
+            <a href="@item.Url" class="btn btn-outline-success w-100 filter-shadow-sm">
+                <span class="small fw-bold">@item.DisplayName.ToUpper()</span>
+            </a>
+        </div>
+    }
+</div>
 
 @section PageTitle {
     Bảng điều khiển

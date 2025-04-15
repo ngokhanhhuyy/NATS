@@ -9,6 +9,7 @@
     align-items: center;
     justify-content: stretch;
     padding: 0;
+    margin-top: var(--navbar-height);
 }
 
 .body-container {

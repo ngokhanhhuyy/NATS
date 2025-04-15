@@ -70,6 +70,7 @@ public static class UrlHelperExtensions
 
     public static string GetProtectedDashboardRoutePath(this IUrlHelper urlHelper)
     {
-        return urlHelper.GetPublicHomeRoutePath();
+        string routeName = Protected.Controllers.DashboardController.DashboardRouteName;
+        return urlHelper.RouteUrl(routeName);
     }
 }

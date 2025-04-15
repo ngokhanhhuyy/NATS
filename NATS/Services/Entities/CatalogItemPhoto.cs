@@ -21,4 +21,4 @@ public class CatalogItemPhoto
 
     // Navigation property
     public virtual CatalogItem Item { get; set; }
-}
+} 

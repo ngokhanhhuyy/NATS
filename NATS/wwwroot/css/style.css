@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 :root {
-    --bs-body-font-family: 
+    --bs-body-font-family:
         Roboto,
         -apple-system,
         BlinkMacSystemFont,
@@ -15,15 +15,18 @@
         sans-serif !important;
     --bs-body-font-size: 1.2rem !important;
     --navbar-height: 60px;
+    --filter-shadow-sm: drop-shadow(var(--bs-box-shadow-sm));
+    --filter-shadow: drop-shadow(var(--bs-box-shadow));
+    --filter-shadow-lg: drop-shadow(var(--bs-box-shadow-lg));
 }
 
-html, body {
+html,
+body {
     max-width: 100%;
     overflow-x: hidden;
 }
 
-body {
-    min-height: 100vh;
+html {
     scrollbar-gutter: stable;
 }
 
@@ -49,18 +52,19 @@ select:not(.is-invalid):not(.is-valid):focus {
 input:not([type="checkbox"]):is(.is-invalid),
 textarea:is(.is-invalid),
 select:is(.is-invalid) {
-    color: var(--bs-danger-text-emphasis) !important;  
+    color: var(--bs-danger-text-emphasis) !important;
     background-color: rgba(var(--bs-danger-rgb), 0.1) !important;
 }
 
 input:not([type="checkbox"]):is(.is-valid),
 textarea:is(.is-valid),
 select:is(.is-valid) {
-    color: var(--bs-success-text-emphasis) !important;  
+    color: var(--bs-success-text-emphasis) !important;
     background-color: rgba(var(--bs-success-rgb), 0.1) !important;
 }
 
-input[type="checkbox"], select {
+input[type="checkbox"],
+select {
     cursor: pointer;
 }
 
@@ -86,7 +90,8 @@ select:is(.is-valid)::placeholder {
     --bs-body-bg: transparent;
 }
 
-.form-floating label.required::after, .form-floating.required label::after {
+.form-floating label.required::after,
+.form-floating.required label::after {
     content: "*";
     color: red;
     margin-left: 5px;
@@ -98,30 +103,40 @@ select:is(.is-valid)::placeholder {
 /*  padding-bottom: calc(var(--bs-gutter-y) / 2);*/
 /*}*/
 
+.filter-shadow-sm {
+    filter: var(--filter-shadow-sm);
+}
+
+.filter-shadow {
+    filter: var(--filter-shadow);
+}
+
+.filter.shadow-lg {
+    filter: var(--filter-shadow-lg);
+}
+
 .fade-animation {
-  animation-name: fade;
-  animation-duration: 0.25s;
-  animation-timing-function: ease;
+    animation-name: fade;
+    animation-duration: 0.25s;
+    animation-timing-function: ease;
 }
 
 .fade-animation-reverse {
-  animation-direction: reverse;
+    animation-direction: reverse;
 }
 
 main {
     margin-top: var(--navbar-height);
 }
 
-
-
 @keyframes fade {
-  from {
-    opacity: 100%;
-  }
+    from {
+        opacity: 100%;
+    }
 
-  to {
-    opacity: 0;
-  }
+    to {
+        opacity: 0;
+    }
 }
 
 [v-cloak] {

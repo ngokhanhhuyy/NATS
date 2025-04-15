@@ -16,6 +16,10 @@ nav {
     transition: background-color var(--navbar-transition-duration) ease;
 }
 
+nav > .container-fluid {
+    max-width: 1200px;
+}
+
 nav img {
     width: auto;
     height: calc(var(--navbar-height) - 12px);
@@ -58,12 +62,6 @@ nav .navbar-nav .nav-item .nav-link {
 nav .navbar-nav .nav-item .nav-link.active {
     background-color: var(--bs-success) !important;
     color: var(--bs-white);
-}
-
-@media (max-width: 1200px) {
-    nav {
-        height: auto !important;
-    }
 }
 
 @media (max-width: 992px) {
