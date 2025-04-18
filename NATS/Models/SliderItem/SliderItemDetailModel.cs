@@ -14,4 +14,10 @@ public class SliderItemDetailModel
         Index = responseDto.Index;
         ThumbnailUrl = responseDto.ThumbnailUrl;
     }
+
+    public string GetUpdateRoutePath(IUrlHelper urlHelper)
+    {
+        string routeName = Protected.Controllers.SliderItemController.UpdateRouteName;
+        return urlHelper.RouteUrl(routeName, new { id = Id });
+    }
 }

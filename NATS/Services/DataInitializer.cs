@@ -54,6 +54,7 @@ public sealed partial class DataInitializer
     {
         if (!_roleManager.Roles.Any())
         {
+            Console.WriteLine("Initializing Roles");
             List<Role> roles = new List<Role>
             {
                 new Role
@@ -95,6 +96,7 @@ public sealed partial class DataInitializer
     {
         if (!_userManager.Users.Any())
         {
+            Console.WriteLine("Initializing Users");
             Dictionary<User, (string Password, string RoleName)> users;
             users = new Dictionary<User, (string Password, string RoleName)>
             {
@@ -155,6 +157,8 @@ public sealed partial class DataInitializer
     {
         if (!_context.GeneralSettings.Any())
         {
+            Console.WriteLine("Initializing AboutUsIntroduction");
+            Console.WriteLine("Initializing GeneralSettings");
             GeneralSettings settings = new GeneralSettings
             {
                 ApplicationName = "Trung tâm Khoa học Đào tạo và Thẩm mỹ Quốc Gia",
@@ -237,6 +241,7 @@ public sealed partial class DataInitializer
     {
         if (!_context.Members.Any())
         {
+            Console.WriteLine("Initializing Members");
             Faker faker = new Faker("vi");
             List<Member> members = new List<Member>
             {
@@ -281,6 +286,7 @@ public sealed partial class DataInitializer
     {
         if (!_context.Certificates.Any())
         {
+            Console.WriteLine("Initializing Certificates");
             Certificate certificate = new Certificate
             {
                 Name = "Quyết định Thành lập",
@@ -296,6 +302,7 @@ public sealed partial class DataInitializer
     {
         if (!_context.SummaryItems.Any())
         {
+            Console.WriteLine("Initializing SummaryItems");
             List<SummaryItem> items = new List<SummaryItem>
             {
                 new SummaryItem
@@ -469,6 +476,7 @@ public sealed partial class DataInitializer
     {
         if (!_context.CatalogItems.Any(ci => ci.Type == CatalogItemType.Course))
         {
+            Console.WriteLine("Initializing CatalogItems - Courses");
             Faker faker = new Faker("vi");
             List<CatalogItem> courses = new List<CatalogItem>
             {
@@ -478,16 +486,6 @@ public sealed partial class DataInitializer
                     Summary = "Khóa học này tập trung vào việc chăm sóc và điều trị da, bao " +
                             "gồm các phương pháp làm sạch da, massage, và các liệu pháp " +
                             "chăm sóc da mặt chuyên sâu.",
-                    ThumbnailUrl = "/images/front-pages/courses/1.jpg",
-                    Photos = new List<CatalogItemPhoto>
-                    {
-                        new CatalogItemPhoto { Url = "/images/front-pages/courses/1_1.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/courses/1_2.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/courses/1_3.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/courses/1_4.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/courses/1_5.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/courses/1_6.jpg" },
-                    } 
                 },
                 new CatalogItem
                 {
@@ -495,13 +493,6 @@ public sealed partial class DataInitializer
                     Summary = "Chương trình này cung cấp các kỹ năng cần thiết về trang " +
                             "điểm từ cơ bản đến nâng cao, giúp học viên trở thành chuyên " +
                             "gia trang điểm chuyên nghiệp.",
-                    ThumbnailUrl = "/images/front-pages/courses/2.jpg",
-                    Photos = new List<CatalogItemPhoto>
-                    {
-                        new CatalogItemPhoto { Url = "/images/front-pages/courses/2_1.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/courses/2_2.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/courses/2_3.jpg" }
-                    } 
                 },
                 new CatalogItem
                 {
@@ -509,11 +500,6 @@ public sealed partial class DataInitializer
                     Summary = "Dành cho những ai muốn trở thành nhà tạo mẫu tóc chuyên " +
                             "nghiệp, chương trình này bao gồm cắt, nhuộm, tạo kiểu tóc và " +
                             "các kỹ thuật làm tóc khác.",
-                    ThumbnailUrl = "/images/front-pages/courses/3.jpg",
-                    Photos = new List<CatalogItemPhoto>
-                    {
-                        new CatalogItemPhoto { Url = "/images/front-pages/courses/3_1.jpg" },
-                    } 
                 },
                 new CatalogItem
                 {
@@ -521,7 +507,6 @@ public sealed partial class DataInitializer
                     Summary = "Cung cấp kiến thức và kỹ năng từ cơ bản đến nâng cao trong " +
                             "lĩnh vực làm nail, bao gồm vẽ nail, phủ gel, và thiết kế nail " +
                             "nghệ thuật.",
-                    ThumbnailUrl = "/images/front-pages/courses/4.jpg",
                 },
             };
 
@@ -548,6 +533,7 @@ public sealed partial class DataInitializer
     {
         if (!_context.CatalogItems.Any(ci => ci.Type == CatalogItemType.Service))
         {
+            Console.WriteLine("Initializing CatalogItems - Services");
             Faker faker = new Faker("vi");
             List<CatalogItem> services = new List<CatalogItem>
             {
@@ -626,10 +612,10 @@ public sealed partial class DataInitializer
     {
         if (!_context.SliderItems.Any())
         {
+            Console.WriteLine("Initializing SliderItems");
             string[] photoUrls = new string[]
             {
                 "/images/front-pages/slider-items/1.jpg",
-                "/images/front-pages/slider-items/2.jpg",
                 "/images/front-pages/slider-items/3.jpg"
             };
 
@@ -653,6 +639,7 @@ public sealed partial class DataInitializer
         // Initialize posts.
         if (!_context.Posts.Any())
         {
+            Console.WriteLine("Initializing Posts");
             Faker faker = new Faker("vi");
             Random random = new Random();
             for (int i = 0; i < 30; i++)
@@ -697,6 +684,7 @@ public sealed partial class DataInitializer
     {
         if (!_context.Contacts.Any())
         {
+            Console.WriteLine("Initializing Contacts");
             List<Contact> contacts = new List<Contact>
             {
                 new Contact

@@ -1,0 +1,13 @@
+<div class="block d-flex flex-column filter-shadow-sm">
+    <div class="block-header @await RenderSectionAsync("BlockHeaderClass", false)">
+        <span class="fw-bold small text-success h-auto pt-1">
+            @await RenderSectionAsync("BlockTitle", false)
+        </span>
+
+        @await RenderSectionAsync("BlockHeader", false)
+    </div>
+
+    <div class="block-body flex-fill @await RenderSectionAsync("BlockBodyClass", false)">
+        @RenderBody()
+    </div>
+</div>

@@ -2,7 +2,7 @@
     private List<(string, string)> Items => new List<(string, string)>
     {
         (
-            Url.RouteUrl(NATS.Protected.Controllers.DashboardController.DashboardRouteName),
+            Url.RouteUrl(NATS.Protected.Controllers.SliderItemController.ListRouteName),
             "Trình chiếu ảnh"
         ),
         (
@@ -43,12 +43,12 @@
 <div class="row g-3">
     <div class="col col-12">
         <div class="d-flex flex-column filter-shadow-sm">
-            <div class="bg-success-subtle border border-success rounded-top-3 p-2 px-3">
+            <div class="bg-success-subtle border border-success-subtle rounded-top-3 p-2 px-3">
                 <span class="small fw-bold text-success">LƯỢT TRUY CẬP</span>
             </div>
             <div
-                class="flex-fill border border-top-0 border-success-subtle bg-white
-                        rounded-bottom-3 d-flex justify-content-center align-items-center"
+                class="flex-fill border border-top-0 bg-white rounded-bottom-3
+                        d-flex justify-content-center align-items-center"
                 style="min-height: 500px"
             >
                 <h2 class="fw-bold opacity-25">

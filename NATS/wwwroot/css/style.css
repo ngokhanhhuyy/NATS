@@ -13,8 +13,8 @@
         "Droid Sans",
         "Helvetica Neue",
         sans-serif !important;
-    --bs-body-font-size: 1.2rem !important;
-    --navbar-height: 60px;
+    --bs-body-font-size: 1.0rem !important;
+    --navbar-height: 50px;
     --filter-shadow-sm: drop-shadow(var(--bs-box-shadow-sm));
     --filter-shadow: drop-shadow(var(--bs-box-shadow));
     --filter-shadow-lg: drop-shadow(var(--bs-box-shadow-lg));

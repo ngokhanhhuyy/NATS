@@ -1,0 +1,46 @@
+@model SliderItemUpsertViewModel
+@functions {
+    private string BlockTitle
+    {
+        get
+        {
+            if (Model.IsForCreating)
+            {
+                return "Tạo ảnh trình chiếu mới".ToUpper();
+            }
+
+            return "Chỉnh sửa ảnh trình chiếu".ToUpper();
+        }
+    }
+}
+
+<div class="row g-3">
+    <div class="col col-12">
+        <div class="block">
+            <div class="block-header">
+                <div class="block-title">
+                    @BlockTitle
+                </div>
+            </div>
+            <div class="block-body p-3 pt-2">
+                <div class="row g-3">
+                    <div class="col col-12 form-group">
+                        <label for="@Html.IdFor(m => m.Title)" class="fw-bold small opacity-75">
+                            @Html.DisplayNameFor(m => m.Title)
+                        </label>
+
+                        <input
+                            asp-for="Title" 
+                            type="text"
+                            placeholder="@Html.DisplayNameFor(m => m.Title)" />
+                        <span asp-validation-for="Title"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    @BlockTitle
+}

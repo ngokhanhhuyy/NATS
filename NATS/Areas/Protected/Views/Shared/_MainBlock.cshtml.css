@@ -1,0 +1,20 @@
+.block-header {
+    background-color: rgba(var(--bs-success-rgb), 0.1);
+    border: 1px solid rgba(var(--bs-success-rgb), 0.25);
+    border-top-left-radius: var(--bs-border-radius-lg);
+    border-top-right-radius: var(--bs-border-radius-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 45px;
+    padding: .5rem;
+    padding-left: .75rem;
+}
+
+.block-body {
+    background-color: white;
+    border: 1px solid rgba(var(--bs-success-rgb), 0.25);
+    border-top-width: 0;
+    border-bottom-left-radius: var(--bs-border-radius-lg);
+    border-bottom-right-radius: var(--bs-border-radius-lg);
+}

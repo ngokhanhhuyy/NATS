@@ -1,0 +1,62 @@
+@model List<SliderItemDetailModel>
+
+<div class="row g-3">
+    <div class="col col-12">
+        <div class="block">
+            <div class="block-header">
+                <span class="block-title">
+                    @("Trình chiếu ảnh trang chủ".ToUpper())
+                </span>
+                <a
+                    href="@Url.GetProtectedSliderItemCreateRoutePath()"
+                    class="btn btn-success btn-sm"
+                >
+                    <i class="bi bi-plus-lg"></i>
+                    <span class="d-sm-inline d-none">Tạo mới</span>
+                </a>
+            </div>
+
+            <div class="block-body">
+                <ul class="list-group list-group-flush">
+                    @for (int index = 0; index < Model.Count; index++)
+                    {
+                        SliderItemDetailModel item = Model[index];
+                        <li class="list-group-item d-flex">
+                            <!-- Thumbnail -->
+                            <a href="@item.GetUpdateRoutePath(Url)">
+                                <img
+                                    src="@item.ThumbnailUrl"
+                                    alt="Ảnh @item.Id"
+                                    class="img-thumbnail thumbnail"
+                                />
+                            </a>
+
+                            <!-- Name -->
+                            <div class="d-flex flex-column flex-fill mx-2">
+                                <a href="@item.GetUpdateRoutePath(Url)" class="fw-bold">
+                                    @(item.Title ?? $"Ảnh #{item.Id}")
+                                </a>
+
+                                <span class="small opacity-50">
+                                    Ảnh #@item.Id
+                                </span>
+                            </div>
+
+                            <a
+                                href="@item.GetUpdateRoutePath(Url)"
+                                class="btn btn-outline-success btn-sm"
+                            >
+                                <i class="bi bi-pencil-square"></i>
+                                <span class="ms-1 d-sm-inline d-none">Sửa</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section PageTitle {
+    Danh sách trình chiếu ảnh
+}

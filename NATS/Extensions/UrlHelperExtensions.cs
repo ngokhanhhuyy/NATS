@@ -73,4 +73,24 @@ public static class UrlHelperExtensions
         string routeName = Protected.Controllers.DashboardController.DashboardRouteName;
         return urlHelper.RouteUrl(routeName);
     }
+
+    public static string GetProtectedSliderItemListRoutePath(this IUrlHelper urlHelper)
+    {
+        string routeName = Protected.Controllers.SliderItemController.ListRouteName;
+        return urlHelper.RouteUrl(routeName);
+    }
+
+    public static string GetProtectedSliderItemCreateRoutePath(this IUrlHelper urlHelper)
+    {
+        string routeName = Protected.Controllers.SliderItemController.CreateRouteName;
+        return urlHelper.RouteUrl(routeName);
+    }
+
+    public static string GetProtectedSliderItemUpdateRoutePath(
+            this IUrlHelper urlHelper,
+            int id)
+    {
+        string routeName = Protected.Controllers.SliderItemController.UpdateRouteName;
+        return urlHelper.RouteUrl(routeName, new { id });
+    }
 }
