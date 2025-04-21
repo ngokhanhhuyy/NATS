@@ -12,9 +12,7 @@
             </div>
             
             <form
-                asp-area="FrontPages"
-                asp-controller="Enquiry"
-                asp-action="Create"
+                action="@Url.GetPublicEnquiryRoutePath()"
                 method="post"
                 class="bg-white rounded-4 shadow p-3 w-100
                         d-flex flex-column align-items-stretch"
