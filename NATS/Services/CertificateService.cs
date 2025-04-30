@@ -3,11 +3,10 @@ namespace NATS.Services;
 /// <inheritdoc cref="ICertificateService" />
 public class CertificateService
     :
-        AbstractHasThumbnailService<Certificate, CertificateUpsertRequestDto>,
+        AbstractUpsertableService<Certificate, CertificateUpsertRequestDto>,
         ICertificateService
 {
-    public CertificateService(DatabaseContext context, IPhotoService photoService)
-            : base(context, photoService)
+    public CertificateService(DatabaseContext context) : base(context)
     {
     }
 
@@ -38,7 +37,8 @@ public class CertificateService
     {
         Certificate certificate = new Certificate
         {
-            Name = requestDto.Name
+            Name = requestDto.Name,
+            ThumbnailUrl = requestDto.ThumbnailUrl
         };
 
         return await base.SaveCreatedEntityAsync(certificate, requestDto);
@@ -53,6 +53,9 @@ public class CertificateService
                 nameof(Certificate),
                 nameof(id),
                 id.ToString());
+
+        certificate.Name = requestDto.Name;
+        certificate.ThumbnailUrl = requestDto.ThumbnailUrl;
 
         await base.SaveUpdatedEntityAsync(certificate, requestDto);
     }

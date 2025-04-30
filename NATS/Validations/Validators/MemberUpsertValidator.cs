@@ -4,11 +4,6 @@ public class MemberUpsertValidator : Validator<MemberUpsertRequestDto>
 {
     public MemberUpsertValidator()
     {
-        RuleFor(dto => dto.ThumbnailFile)
-            .Must(IsValidImage)
-            .WithMessage(ErrorMessages.Invalid)
-            .When(dto => dto.ThumbnailChanged && dto.ThumbnailFile != null)
-            .WithName(DisplayNames.Photo);
         RuleFor(dto => dto.FullName)
             .NotEmpty()
             .MaximumLength(50)

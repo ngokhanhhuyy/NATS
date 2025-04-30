@@ -3,13 +3,10 @@ namespace NATS.Services;
 /// <inheritdoc cref="ISummaryItemService" />
 public class SummaryItemService
     :
-        AbstractHasThumbnailService<SummaryItem, SummaryItemUpdateRequestDto>,
+        AbstractUpsertableService<SummaryItem, SummaryItemUpdateRequestDto>,
         ISummaryItemService
 {
-
-    public SummaryItemService(
-            DatabaseContext context,
-            IPhotoService photoService) : base(context, photoService)
+    public SummaryItemService(DatabaseContext context) : base(context)
     {
     }
 
@@ -45,6 +42,7 @@ public class SummaryItemService
         item.Name = requestDto.Name;
         item.SummaryContent = requestDto.SummaryContent;
         item.DetailContent = requestDto.DetailContent;
+        item.ThumbnailUrl = requestDto.ThumbnailUrl;
 
         // Save changes.
         await base.SaveUpdatedEntityAsync(item, requestDto);

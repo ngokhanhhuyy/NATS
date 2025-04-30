@@ -86,7 +86,6 @@ builder.Services.AddScoped<IAboutUsIntroductionService, AboutUsIntroductionServi
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<ICertificateService, CertificateService>();
 builder.Services.AddScoped<ISummaryItemService, SummaryItemService>();
-builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<ISummaryItemService, SummaryItemService>();
 builder.Services.AddScoped<ICatalogItemService, CatalogItemService>();
 builder.Services.AddScoped<ISliderItemService, SliderItemService>();

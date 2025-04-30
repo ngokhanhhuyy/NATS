@@ -26,7 +26,4 @@ public class CatalogItem : IHasThumbnailEntity
     [Column("thumbnail_url")]
     [StringLength(255)]
     public string ThumbnailUrl { get; set; }
-
-    // Navigation property
-    public virtual List<CatalogItemPhoto> Photos { get; set; }
 }

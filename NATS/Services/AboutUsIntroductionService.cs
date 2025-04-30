@@ -3,14 +3,12 @@ namespace NATS.Services;
 /// <inheritdoc cref="IAboutUsIntroductionService" />
 public class AboutUsIntroductionService
         :
-            AbstractHasThumbnailService<
+            AbstractUpsertableService<
                 AboutUsIntroduction,
                 AboutUsIntroductionUpdateRequestDto>,
             IAboutUsIntroductionService
 {
-    public AboutUsIntroductionService(
-            DatabaseContext context,
-            IPhotoService photoService) : base(context, photoService)
+    public AboutUsIntroductionService(DatabaseContext context) : base(context)
     {
     }
 
@@ -29,6 +27,7 @@ public class AboutUsIntroductionService
         AboutUsIntroduction introduction = await Context.AboutUsIntroductions.SingleAsync();
 
         // Update the entity's properties.
+        introduction.ThumbnailUrl = requestDto.ThumbnailUrl;
         introduction.MainQuoteContent = requestDto.MainQuoteContent;
         introduction.AboutUsContent = requestDto.AboutUsContent;
         introduction.WhyChooseUsContent = requestDto.WhyChooseUsContent;

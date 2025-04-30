@@ -14,7 +14,6 @@ public class DatabaseContext
     public DbSet<SummaryItem> SummaryItems { get; set; }
     public DbSet<AboutUsIntroduction> AboutUsIntroductions { get; set; }
     public DbSet<CatalogItem> CatalogItems { get; set; }
-    public DbSet<CatalogItemPhoto> CatalogItemPhotos { get; set; }
     public DbSet<Member> Members { get; set; }
     public DbSet<Certificate> Certificates { get; set; }
     public DbSet<Enquiry> Enquiries { get; set; }
@@ -51,15 +50,6 @@ public class DatabaseContext
         builder.Entity<CatalogItem>(e => {
             e.ToTable("catalog_items");
             e.HasKey(bs => bs.Id);
-        });
-        builder.Entity<CatalogItemPhoto>(e =>
-        {
-            e.ToTable("catalog_item_photos");
-            e.HasKey(bsp => bsp.Id);
-            e.HasOne(bsp => bsp.Item)
-                .WithMany(bs => bs.Photos)
-                .HasForeignKey(bsp => bsp.ItemId)
-                .OnDelete(DeleteBehavior.Cascade);
         });
         builder.Entity<Member>(e =>
         {

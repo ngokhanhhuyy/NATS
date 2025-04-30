@@ -5,15 +5,14 @@ namespace NATS.Services;
 /// <inheritdoc cref="IPostService" />
 public partial class PostService
     : 
-        AbstractHasThumbnailService<Post, PostUpsertRequestDto>,
+        AbstractUpsertableService<Post, PostUpsertRequestDto>,
         IPostService
 {
     private readonly IAuthorizationService _authorizationService;
     
     public PostService(
             DatabaseContext context,
-            IPhotoService photoService,
-            IAuthorizationService authorizationService) : base(context, photoService)
+            IAuthorizationService authorizationService) : base(context)
     {
         _authorizationService = authorizationService;
     }
@@ -102,6 +101,7 @@ public partial class PostService
             Content = requestDto.Content,
             IsPinned = requestDto.IsPinned,
             IsPublished = requestDto.IsPublished,
+            ThumbnailUrl = requestDto.ThumbnailUrl,
             UserId = (await _authorizationService.GetCallerUserDetailAsync()).Id,
         };
 
@@ -130,6 +130,7 @@ public partial class PostService
         post.Content = requestDto.Content;
         post.IsPinned = requestDto.IsPinned;
         post.IsPublished = requestDto.IsPublished;
+        post.ThumbnailUrl = requestDto.ThumbnailUrl;
         post.UpdatedDateTime = DateTime.Now;
 
         // Save changes.

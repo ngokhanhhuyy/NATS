@@ -517,11 +517,6 @@ public sealed partial class DataInitializer
                                 faker.Lorem.Paragraph(8) + Environment.NewLine +
                                 faker.Lorem.Paragraph(10);
 
-                foreach (CatalogItemPhoto photo in course.Photos ?? [])
-                {
-                    photo.Description = faker.Lorem.Sentences(3);
-                }
-
                 _context.Add(course);
             }
 
@@ -544,15 +539,6 @@ public sealed partial class DataInitializer
                             "tự nhiên để thư giãn cơ bắp, giảm stress và cải thiện lưu " +
                             "thông máu.",
                     ThumbnailUrl = "/images/front-pages/services/1.jpg",
-                    Photos = new List<CatalogItemPhoto>
-                    {
-                        new CatalogItemPhoto { Url = "/images/front-pages/services/1_1.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/services/1_2.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/services/1_3.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/services/1_4.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/services/1_5.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/services/1_6.jpg" },
-                    } 
                 },
                 new CatalogItem
                 {
@@ -561,12 +547,6 @@ public sealed partial class DataInitializer
                             "tiến để giảm thiểu các dấu hiệu lão hóa, làm mờ nếp nhăn, và " +
                             "tái tạo làn da.",
                     ThumbnailUrl = "/images/front-pages/services/2.jpg",
-                    Photos = new List<CatalogItemPhoto>
-                    {
-                        new CatalogItemPhoto { Url = "/images/front-pages/services/2_1.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/services/2_2.jpg" },
-                        new CatalogItemPhoto { Url = "/images/front-pages/services/2_3.jpg" }
-                    } 
                 },
                 new CatalogItem
                 {
@@ -574,10 +554,6 @@ public sealed partial class DataInitializer
                     Summary = "Kết hợp giữa tắm hơi và sử dụng hỗn hợp tinh chất tự nhiên " +
                             "giúp làm sáng da, mờ vết thâm và cung cấp dưỡng chất.",
                     ThumbnailUrl = "/images/front-pages/services/3.jpg",
-                    Photos = new List<CatalogItemPhoto>
-                    {
-                        new CatalogItemPhoto { Url = "/images/front-pages/services/3_1.jpg" },
-                    } 
                 },
                 new CatalogItem
                 {
@@ -595,11 +571,6 @@ public sealed partial class DataInitializer
                 service.Detail = faker.Lorem.Paragraph(5) + Environment.NewLine +
                                 faker.Lorem.Paragraph(8) + Environment.NewLine +
                                 faker.Lorem.Paragraph(10);
-
-                foreach (CatalogItemPhoto photo in service.Photos ?? [])
-                {
-                    photo.Description = faker.Lorem.Sentences(3);
-                }
 
                 _context.CatalogItems.Add(service);
             }

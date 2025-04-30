@@ -12,9 +12,5 @@ public class PostValidator : Validator<PostUpsertRequestDto>
             .NotEmpty()
             .MaximumLength(10000)
             .WithName(DisplayNames.Content);
-        RuleFor(dto => dto.ThumbnailFile)
-            .Must(IsValidImage)
-            .When(dto => dto.ThumbnailFile != null)
-            .WithName(DisplayNames.ThumbnailFile);
     }
 }

@@ -3,13 +3,10 @@ namespace NATS.Services;
 /// <inheritdoc cref="IMemberService"/>
 public class MemberService
     :
-        AbstractHasThumbnailService<Member, MemberUpsertRequestDto>,
+        AbstractUpsertableService<Member, MemberUpsertRequestDto>,
         IMemberService
 {
-
-    public MemberService(
-            DatabaseContext context,
-            IPhotoService photoService) : base(context, photoService)
+    public MemberService(DatabaseContext context) : base(context)
     {
     }
 
@@ -40,7 +37,8 @@ public class MemberService
         {
             FullName = requestDto.FullName,
             RoleName = requestDto.RoleName,
-            Description = requestDto.Description
+            Description = requestDto.Description,
+            ThumbnailUrl = requestDto.ThumbnailUrl
         };
 
         return await base.SaveCreatedEntityAsync(member, requestDto);
@@ -58,6 +56,7 @@ public class MemberService
         member.FullName = requestDto.FullName;
         member.RoleName = requestDto.RoleName;
         member.Description = requestDto.Description;
+        member.ThumbnailUrl = requestDto.ThumbnailUrl;
 
         // Save changes.
         await base.SaveUpdatedEntityAsync(member, requestDto);

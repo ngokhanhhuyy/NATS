@@ -8,12 +8,6 @@ public class SliderItemUpsertViewModel
     [Display(Name = DisplayNames.Thumbnail)]
     public string ThumbnailUrl { get; set; }
 
-    [Display(Name = "Thay đổi ảnh")]
-    public IFormFile ThumbnailFile { get; set; }
-
-    [Display(Name = "Đã thay đổi")]
-    public bool ThumbnailChanged { get; set; }
-
     [Display(Name = "Trang tạo")]
     public bool IsForCreating { get; set; } = true;
 
@@ -24,21 +18,12 @@ public class SliderItemUpsertViewModel
         IsForCreating = false;
     }
 
-    public async Task<SliderItemUpsertRequestDto> ToRequestDtoAsync()
+    public SliderItemUpsertRequestDto ToRequestDto()
     {
-        byte[] thumbnailFile = null;
-        if (ThumbnailFile != null)
-        {
-            using MemoryStream stream = new MemoryStream();
-            await ThumbnailFile.CopyToAsync(stream);
-            thumbnailFile = stream.ToArray();
-        }
-        
         return new SliderItemUpsertRequestDto
         {
             Title = Title,
-            ThumbnailFile = thumbnailFile,
-            ThumbnailChanged = ThumbnailChanged
+            ThumbnailUrl = ThumbnailUrl
         };
     }
 }

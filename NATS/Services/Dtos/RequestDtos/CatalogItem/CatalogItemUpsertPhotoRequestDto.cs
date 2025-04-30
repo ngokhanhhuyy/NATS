@@ -3,7 +3,7 @@ namespace NATS.Services.Dtos.RequestDtos;
 public class CatalogItemUpsertPhotoRequestDto : IRequestDto
 {
     public int? Id { get; set; }
-    public byte[] File { get; set; }
+    public byte[] Url { get; set; }
     public string Description { get; set; }
     public bool IsDeleted { get; set; }
 

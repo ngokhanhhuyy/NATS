@@ -6,12 +6,12 @@ public class PostUpsertRequestDto : IHasThumbnailUpsertRequestDto
     public string Content { get; set; }
     public bool IsPinned { get; set; }
     public bool IsPublished { get; set; }
-    public bool ThumbnailChanged { get; set; }
-    public byte[] ThumbnailFile { get; set; }
+    public string ThumbnailUrl { get; set; }
 
     public void TransformValues()
     {
         Title = Title.ToNullIfEmpty();
         Content = Content.ToNullIfEmpty();
+        ThumbnailUrl = ThumbnailUrl.ToNullIfEmpty();
     }
 }

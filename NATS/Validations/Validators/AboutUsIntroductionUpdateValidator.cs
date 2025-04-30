@@ -5,11 +5,6 @@ public class AboutUsIntroductionUpdateValidator
 {
     public AboutUsIntroductionUpdateValidator()
     {
-        RuleFor(dto => dto.ThumbnailFile)
-            .Must(IsValidImage)
-            .WithMessage(ErrorMessages.Invalid)
-            .When(dto => dto.ThumbnailFile != null)
-            .WithName(DisplayNames.MainPhoto);
         RuleFor(dto => dto.MainQuoteContent)
             .NotEmpty()
             .MaximumLength(1000)

@@ -3,12 +3,10 @@ namespace NATS.Services;
 /// <inheritdoc cref="ISliderItemService"/>
 public class SliderItemService
         :
-            AbstractHasThumbnailService<SliderItem, SliderItemUpsertRequestDto>,
+            AbstractUpsertableService<SliderItem, SliderItemUpsertRequestDto>,
             ISliderItemService
 {
-    public SliderItemService(
-            DatabaseContext context,
-            IPhotoService photoService) : base(context, photoService)
+    public SliderItemService(DatabaseContext context) : base(context)
     {
     }
 
@@ -38,7 +36,8 @@ public class SliderItemService
         SliderItem sliderItem = new SliderItem
         {
             Title = requestDto.Title,
-            Index = (await Context.SliderItems.MaxAsync(i => i.Index)) + 1
+            Index = (await Context.SliderItems.MaxAsync(i => i.Index)) + 1,
+            ThumbnailUrl = requestDto.ThumbnailUrl
         };
 
         return await base.SaveCreatedEntityAsync(sliderItem, requestDto);
@@ -54,6 +53,7 @@ public class SliderItemService
 
         // Update properties.
         sliderItem.Title = requestDto.Title;
+        sliderItem.ThumbnailUrl = requestDto.ThumbnailUrl;
 
         // Save changes.
         await base.SaveUpdatedEntityAsync(sliderItem, requestDto);

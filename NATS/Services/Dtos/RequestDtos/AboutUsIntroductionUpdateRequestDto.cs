@@ -2,7 +2,7 @@ namespace NATS.Services.Dtos.RequestDtos;
 
 public class AboutUsIntroductionUpdateRequestDto : IHasThumbnailUpsertRequestDto
 {
-    public byte[] ThumbnailFile { get; set; }
+    public string ThumbnailUrl { get; set; }
     public bool ThumbnailChanged { get; set; }
     public string MainQuoteContent { get; set; }
     public string AboutUsContent { get; set; }

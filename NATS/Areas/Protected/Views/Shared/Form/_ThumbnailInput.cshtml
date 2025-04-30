@@ -1,0 +1,22 @@
+@model IHasThumbnailUpsertViewModel
+
+<div class="thumbnail-input-container">
+    <div class="click-area"></div>
+    <input type="file" class="d-none" accept="image/png, image/jpeg, image/jpg">
+    <input type="hidden"
+    <template v-if="">
+        
+    </template>
+</div>
+
+<script type="module">
+    import { createApp } from "vue";
+
+    createApp({
+        data() {
+            return {
+                thumbnailUrl: @Model.ThumbnailUrl
+            };
+        }
+    })
+</script>

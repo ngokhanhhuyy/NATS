@@ -1,0 +1,15 @@
+.thumbnail-input-container {
+    background-color: rgba(var(--bs-secondary-rgb), 0.1);
+    border: 1px solid rgba(var(--bs-secondary-rgb), 0.25);
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.click-area {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}

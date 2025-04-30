@@ -16,10 +16,5 @@ public class SummaryItemUpdateValidator : Validator<SummaryItemUpdateRequestDto>
             .NotEmpty()
             .MaximumLength(3000)
             .WithName(DisplayNames.Content);
-        RuleFor(dto => dto.ThumbnailFile)
-            .Must(IsValidImage)
-            .When(dto => dto.ThumbnailFile != null && dto.ThumbnailChanged)
-            .WithMessage(ErrorMessages.Invalid)
-            .WithName(DisplayNames.ThumbnailFile);
     }
 }

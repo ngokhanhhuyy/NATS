@@ -4,11 +4,11 @@ public class CertificateUpsertRequestDto : IHasThumbnailUpsertRequestDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public byte[] ThumbnailFile { get; set; }
-    public bool ThumbnailChanged { get; set; } = false;
+    public string ThumbnailUrl { get; set; }
 
     public void TransformValues()
     {
         Name = Name.ToNullIfEmpty();
+        ThumbnailUrl = ThumbnailUrl.ToNullIfEmpty();
     }
 }
