@@ -2,20 +2,81 @@
 @inject CssUniqueIdHelper CssUniqueId
 @model IHasThumbnailUpsertViewModel
 @{
+    string imgbbApiKey = Environment.GetEnvironmentVariable("IMGBB_API_KEY");
     string uniqueId = CssUniqueId.GenerateId();
+    string defaultImageUrl = "https://i.ibb.co/R4pCSvP3/default.jpg";
+}
+@functions {
+    private bool HasThumbnail => !string.IsNullOrWhiteSpace(Model.ThumbnailUrl);
+    private string ThumbnailPreviewClassName => !HasThumbnail ? "d-none" : "";
+    private string ThumbnailAddingIndicatorClassName => HasThumbnail ? "d-none" : "";
 }
 
 <div class="thumbnail-input-container" data-unique-id="@uniqueId">
-    <div class="click-area"></div>
+    <button type="button" class="click-area"></button>
     <input type="file" class="d-none" accept="image/png, image/jpeg, image/jpg">
     <input type="hidden">
-        
-    </template>
+    
+    <!-- Thumbnail Preview -->
+    <div class="thumbnail-preview @ThumbnailPreviewClassName">
+        <img src="@(Model.ThumbnailUrl ?? defaultImageUrl)" class="img-thumbnail" />
+        <button type="button" class="btn btn-danger rounded-circle delete-button">
+            +
+        </button>
+    </div>
+    
+    <!-- Thumbnail Adding Indicator -->
+    <div class="thumbnail-adding-indicator @ThumbnailAddingIndicatorClassName">
+        <span>Thêm ảnh</span>
+        <i class="bi bi-plus-lg"></i>
+    </div>
+    
+    <!-- Thumbnail Loading Indicator -->
+    <div class="thumbnail-loading-indicator d-none">
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span role="status">Đang xử lý ...</span>
+    </div>
+    
+    <!-- Validation Modal -->
+    <div
+        class="modal fade"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5"></h1>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body d-flex flex-column">
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Đã hiểu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script src="/js/protected/thumbnail_input.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const querySelector = `.thumbnail-input-element[data-unique-id=\"${@uniqueId}\"]`;
-        const clickAreaElement = document.querySelector(querySelector);
-    });
+document.addEventListener("DOMContentLoaded", () => {
+    const imgbbApiKey = "@imgbbApiKey";
+    const querySelector = ".thumbnail-input-container[data-unique-id=\"@uniqueId\"]";
+    createThumbnailInputController(imgbbApiKey, querySelector);
+});
 </script>

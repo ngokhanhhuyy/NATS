@@ -23,21 +23,29 @@
                 </div>
             </div>
             <div class="block-body p-3 pt-2">
-                <div class="row g-3">
-                    <div class="col col-12 form-group">
-                        <label
-                            for="@Html.IdFor(m => m.Title)"
-                            class="fw-bold small opacity-75"
-                        >
-                            @Html.DisplayNameFor(m => m.Title)
-                        </label>
+                <div class="form-group mb-3">
+                    <label for="@Html.IdFor(m => m.Title)" class="fw-bold small opacity-75">
+                        @Html.DisplayNameFor(m => m.Title)
+                    </label>
 
-                        <input
-                            asp-for="Title" 
-                            type="text"
-                            placeholder="@Html.DisplayNameFor(m => m.Title)" />
-                        <span asp-validation-for="Title"></span>
-                    </div>
+                    <input
+                        asp-for="Title" 
+                        type="text"
+                        placeholder="@Html.DisplayNameFor(m => m.Title)"
+                    />
+                    <span asp-validation-for="Title"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label
+                        for="@Html.IdFor(m => m.ThumbnailUrl)"
+                        class="fw-bold small opacity-75"
+                    >
+                        @Html.DisplayNameFor(m => m.ThumbnailUrl)
+                    </label>
+
+                    @await Html.PartialAsync("Form/_ThumbnailInput", model: Model)
+                    <span asp-validation-for="ThumbnailUrl"></span>
                 </div>
             </div>
         </div>

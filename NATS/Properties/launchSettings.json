@@ -4,7 +4,10 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:12343",
-      "sslPort": 44368
+      "sslPort": 44368,
+      "environmentVariables": {
+        "IMGBB_API_KEY": "5766dd450acc191f87589a57db07f429"
+      }
     }
   },
   "profiles": {
@@ -15,7 +18,8 @@
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH": "1"
+        "DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH": "1",
+        "IMGBB_API_KEY": "5766dd450acc191f87589a57db07f429"
       },
       "hotReloadEnabled": false
     },
@@ -26,7 +30,8 @@
       "applicationUrl": "https://localhost:7235;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH": "1"
+        "DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH": "1",
+        "IMGBB_API_KEY": "5766dd450acc191f87589a57db07f429"
       },
       "hotReloadEnabled": false
     },

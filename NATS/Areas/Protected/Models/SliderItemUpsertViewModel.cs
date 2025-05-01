@@ -1,6 +1,6 @@
 namespace NATS.Protected.Models;
 
-public class SliderItemUpsertViewModel
+public class SliderItemUpsertViewModel : IHasThumbnailUpsertViewModel
 {
     [Display(Name = DisplayNames.Title)]
     public string Title { get; set; }
