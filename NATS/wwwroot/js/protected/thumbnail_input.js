@@ -22,12 +22,9 @@
  */
 function createThumbnailInputController(imgbbApiKey, container) {
     const apiKey = imgbbApiKey;
-    let /** @type {HTMLDivElement} */ containerElement;
-    if (typeof container === "string") {
-        containerElement = document.querySelector(container);
-    } else {
-        containerElement = container;
-    }
+    const /** @type {HTMLDivElement} */ containerElement = typeof container === "string"
+        ? document.querySelector(container)
+        : container;
     
     /** @type {HTMLButtonElement} */
     const buttonElement = containerElement.querySelector(".click-area");
@@ -42,11 +39,11 @@ function createThumbnailInputController(imgbbApiKey, container) {
     const thumbnailPreviewElement = containerElement.querySelector(".thumbnail-preview");
     
     /** @type {HTMLDivElement} */
-    const thumbnailAddingIndicator = containerElement
+    const thumbnailAddingIndicatorElement = containerElement
         .querySelector(".thumbnail-adding-indicator");
     
     /** @type {HTMLDivElement} */
-    const thumbnailUploadingInidicator = containerElement
+    const thumbnailUploadingInidicatorElement = containerElement
         .querySelector(".thumbnail-loading-indicator");
             
     /** @type {HTMLImageElement} */
@@ -54,6 +51,18 @@ function createThumbnailInputController(imgbbApiKey, container) {
     
     /** @type {HTMLButtonElement} */
     const thumbnailClearButtonElement = thumbnailPreviewElement.querySelector("button");
+
+    /** @type {HTMLDivElement} */
+    const thumbnailAddingIndicatorTextElement = thumbnailAddingIndicatorElement
+        .querySelector(".adding-indicator-text");
+
+    /** @type {HTMLDivElement} */
+    const validationMessageContainerElement = thumbnailAddingIndicatorElement
+        .querySelector(".validation-message-container");
+
+    /** @type {HTMLSpanElement} */
+    const validationMessageElement = thumbnailAddingIndicatorElement
+        .querySelector(".validation-message");
     
     /** @type {HTMLDivElement} */
     const modalElement = containerElement.querySelector(".modal");
@@ -70,47 +79,40 @@ function createThumbnailInputController(imgbbApiKey, container) {
     
     thumbnailClearButtonElement.addEventListener("click", clearThumbnail);
     
-    fileInputElement.addEventListener("change", async () => {
-        if (!fileInputElement.files || !fileInputElement.files[0]) {
+    fileInputElement.addEventListener("change", async (event) => {
+        /** @type {HTMLInputElement} */
+        const inputElement = event.target;
+        if (!inputElement.files || !inputElement.files[0]) {
             clearThumbnail();
         }
         
-        const file = fileInputElement.files[0];
+        const file = inputElement.files[0];
         try {
             await validateFile(file);
+            showValidationErrorMessage(null);
             switchMode("thumbnailUploading");
             const uploadingResult = await uploadFile(file);
             switchMode("thumbnailAdded");
-            thumbnailPreviewImageElement.setAttribute("src", uploadingResult.imageUrl);
+            thumbnailPreviewImageElement.setAttribute("src", uploadingResult.thumbnailUrl);
         } catch (error) {
             if (typeof error !== "string") {
                 throw error;
             }
-            
-            if (error === "FileTooLarge") {
-                showModal([
-                    "File có kích thước quá lớn",
-                    "Hãy đảm bảo rằng file bạn muốn upload có kích thước nhỏ hơn 3MB."
-                ]);
-                
-                return;
-            }
-            
-            if (error === "InvalidFileType") {
-                showModal([
-                    "Kiểu file không hợp lệ",
-                    "Hãy đảm bảo rằng file bạn muốn upload có kiểu PNG hoặc JPEG/JPG"
-                ]);
-            }
+
+            showValidationErrorMessage("File phải có kích thước nhỏ hơn 3MB");
         }
     });
 
     /**
      * Clears thumbnail url and images, shows the thumbnail adding elements.
+     * 
+     * @param {Event} event
      */
-    function clearThumbnail() {
+    function clearThumbnail(event) {
+        event.preventDefault();
+        event.stopPropagation();
         switchMode("thumbnailCleared");
-        thumbnailPreviewImageElement.setAttribute("src", undefined);
+        thumbnailPreviewImageElement.removeAttribute("src");
         hiddenInputElement.value = "";
     }
 
@@ -126,11 +128,9 @@ function createThumbnailInputController(imgbbApiKey, container) {
      */
     async function validateFile(file) {
         return new Promise((resolve, reject) => {
-            console.log(file.size / (1024 * 1024));
-            reject("FileTooLarge");
-            // if (file.size > 1.5 * 1024 * 1024) {
-            //     reject("FileTooLarge");
-            // }
+            if (file.size > 1.5 * 1024 * 1024) {
+                reject("File phải có kích thước nhỏ hơn 3MB");
+            }
         
             const reader = new FileReader();
             reader.onload = () => {
@@ -147,7 +147,7 @@ function createThumbnailInputController(imgbbApiKey, container) {
                 const isJpeg = arr[0] === 0xFF && arr[1] === 0xD8;
 
                 if (!isPng && !isJpeg) {
-                    reject("InvalidFileType");
+                    reject("File phải là ảnh PNG hoặc JPEG/JPG");
                 }
                 
                 resolve();
@@ -191,6 +191,28 @@ function createThumbnailInputController(imgbbApiKey, container) {
     }
 
     /**
+     * Shows validation error messsage and adds style to the container which indicates that
+     * there is error. If value for {@link message} is null or empty, the validation error
+     * message and the style will be cleared.
+     * 
+     * @param {string | null} message 
+     */
+    function showValidationErrorMessage(message) {
+        if (message) {
+            containerElement.classList.add("error");
+            thumbnailAddingIndicatorTextElement.classList.add("d-none");
+            validationMessageContainerElement.classList.remove("d-none");
+            validationMessageElement.textContent = message;
+            return;
+        }
+
+        containerElement.classList.remove("error");
+        thumbnailAddingIndicatorTextElement.classList.remove("d-none");
+        validationMessageContainerElement.classList.add("d-none");
+        validationMessageElement.textContent = "";
+    }
+
+    /**
      * Show the validation error notification modal with the specified texts.
      * 
      * @param {string[]} texts An array of strings, representing the sentences in the
@@ -216,8 +238,8 @@ function createThumbnailInputController(imgbbApiKey, container) {
         /** @@type {{ [key: Mode]: HTMLDivElement }} */
         const elementForModes = {
             thumbnailAdded: thumbnailPreviewElement,
-            thumbnailCleared: thumbnailAddingIndicator,
-            thumbnailUploading: thumbnailUploadingInidicator
+            thumbnailCleared: thumbnailAddingIndicatorElement,
+            thumbnailUploading: thumbnailUploadingInidicatorElement
         }
         
         for (const [evaluatingMode, element] of Object.entries(elementForModes)) {

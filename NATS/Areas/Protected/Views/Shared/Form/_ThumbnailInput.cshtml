@@ -4,7 +4,7 @@
 @{
     string imgbbApiKey = Environment.GetEnvironmentVariable("IMGBB_API_KEY");
     string uniqueId = CssUniqueId.GenerateId();
-    string defaultImageUrl = "https://i.ibb.co/R4pCSvP3/default.jpg";
+    const string defaultImageUrl = "https://i.ibb.co/R4pCSvP3/default.jpg";
 }
 @functions {
     private bool HasThumbnail => !string.IsNullOrWhiteSpace(Model.ThumbnailUrl);
@@ -27,8 +27,16 @@
     
     <!-- Thumbnail Adding Indicator -->
     <div class="thumbnail-adding-indicator @ThumbnailAddingIndicatorClassName">
-        <span>Thêm ảnh</span>
-        <i class="bi bi-plus-lg"></i>
+        <div class="adding-indicator-text">
+            <span>Thêm ảnh</span>
+            <i class="bi bi-plus-lg"></i>
+        </div>
+
+        <div class="validation-message-container d-none">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span class="validation-message mx-2"></span>
+            <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
     </div>
     
     <!-- Thumbnail Loading Indicator -->
@@ -72,7 +80,7 @@
     </div>
 </div>
 
-<script src="/js/protected/thumbnail_input.js"></script>
+<script src="/js/protected/thumbnail_input.js" asp-append-version="true"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const imgbbApiKey = "@imgbbApiKey";
