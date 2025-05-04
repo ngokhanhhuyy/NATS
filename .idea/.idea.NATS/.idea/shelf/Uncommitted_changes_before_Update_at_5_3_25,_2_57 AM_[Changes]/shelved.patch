@@ -1,0 +1,1513 @@
+Index: NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>.thumbnail-input-container {\r\n    --transition-duration: .15s;\r\n    --transition-timing-function: ease;\r\n    background-color: rgba(var(--bs-secondary-rgb), 0.1);\r\n    color: var(--bs-secondary);\r\n    border: 1px solid rgba(var(--bs-secondary-rgb), 0.25);\r\n    border-radius: .5rem;\r\n    padding: 1rem;\r\n    min-height: 120px;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    transition:\r\n        background var(--transition-duration) var(--transition-timing-function),\r\n        border var(--transition-duration) var(--transition-timing-function),\r\n        color var(--transition-duration) var(--transition-timing-function);\r\n}\r\n\r\n.thumbnail-input-container:not(:has(.thumbnail-adding-indicator.d-none)):hover {\r\n    color: var(--bs-success);\r\n    background: rgba(var(--bs-success-rgb), 0.1);\r\n    border-color: rgba(var(--bs-success-rgb), 0.5);\r\n}\r\n\r\n.click-area {\r\n    opacity: 0;\r\n    position: absolute;\r\n    top: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    cursor: pointer;\r\n}\r\n\r\n.thumbnail-preview {\r\n    width: 150px;\r\n    height: 150px;\r\n    position: relative;\r\n}\r\n\r\n.thumbnail-preview img {\r\n    width: 100%;\r\n    height: 100%;\r\n    object-fit: cover;\r\n    object-position: 50%;\r\n    border-color: rgba(var(--bs-success-rgb), 0.5) !important;\r\n    box-shadow: var(--bs-box-shadow-sm);\r\n}\r\n\r\n.thumbnail-preview button {\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    padding: .25rem;\r\n    aspect-ratio: 1;\r\n    position: absolute;\r\n    top: 0;\r\n    right: 0;\r\n    transform: scale(125%) translate(25%, -25%) rotate(-45deg);\r\n    box-shadow: var(--bs-box-shadow-sm);\r\n}\r\n\r\n.thumbnail-adding-indicator {\r\n    font-weight: bold;\r\n    font-size: 1rem;\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml.css b/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml.css
+--- a/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml.css	(revision 2153870133fad336853c057ffac1e4e6b1bc1ea7)
++++ b/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml.css	(date 1746207600004)
+@@ -10,6 +10,7 @@
+     display: flex;
+     justify-content: center;
+     align-items: center;
++    position: relative;
+     transition:
+         background var(--transition-duration) var(--transition-timing-function),
+         border var(--transition-duration) var(--transition-timing-function),
+@@ -50,8 +51,10 @@
+     display: flex;
+     justify-content: center;
+     align-items: center;
+-    padding: .25rem;
+     aspect-ratio: 1;
++    padding: 0;
++    width: 1.25rem;
++    height: 1.25rem;
+     position: absolute;
+     top: 0;
+     right: 0;
+Index: NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>@using NATS.Helpers\r\n@inject CssUniqueIdHelper CssUniqueId\r\n@model IHasThumbnailUpsertViewModel\r\n@{\r\n    string imgbbApiKey = Environment.GetEnvironmentVariable(\"IMGBB_API_KEY\");\r\n    string uniqueId = CssUniqueId.GenerateId();\r\n    string defaultImageUrl = \"https://i.ibb.co/R4pCSvP3/default.jpg\";\r\n}\r\n@functions {\r\n    private bool HasThumbnail => !string.IsNullOrWhiteSpace(Model.ThumbnailUrl);\r\n    private string ThumbnailPreviewClassName => !HasThumbnail ? \"d-none\" : \"\";\r\n    private string ThumbnailAddingIndicatorClassName => HasThumbnail ? \"d-none\" : \"\";\r\n}\r\n\r\n<div class=\"thumbnail-input-container\" data-unique-id=\"@uniqueId\">\r\n    <button type=\"button\" class=\"click-area\"></button>\r\n    <input type=\"file\" class=\"d-none\" accept=\"image/png, image/jpeg, image/jpg\">\r\n    <input type=\"hidden\">\r\n    \r\n    <!-- Thumbnail Preview -->\r\n    <div class=\"thumbnail-preview @ThumbnailPreviewClassName\">\r\n        <img src=\"@(Model.ThumbnailUrl ?? defaultImageUrl)\" class=\"img-thumbnail\" />\r\n        <button type=\"button\" class=\"btn btn-danger rounded-circle delete-button\">\r\n            +\r\n        </button>\r\n    </div>\r\n    \r\n    <!-- Thumbnail Adding Indicator -->\r\n    <div class=\"thumbnail-adding-indicator @ThumbnailAddingIndicatorClassName\">\r\n        <span>Thêm ảnh</span>\r\n        <i class=\"bi bi-plus-lg\"></i>\r\n    </div>\r\n    \r\n    <!-- Thumbnail Loading Indicator -->\r\n    <div class=\"thumbnail-loading-indicator d-none\">\r\n        <span class=\"spinner-border spinner-border-sm\" aria-hidden=\"true\"></span>\r\n        <span role=\"status\">Đang xử lý ...</span>\r\n    </div>\r\n    \r\n    <!-- Validation Modal -->\r\n    <div\r\n        class=\"modal fade\"\r\n        data-bs-backdrop=\"static\"\r\n        data-bs-keyboard=\"false\"\r\n        tabindex=\"-1\"\r\n        aria-hidden=\"true\"\r\n    >\r\n        <div class=\"modal-dialog\">\r\n            <div class=\"modal-content\">\r\n                <div class=\"modal-header\">\r\n                    <h1 class=\"modal-title fs-5\"></h1>\r\n                    <button\r\n                        type=\"button\"\r\n                        class=\"btn-close\"\r\n                        data-bs-dismiss=\"modal\"\r\n                        aria-label=\"Close\"\r\n                    ></button>\r\n                </div>\r\n                <div class=\"modal-body d-flex flex-column\">\r\n                </div>\r\n                <div class=\"modal-footer\">\r\n                    <button\r\n                        type=\"button\"\r\n                        class=\"btn btn-secondary\"\r\n                        data-bs-dismiss=\"modal\"\r\n                    >\r\n                        Đã hiểu\r\n                    </button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n<script src=\"/js/protected/thumbnail_input.js\"></script>\r\n<script>\r\ndocument.addEventListener(\"DOMContentLoaded\", () => {\r\n    const imgbbApiKey = \"@imgbbApiKey\";\r\n    const querySelector = \".thumbnail-input-container[data-unique-id=\\\"@uniqueId\\\"]\";\r\n    createThumbnailInputController(imgbbApiKey, querySelector);\r\n});\r\n</script>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml b/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml
+--- a/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml	(revision 2153870133fad336853c057ffac1e4e6b1bc1ea7)
++++ b/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml	(date 1746207302467)
+@@ -4,7 +4,7 @@
+ @{
+     string imgbbApiKey = Environment.GetEnvironmentVariable("IMGBB_API_KEY");
+     string uniqueId = CssUniqueId.GenerateId();
+-    string defaultImageUrl = "https://i.ibb.co/R4pCSvP3/default.jpg";
++    const string defaultImageUrl = "https://i.ibb.co/R4pCSvP3/default.jpg";
+ }
+ @functions {
+     private bool HasThumbnail => !string.IsNullOrWhiteSpace(Model.ThumbnailUrl);
+Index: NATS/global.json
+===================================================================
+diff --git a/NATS/global.json b/NATS/global.json
+deleted file mode 100644
+--- a/NATS/global.json	(revision 2153870133fad336853c057ffac1e4e6b1bc1ea7)
++++ /dev/null	(revision 2153870133fad336853c057ffac1e4e6b1bc1ea7)
+@@ -1,5 +0,0 @@
+-{
+-  "sdk": {
+-    "version": "9.0.201"
+-  }
+-}
+Index: .idea/.idea.NATS/.idea/dataSources.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"DataSourceManagerImpl\" format=\"xml\" multifile-model=\"true\">\r\n    <data-source source=\"LOCAL\" name=\"nats@localhost\" uuid=\"c6a547f5-00cc-4032-98a7-ed5b8fde1cb8\">\r\n      <driver-ref>mysql.8</driver-ref>\r\n      <synchronize>true</synchronize>\r\n      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>\r\n      <jdbc-url>jdbc:mysql://localhost:3306/nats</jdbc-url>\r\n      <working-dir>$ProjectFileDir$</working-dir>\r\n    </data-source>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.NATS/.idea/dataSources.xml b/.idea/.idea.NATS/.idea/dataSources.xml
+--- a/.idea/.idea.NATS/.idea/dataSources.xml	(revision 2153870133fad336853c057ffac1e4e6b1bc1ea7)
++++ b/.idea/.idea.NATS/.idea/dataSources.xml	(date 1746206356719)
+@@ -1,11 +1,16 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+-    <data-source source="LOCAL" name="nats@localhost" uuid="c6a547f5-00cc-4032-98a7-ed5b8fde1cb8">
++    <data-source source="LOCAL" name="@localhost" uuid="c6a547f5-00cc-4032-98a7-ed5b8fde1cb8">
+       <driver-ref>mysql.8</driver-ref>
+       <synchronize>true</synchronize>
+       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+-      <jdbc-url>jdbc:mysql://localhost:3306/nats</jdbc-url>
++      <jdbc-url>jdbc:mysql://localhost:3306/</jdbc-url>
++      <jdbc-additional-properties>
++        <property name="com.intellij.clouds.kubernetes.db.host.port" />
++        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
++        <property name="com.intellij.clouds.kubernetes.db.container.port" />
++      </jdbc-additional-properties>
+       <working-dir>$ProjectFileDir$</working-dir>
+     </data-source>
+   </component>
+Index: .idea/.idea.NATS/.idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoGeneratedRunConfigurationManager\">\r\n    <projectFile profileName=\"IIS Express\">NATS/NATS.csproj</projectFile>\r\n    <projectFile profileName=\"http\">NATS/NATS.csproj</projectFile>\r\n    <projectFile profileName=\"https\">NATS/NATS.csproj</projectFile>\r\n    <projectFile pubXmlPath=\"NATS/Properties/PublishProfiles/FTPProfile.pubxml\">NATS/NATS.csproj</projectFile>\r\n    <projectFile pubXmlPath=\"NATS/Properties/PublishProfiles/nats.pubxml\">NATS/NATS.csproj</projectFile>\r\n    <projectFile pubXmlPath=\"NATS/Properties/PublishProfiles/nats.vn - Web Deploy.pubxml\">NATS/NATS.csproj</projectFile>\r\n    <projectFile pubXmlPath=\"NATS/Properties/PublishProfiles/nh0zhuybmt-001-site2 - Web Deploy.pubxml\">NATS/NATS.csproj</projectFile>\r\n    <projectFile pubXmlPath=\"NATS/Properties/PublishProfiles/nh0zhuybmt-001-subsite2 - FTP.pubxml\">NATS/NATS.csproj</projectFile>\r\n    <projectFile pubXmlPath=\"NATS/Properties/PublishProfiles/nh0zhuybmt-001-subsite2 - FTP1.pubxml\">NATS/NATS.csproj</projectFile>\r\n  </component>\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"906859bb-e68b-47c5-b55b-4e77815ff55d\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/Areas/Protected/Controllers/DashboardController.cs\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/Areas/Protected/Controllers/DashboardController.cs\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/Areas/Protected/Views/Authentication/SignIn.cshtml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/Areas/Protected/Views/Authentication/SignIn.cshtml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/Areas/Protected/Views/Dashboard/Index.cshtml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/Areas/Protected/Views/Dashboard/Index.cshtml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/_Layout.cshtml.css\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/_Layout.cshtml.css\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/Areas/Public/Views/CatalogItem/CatalogItemList.cshtml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/Areas/Public/Views/CatalogItem/CatalogItemList.cshtml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/Extensions/UrlHelperExtensions.cs\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/Extensions/UrlHelperExtensions.cs\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/Services/Entities/CatalogItemPhoto.cs\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/Services/Entities/CatalogItemPhoto.cs\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/Services/PhotoService.cs\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/Services/PhotoService.cs\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/Views/Shared/Components/NavigationBarComponent/Default.cshtml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/Views/Shared/Components/NavigationBarComponent/Default.cshtml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/Views/Shared/Components/NavigationBarComponent/Default.cshtml.css\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/Views/Shared/Components/NavigationBarComponent/Default.cshtml.css\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/NATS/wwwroot/css/style.css\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/NATS/wwwroot/css/style.css\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"DpaMonitoringSettings\">\r\n    <option name=\"firstShow\" value=\"false\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"package.json\" />\r\n        <option value=\"CSS File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;ngokhanhhuyy&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/ngokhanhhuyy/NATS.git&quot;,\r\n    &quot;accountId&quot;: &quot;2ba9c534-b543-4d3a-8c33-9867e8819988&quot;\r\n  }\r\n}</component>\r\n  <component name=\"HighlightingSettingsPerFile\">\r\n    <setting file=\"file://$PROJECT_DIR$/NATS/Areas/FrontPages/Views/Shared/Components/FooterComponent/Default.cshtml\" root0=\"FORCE_HIGHLIGHTING\" root1=\"FORCE_HIGHLIGHTING\" root2=\"FORCE_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/NATS/Services/ContactService.cs\" root0=\"FORCE_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/NATS/Services/Dtos/RequestDtos/SliderItem/SliderItemUpsertRequestDto.cs\" root0=\"FORCE_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/NATS/Services/Interfaces/IGeneralSettingsService.cs\" root0=\"FORCE_HIGHLIGHTING\" />\r\n  </component>\r\n  <component name=\"MetaFilesCheckinStateConfiguration\" checkMetaFiles=\"true\" />\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;customColor&quot;: &quot;&quot;,\r\n  &quot;associatedIndex&quot;: 5\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2u7Z7ut5snaxdOwcEouYQcpC3Ss\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;.NET Launch Settings Profile.NATS: IIS Express.executor&quot;: &quot;Debug&quot;,\r\n    &quot;.NET Launch Settings Profile.NATS: http.executor&quot;: &quot;Debug&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;v2&quot;,\r\n    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Rainbow Brackets Lite&quot;,\r\n    &quot;ts.external.directory.path&quot;: &quot;C:\\\\Users\\\\vuong\\\\AppData\\\\Local\\\\JetBrains\\\\JetBrains Rider 2023.2.2\\\\plugins\\\\javascript-plugin\\\\jsLanguageServicesImpl\\\\external&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  },\r\n  &quot;keyToStringList&quot;: {\r\n    &quot;DatabaseDriversLRU&quot;: [\r\n      &quot;mysql&quot;\r\n    ]\r\n  }\r\n}</component>\r\n  <component name=\"RunManager\" selected=\".NET Launch Settings Profile.NATS: http\">\r\n    <configuration name=\"NATS: FTPProfile\" type=\"DotNetMsBuildPublish\" factoryName=\"Publish to IIS\">\r\n      <riderPublish configuration=\"Release\" platform=\"Any CPU\" publish_profile=\"FTPProfile.pubxml\" pubxml_path=\"$PROJECT_DIR$/NATS/Properties/PublishProfiles/FTPProfile.pubxml\" user_name=\"wu8b25xz7osf\" uuid_high=\"3370490737021568718\" uuid_low=\"-5982175220513549920\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"NATS: nats\" type=\"DotNetMsBuildPublish\" factoryName=\"Publish to IIS\">\r\n      <riderPublish publish_profile=\"nats.pubxml\" pubxml_path=\"$PROJECT_DIR$/NATS/Properties/PublishProfiles/nats.pubxml\" uuid_high=\"3370490737021568718\" uuid_low=\"-5982175220513549920\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"NATS: nats.vn - Web Deploy\" type=\"DotNetMsBuildPublish\" factoryName=\"Publish to IIS\">\r\n      <riderPublish configuration=\"Release\" platform=\"Any CPU\" publish_profile=\"nats.vn - Web Deploy.pubxml\" pubxml_path=\"$PROJECT_DIR$/NATS/Properties/PublishProfiles/nats.vn - Web Deploy.pubxml\" user_name=\"wu8b25xz7osf\" uuid_high=\"3370490737021568718\" uuid_low=\"-5982175220513549920\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"NATS: nh0zhuybmt-001-site2 - Web Deploy\" type=\"DotNetMsBuildPublish\" factoryName=\"Publish to IIS\">\r\n      <riderPublish configuration=\"Release\" platform=\"Any CPU\" publish_profile=\"nh0zhuybmt-001-site2 - Web Deploy.pubxml\" pubxml_path=\"$PROJECT_DIR$/NATS/Properties/PublishProfiles/nh0zhuybmt-001-site2 - Web Deploy.pubxml\" user_name=\"nh0zhuybmt-001\" uuid_high=\"3370490737021568718\" uuid_low=\"-5982175220513549920\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"NATS: nh0zhuybmt-001-subsite2 - FTP\" type=\"DotNetMsBuildPublish\" factoryName=\"Publish to IIS\">\r\n      <riderPublish configuration=\"Release\" platform=\"Any CPU\" publish_profile=\"nh0zhuybmt-001-subsite2 - FTP.pubxml\" pubxml_path=\"$PROJECT_DIR$/NATS/Properties/PublishProfiles/nh0zhuybmt-001-subsite2 - FTP.pubxml\" user_name=\"nh0zhuybmt-001\" uuid_high=\"3370490737021568718\" uuid_low=\"-5982175220513549920\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"NATS: nh0zhuybmt-001-subsite2 - FTP1\" type=\"DotNetMsBuildPublish\" factoryName=\"Publish to IIS\">\r\n      <riderPublish configuration=\"Release\" platform=\"Any CPU\" publish_profile=\"nh0zhuybmt-001-subsite2 - FTP1.pubxml\" pubxml_path=\"$PROJECT_DIR$/NATS/Properties/PublishProfiles/nh0zhuybmt-001-subsite2 - FTP1.pubxml\" user_name=\"nh0zhuybmt-001\" uuid_high=\"3370490737021568718\" uuid_low=\"-5982175220513549920\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"NATS: IIS Express\" type=\"LaunchSettings\" factoryName=\".NET Launch Settings Profile\">\r\n      <option name=\"LAUNCH_PROFILE_PROJECT_FILE_PATH\" value=\"$PROJECT_DIR$/NATS/NATS.csproj\" />\r\n      <option name=\"LAUNCH_PROFILE_TFM\" value=\"net9.0\" />\r\n      <option name=\"LAUNCH_PROFILE_NAME\" value=\"IIS Express\" />\r\n      <option name=\"USE_EXTERNAL_CONSOLE\" value=\"0\" />\r\n      <option name=\"USE_MONO\" value=\"0\" />\r\n      <option name=\"RUNTIME_ARGUMENTS\" value=\"\" />\r\n      <option name=\"GENERATE_APPLICATIONHOST_CONFIG\" value=\"1\" />\r\n      <option name=\"SHOW_IIS_EXPRESS_OUTPUT\" value=\"0\" />\r\n      <option name=\"SEND_DEBUG_REQUEST\" value=\"1\" />\r\n      <option name=\"ADDITIONAL_IIS_EXPRESS_ARGUMENTS\" value=\"\" />\r\n      <method v=\"2\">\r\n        <option name=\"Build\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"NATS: http\" type=\"LaunchSettings\" factoryName=\".NET Launch Settings Profile\">\r\n      <option name=\"LAUNCH_PROFILE_PROJECT_FILE_PATH\" value=\"$PROJECT_DIR$/NATS/NATS.csproj\" />\r\n      <option name=\"LAUNCH_PROFILE_TFM\" value=\"net9.0\" />\r\n      <option name=\"LAUNCH_PROFILE_NAME\" value=\"http\" />\r\n      <option name=\"USE_EXTERNAL_CONSOLE\" value=\"0\" />\r\n      <option name=\"USE_MONO\" value=\"0\" />\r\n      <option name=\"RUNTIME_ARGUMENTS\" value=\"\" />\r\n      <option name=\"GENERATE_APPLICATIONHOST_CONFIG\" value=\"1\" />\r\n      <option name=\"SHOW_IIS_EXPRESS_OUTPUT\" value=\"0\" />\r\n      <option name=\"SEND_DEBUG_REQUEST\" value=\"1\" />\r\n      <option name=\"ADDITIONAL_IIS_EXPRESS_ARGUMENTS\" value=\"\" />\r\n      <method v=\"2\">\r\n        <option name=\"Build\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"NATS: https\" type=\"LaunchSettings\" factoryName=\".NET Launch Settings Profile\">\r\n      <option name=\"LAUNCH_PROFILE_PROJECT_FILE_PATH\" value=\"$PROJECT_DIR$/NATS/NATS.csproj\" />\r\n      <option name=\"LAUNCH_PROFILE_TFM\" value=\"net9.0\" />\r\n      <option name=\"LAUNCH_PROFILE_NAME\" value=\"https\" />\r\n      <option name=\"USE_EXTERNAL_CONSOLE\" value=\"0\" />\r\n      <option name=\"USE_MONO\" value=\"0\" />\r\n      <option name=\"RUNTIME_ARGUMENTS\" value=\"\" />\r\n      <option name=\"GENERATE_APPLICATIONHOST_CONFIG\" value=\"1\" />\r\n      <option name=\"SHOW_IIS_EXPRESS_OUTPUT\" value=\"0\" />\r\n      <option name=\"SEND_DEBUG_REQUEST\" value=\"1\" />\r\n      <option name=\"ADDITIONAL_IIS_EXPRESS_ARGUMENTS\" value=\"\" />\r\n      <method v=\"2\">\r\n        <option name=\"Build\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"906859bb-e68b-47c5-b55b-4e77815ff55d\" name=\"Changes\" comment=\"\" />\r\n      <created>1741601415024</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1741601415024</updated>\r\n      <workItem from=\"1741601419187\" duration=\"184000\" />\r\n      <workItem from=\"1741601888927\" duration=\"10253000\" />\r\n      <workItem from=\"1742654787231\" duration=\"4321000\" />\r\n      <workItem from=\"1742714889076\" duration=\"16210000\" />\r\n      <workItem from=\"1742743557164\" duration=\"14323000\" />\r\n      <workItem from=\"1742815690103\" duration=\"29009000\" />\r\n      <workItem from=\"1742892451191\" duration=\"1837000\" />\r\n      <workItem from=\"1742980951680\" duration=\"6465000\" />\r\n      <workItem from=\"1743261285478\" duration=\"4526000\" />\r\n      <workItem from=\"1743275861026\" duration=\"3055000\" />\r\n      <workItem from=\"1743446006129\" duration=\"8392000\" />\r\n      <workItem from=\"1744464784185\" duration=\"2564000\" />\r\n      <workItem from=\"1744468515196\" duration=\"8668000\" />\r\n      <workItem from=\"1744619943682\" duration=\"4667000\" />\r\n      <workItem from=\"1744643857795\" duration=\"1001000\" />\r\n      <workItem from=\"1744645428805\" duration=\"177000\" />\r\n      <workItem from=\"1744645804608\" duration=\"75000\" />\r\n      <workItem from=\"1744645899766\" duration=\"1677000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Commit\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1743455167244</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1743455167244</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"UnityCheckinConfiguration\" checkUnsavedScenes=\"true\" />\r\n  <component name=\"UnityProjectConfiguration\" hasMinimizedUI=\"false\" />\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <option name=\"CLEAR_INITIAL_COMMIT_MESSAGE\" value=\"true\" />\r\n    <MESSAGE value=\"Commit\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Commit\" />\r\n  </component>\r\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\r\n    <expand />\r\n    <select />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.NATS/.idea/workspace.xml b/.idea/.idea.NATS/.idea/workspace.xml
+--- a/.idea/.idea.NATS/.idea/workspace.xml	(revision 2153870133fad336853c057ffac1e4e6b1bc1ea7)
++++ b/.idea/.idea.NATS/.idea/workspace.xml	(date 1746207627313)
+@@ -16,18 +16,15 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="906859bb-e68b-47c5-b55b-4e77815ff55d" name="Changes" comment="">
++      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.local.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources/c6a547f5-00cc-4032-98a7-ed5b8fde1cb8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources/c6a547f5-00cc-4032-98a7-ed5b8fde1cb8.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/projectSettingsUpdater.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/Areas/Protected/Controllers/DashboardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Controllers/DashboardController.cs" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Authentication/SignIn.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Authentication/SignIn.cshtml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Dashboard/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Dashboard/Index.cshtml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/_Layout.cshtml.css" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/_Layout.cshtml.css" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/Areas/Public/Views/CatalogItem/CatalogItemList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Public/Views/CatalogItem/CatalogItemList.cshtml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/Extensions/UrlHelperExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Extensions/UrlHelperExtensions.cs" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/Services/Entities/CatalogItemPhoto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Services/Entities/CatalogItemPhoto.cs" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/Services/PhotoService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Services/PhotoService.cs" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/Views/Shared/Components/NavigationBarComponent/Default.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Views/Shared/Components/NavigationBarComponent/Default.cshtml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/Views/Shared/Components/NavigationBarComponent/Default.cshtml.css" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Views/Shared/Components/NavigationBarComponent/Default.cshtml.css" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/NATS/wwwroot/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/wwwroot/css/style.css" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml.css" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml.css" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/NATS/global.json" beforeDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -89,7 +86,7 @@
+     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Rainbow Brackets Lite&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+     &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\vuong\\AppData\\Local\\JetBrains\\JetBrains Rider 2023.2.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   },
+@@ -99,6 +96,46 @@
+     ]
+   }
+ }</component>
++  <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
++    <layout>
++      <window_info id="Bookmarks" side_tool="true" />
++      <window_info id="Merge Requests" />
++      <window_info id="Assembly Explorer" side_tool="true" />
++      <window_info id="Commit_Guest" show_stripe_button="false" />
++      <window_info id="Pull Requests" />
++      <window_info id="Learn" />
++      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20442177" />
++      <window_info id="Commit" order="1" weight="0.20442177" />
++      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
++      <window_info anchor="bottom" id="Database Changes" />
++      <window_info anchor="bottom" id="TypeScript" />
++      <window_info anchor="bottom" id="Build" />
++      <window_info anchor="bottom" id="Dynamic Program Analysis" />
++      <window_info anchor="bottom" id="TODO" />
++      <window_info anchor="bottom" id="Unit Tests" />
++      <window_info anchor="bottom" id="dotTrace Profiler" />
++      <window_info anchor="bottom" id="File Transfer" />
++      <window_info anchor="bottom" id="NuGet" />
++      <window_info anchor="bottom" id="dotMemory" />
++      <window_info anchor="bottom" id="Unity" />
++      <window_info anchor="bottom" id="Version Control" order="0" />
++      <window_info anchor="bottom" id="Problems" order="1" />
++      <window_info anchor="bottom" id="Problems View" order="2" />
++      <window_info active="true" anchor="bottom" id="Terminal" order="3" visible="true" weight="0.33025026" />
++      <window_info anchor="bottom" id="Services" order="4" weight="0.33025026" />
++      <window_info anchor="right" id="RoslynVisualizer" />
++      <window_info anchor="right" id="Endpoints" />
++      <window_info anchor="right" id="Monitoring" />
++      <window_info anchor="right" id="IL" />
++      <window_info anchor="right" id="Coverage" side_tool="true" />
++      <window_info anchor="right" id="Test Coverage" />
++      <window_info anchor="right" content_ui="combo" id="Notifications" order="0" weight="0.25" />
++      <window_info anchor="right" id="AIAssistant" order="1" weight="0.25" />
++      <window_info anchor="right" id="Database" order="2" weight="0.3302721" />
++      <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
++      <window_info anchor="right" id="Maven" order="4" weight="0.25" />
++    </layout>
++  </component>
+   <component name="RunManager" selected=".NET Launch Settings Profile.NATS: http">
+     <configuration name="NATS: FTPProfile" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+       <riderPublish configuration="Release" platform="Any CPU" publish_profile="FTPProfile.pubxml" pubxml_path="$PROJECT_DIR$/NATS/Properties/PublishProfiles/FTPProfile.pubxml" user_name="wu8b25xz7osf" uuid_high="3370490737021568718" uuid_low="-5982175220513549920" />
+@@ -196,6 +233,9 @@
+       <workItem from="1744645428805" duration="177000" />
+       <workItem from="1744645804608" duration="75000" />
+       <workItem from="1744645899766" duration="1677000" />
++      <workItem from="1746179171375" duration="4390000" />
++      <workItem from="1746185793976" duration="3240000" />
++      <workItem from="1746190811964" duration="5593000" />
+     </task>
+     <task id="LOCAL-00001" summary="Commit">
+       <option name="closed" value="true" />
+@@ -217,6 +257,24 @@
+     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+     <MESSAGE value="Commit" />
+     <option name="LAST_COMMIT_MESSAGE" value="Commit" />
++  </component>
++  <component name="XDebuggerManager">
++    <breakpoint-manager>
++      <breakpoints>
++        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
++          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
++          <option name="timeStamp" value="1" />
++        </breakpoint>
++        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
++          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
++          <option name="timeStamp" value="2" />
++        </breakpoint>
++        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
++          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
++          <option name="timeStamp" value="3" />
++        </breakpoint>
++      </breakpoints>
++    </breakpoint-manager>
+   </component>
+   <component name="XSLT-Support.FileAssociations.UIState">
+     <expand />
+Index: .idea/.idea.NATS/.idea/projectSettingsUpdater.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"RiderProjectSettingsUpdater\">\r\n    <option name=\"singleClickDiffPreview\" value=\"1\" />\r\n    <option name=\"vcsConfiguration\" value=\"3\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.NATS/.idea/projectSettingsUpdater.xml b/.idea/.idea.NATS/.idea/projectSettingsUpdater.xml
+--- a/.idea/.idea.NATS/.idea/projectSettingsUpdater.xml	(revision 2153870133fad336853c057ffac1e4e6b1bc1ea7)
++++ b/.idea/.idea.NATS/.idea/projectSettingsUpdater.xml	(date 1746179184025)
+@@ -2,6 +2,7 @@
+ <project version="4">
+   <component name="RiderProjectSettingsUpdater">
+     <option name="singleClickDiffPreview" value="1" />
++    <option name="unhandledExceptionsIgnoreList" value="1" />
+     <option name="vcsConfiguration" value="3" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/.idea.NATS/.idea/inspectionProfiles/Project_Default.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"InspectionProjectProfileManager\">\r\n  <profile version=\"1.0\">\r\n    <option name=\"myName\" value=\"Project Default\" />\r\n    <inspection_tool class=\"CssUnusedSymbol\" enabled=\"true\" level=\"INFORMATION\" enabled_by_default=\"true\" />\r\n  </profile>\r\n</component>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.NATS/.idea/inspectionProfiles/Project_Default.xml b/.idea/.idea.NATS/.idea/inspectionProfiles/Project_Default.xml
+--- a/.idea/.idea.NATS/.idea/inspectionProfiles/Project_Default.xml	(revision 2153870133fad336853c057ffac1e4e6b1bc1ea7)
++++ b/.idea/.idea.NATS/.idea/inspectionProfiles/Project_Default.xml	(date 1746207304009)
+@@ -2,5 +2,11 @@
+   <profile version="1.0">
+     <option name="myName" value="Project Default" />
+     <inspection_tool class="CssUnusedSymbol" enabled="true" level="INFORMATION" enabled_by_default="true" />
++    <inspection_tool class="HtmlRequiredAltAttribute" enabled="false" level="WARNING" enabled_by_default="false" />
++    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
++      <option name="processCode" value="true" />
++      <option name="processLiterals" value="true" />
++      <option name="processComments" value="true" />
++    </inspection_tool>
+   </profile>
+ </component>
+\ No newline at end of file
+Index: .idea/.idea.NATS/.idea/dataSources.local.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"dataSourceStorageLocal\" created-in=\"RD-243.26053.56\">\r\n    <data-source name=\"nats@localhost\" uuid=\"c6a547f5-00cc-4032-98a7-ed5b8fde1cb8\">\r\n      <database-info product=\"MySQL\" version=\"8.1.0\" jdbc-version=\"4.2\" driver-name=\"MySQL Connector/J\" driver-version=\"mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)\" dbms=\"MYSQL\" exact-version=\"8.1.0\" exact-driver-version=\"8.2\">\r\n        <extra-name-characters>#@</extra-name-characters>\r\n        <identifier-quote-string>`</identifier-quote-string>\r\n      </database-info>\r\n      <case-sensitivity plain-identifiers=\"lower\" quoted-identifiers=\"lower\" />\r\n      <secret-storage>master_key</secret-storage>\r\n      <user-name>root</user-name>\r\n      <schema-mapping>\r\n        <introspection-scope>\r\n          <node kind=\"schema\" qname=\"@\" />\r\n        </introspection-scope>\r\n      </schema-mapping>\r\n    </data-source>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.NATS/.idea/dataSources.local.xml b/.idea/.idea.NATS/.idea/dataSources.local.xml
+--- a/.idea/.idea.NATS/.idea/dataSources.local.xml	(revision 2153870133fad336853c057ffac1e4e6b1bc1ea7)
++++ b/.idea/.idea.NATS/.idea/dataSources.local.xml	(date 1746206540753)
+@@ -1,19 +1,24 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="dataSourceStorageLocal" created-in="RD-243.26053.56">
+-    <data-source name="nats@localhost" uuid="c6a547f5-00cc-4032-98a7-ed5b8fde1cb8">
+-      <database-info product="MySQL" version="8.1.0" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.1.0" exact-driver-version="8.2">
++  <component name="dataSourceStorageLocal" created-in="RD-251.23774.471">
++    <data-source name="@localhost" uuid="c6a547f5-00cc-4032-98a7-ed5b8fde1cb8">
++      <database-info product="MySQL" version="8.0.40-0ubuntu0.24.04.1" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.0.40" exact-driver-version="8.2">
+         <extra-name-characters>#@</extra-name-characters>
+         <identifier-quote-string>`</identifier-quote-string>
++        <jdbc-catalog-is-schema>true</jdbc-catalog-is-schema>
+       </database-info>
+-      <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
++      <case-sensitivity plain-identifiers="exact" quoted-identifiers="exact" />
+       <secret-storage>master_key</secret-storage>
+       <user-name>root</user-name>
+       <schema-mapping>
+         <introspection-scope>
+-          <node kind="schema" qname="@" />
++          <node kind="schema">
++            <name qname="@" />
++            <name qname="nats" />
++          </node>
+         </introspection-scope>
+       </schema-mapping>
++      <load-sources>user_and_system_sources</load-sources>
+     </data-source>
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/.idea.NATS/.idea/dataSources/c6a547f5-00cc-4032-98a7-ed5b8fde1cb8.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<dataSource name=\"nats@localhost\">\r\n  <database-model serializer=\"dbm\" dbms=\"MYSQL\" family-id=\"MYSQL\" format-version=\"4.53\">\r\n    <root id=\"1\">\r\n      <DefaultCasing>lower/lower</DefaultCasing>\r\n      <DefaultEngine>InnoDB</DefaultEngine>\r\n      <DefaultTmpEngine>InnoDB</DefaultTmpEngine>\r\n      <Grants>|root||root|localhost|ALTER|G\r\n|root||root|localhost|ALTER ROUTINE|G\r\n|root||root|localhost|APPLICATION_PASSWORD_ADMIN|G\r\n|root||mysql.infoschema|localhost|AUDIT_ABORT_EXEMPT|G\r\n|root||mysql.session|localhost|AUDIT_ABORT_EXEMPT|G\r\n|root||mysql.sys|localhost|AUDIT_ABORT_EXEMPT|G\r\n|root||root|localhost|AUDIT_ABORT_EXEMPT|G\r\n|root||root|localhost|AUDIT_ADMIN|G\r\n|root||mysql.session|localhost|AUTHENTICATION_POLICY_ADMIN|G\r\n|root||root|localhost|AUTHENTICATION_POLICY_ADMIN|G\r\n|root||mysql.session|localhost|BACKUP_ADMIN|G\r\n|root||root|localhost|BACKUP_ADMIN|G\r\n|root||root|localhost|BINLOG_ADMIN|G\r\n|root||root|localhost|BINLOG_ENCRYPTION_ADMIN|G\r\n|root||mysql.session|localhost|CLONE_ADMIN|G\r\n|root||root|localhost|CLONE_ADMIN|G\r\n|root||mysql.session|localhost|CONNECTION_ADMIN|G\r\n|root||root|localhost|CONNECTION_ADMIN|G\r\n|root||root|localhost|CREATE|G\r\n|root||root|localhost|CREATE ROLE|G\r\n|root||root|localhost|CREATE ROUTINE|G\r\n|root||root|localhost|CREATE TABLESPACE|G\r\n|root||root|localhost|CREATE TEMPORARY TABLES|G\r\n|root||root|localhost|CREATE USER|G\r\n|root||root|localhost|CREATE VIEW|G\r\n|root||root|localhost|DELETE|G\r\n|root||root|localhost|DROP|G\r\n|root||root|localhost|DROP ROLE|G\r\n|root||root|localhost|ENCRYPTION_KEY_ADMIN|G\r\n|root||root|localhost|EVENT|G\r\n|root||root|localhost|EXECUTE|G\r\n|root||root|localhost|FILE|G\r\n|root||mysql.infoschema|localhost|FIREWALL_EXEMPT|G\r\n|root||mysql.session|localhost|FIREWALL_EXEMPT|G\r\n|root||mysql.sys|localhost|FIREWALL_EXEMPT|G\r\n|root||root|localhost|FIREWALL_EXEMPT|G\r\n|root||root|localhost|FLUSH_OPTIMIZER_COSTS|G\r\n|root||root|localhost|FLUSH_STATUS|G\r\n|root||root|localhost|FLUSH_TABLES|G\r\n|root||root|localhost|FLUSH_USER_RESOURCES|G\r\n|root||root|localhost|GROUP_REPLICATION_ADMIN|G\r\n|root||root|localhost|GROUP_REPLICATION_STREAM|G\r\n|root||root|localhost|INDEX|G\r\n|root||root|localhost|INNODB_REDO_LOG_ARCHIVE|G\r\n|root||root|localhost|INNODB_REDO_LOG_ENABLE|G\r\n|root||root|localhost|INSERT|G\r\n|root||root|localhost|LOCK TABLES|G\r\n|root||root|localhost|PASSWORDLESS_USER_ADMIN|G\r\n|root||mysql.session|localhost|PERSIST_RO_VARIABLES_ADMIN|G\r\n|root||root|localhost|PERSIST_RO_VARIABLES_ADMIN|G\r\n|root||root|localhost|PROCESS|G\r\n|root||root|localhost|REFERENCES|G\r\n|root||root|localhost|RELOAD|G\r\n|root||root|localhost|REPLICATION CLIENT|G\r\n|root||root|localhost|REPLICATION SLAVE|G\r\n|root||root|localhost|REPLICATION_APPLIER|G\r\n|root||root|localhost|REPLICATION_SLAVE_ADMIN|G\r\n|root||root|localhost|RESOURCE_GROUP_ADMIN|G\r\n|root||root|localhost|RESOURCE_GROUP_USER|G\r\n|root||root|localhost|ROLE_ADMIN|G\r\n|root||mysql.infoschema|localhost|SELECT|G\r\n|root||root|localhost|SELECT|G\r\n|root||root|localhost|SENSITIVE_VARIABLES_OBSERVER|G\r\n|root||root|localhost|SERVICE_CONNECTION_ADMIN|G\r\n|root||mysql.session|localhost|SESSION_VARIABLES_ADMIN|G\r\n|root||root|localhost|SESSION_VARIABLES_ADMIN|G\r\n|root||root|localhost|SET_USER_ID|G\r\n|root||root|localhost|SHOW DATABASES|G\r\n|root||root|localhost|SHOW VIEW|G\r\n|root||root|localhost|SHOW_ROUTINE|G\r\n|root||mysql.session|localhost|SHUTDOWN|G\r\n|root||root|localhost|SHUTDOWN|G\r\n|root||mysql.session|localhost|SUPER|G\r\n|root||root|localhost|SUPER|G\r\n|root||mysql.infoschema|localhost|SYSTEM_USER|G\r\n|root||mysql.session|localhost|SYSTEM_USER|G\r\n|root||mysql.sys|localhost|SYSTEM_USER|G\r\n|root||root|localhost|SYSTEM_USER|G\r\n|root||mysql.session|localhost|SYSTEM_VARIABLES_ADMIN|G\r\n|root||root|localhost|SYSTEM_VARIABLES_ADMIN|G\r\n|root||root|localhost|TABLE_ENCRYPTION_ADMIN|G\r\n|root||root|localhost|TELEMETRY_LOG_ADMIN|G\r\n|root||root|localhost|TRIGGER|G\r\n|root||root|localhost|UPDATE|G\r\n|root||root|localhost|XA_RECOVER_ADMIN|G\r\n|root||root|localhost|grant option|G\r\nperformance_schema|schema||mysql.session|localhost|SELECT|G\r\nsys|schema||mysql.sys|localhost|TRIGGER|G</Grants>\r\n      <ServerVersion>8.1.0</ServerVersion>\r\n    </root>\r\n    <collation id=\"2\" parent=\"1\" name=\"armscii8_bin\">\r\n      <Charset>armscii8</Charset>\r\n    </collation>\r\n    <collation id=\"3\" parent=\"1\" name=\"armscii8_general_ci\">\r\n      <Charset>armscii8</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"4\" parent=\"1\" name=\"ascii_bin\">\r\n      <Charset>ascii</Charset>\r\n    </collation>\r\n    <collation id=\"5\" parent=\"1\" name=\"ascii_general_ci\">\r\n      <Charset>ascii</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"6\" parent=\"1\" name=\"big5_bin\">\r\n      <Charset>big5</Charset>\r\n    </collation>\r\n    <collation id=\"7\" parent=\"1\" name=\"big5_chinese_ci\">\r\n      <Charset>big5</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"8\" parent=\"1\" name=\"binary\">\r\n      <Charset>binary</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"9\" parent=\"1\" name=\"cp1250_bin\">\r\n      <Charset>cp1250</Charset>\r\n    </collation>\r\n    <collation id=\"10\" parent=\"1\" name=\"cp1250_croatian_ci\">\r\n      <Charset>cp1250</Charset>\r\n    </collation>\r\n    <collation id=\"11\" parent=\"1\" name=\"cp1250_czech_cs\">\r\n      <Charset>cp1250</Charset>\r\n    </collation>\r\n    <collation id=\"12\" parent=\"1\" name=\"cp1250_general_ci\">\r\n      <Charset>cp1250</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"13\" parent=\"1\" name=\"cp1250_polish_ci\">\r\n      <Charset>cp1250</Charset>\r\n    </collation>\r\n    <collation id=\"14\" parent=\"1\" name=\"cp1251_bin\">\r\n      <Charset>cp1251</Charset>\r\n    </collation>\r\n    <collation id=\"15\" parent=\"1\" name=\"cp1251_bulgarian_ci\">\r\n      <Charset>cp1251</Charset>\r\n    </collation>\r\n    <collation id=\"16\" parent=\"1\" name=\"cp1251_general_ci\">\r\n      <Charset>cp1251</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"17\" parent=\"1\" name=\"cp1251_general_cs\">\r\n      <Charset>cp1251</Charset>\r\n    </collation>\r\n    <collation id=\"18\" parent=\"1\" name=\"cp1251_ukrainian_ci\">\r\n      <Charset>cp1251</Charset>\r\n    </collation>\r\n    <collation id=\"19\" parent=\"1\" name=\"cp1256_bin\">\r\n      <Charset>cp1256</Charset>\r\n    </collation>\r\n    <collation id=\"20\" parent=\"1\" name=\"cp1256_general_ci\">\r\n      <Charset>cp1256</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"21\" parent=\"1\" name=\"cp1257_bin\">\r\n      <Charset>cp1257</Charset>\r\n    </collation>\r\n    <collation id=\"22\" parent=\"1\" name=\"cp1257_general_ci\">\r\n      <Charset>cp1257</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"23\" parent=\"1\" name=\"cp1257_lithuanian_ci\">\r\n      <Charset>cp1257</Charset>\r\n    </collation>\r\n    <collation id=\"24\" parent=\"1\" name=\"cp850_bin\">\r\n      <Charset>cp850</Charset>\r\n    </collation>\r\n    <collation id=\"25\" parent=\"1\" name=\"cp850_general_ci\">\r\n      <Charset>cp850</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"26\" parent=\"1\" name=\"cp852_bin\">\r\n      <Charset>cp852</Charset>\r\n    </collation>\r\n    <collation id=\"27\" parent=\"1\" name=\"cp852_general_ci\">\r\n      <Charset>cp852</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"28\" parent=\"1\" name=\"cp866_bin\">\r\n      <Charset>cp866</Charset>\r\n    </collation>\r\n    <collation id=\"29\" parent=\"1\" name=\"cp866_general_ci\">\r\n      <Charset>cp866</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"30\" parent=\"1\" name=\"cp932_bin\">\r\n      <Charset>cp932</Charset>\r\n    </collation>\r\n    <collation id=\"31\" parent=\"1\" name=\"cp932_japanese_ci\">\r\n      <Charset>cp932</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"32\" parent=\"1\" name=\"dec8_bin\">\r\n      <Charset>dec8</Charset>\r\n    </collation>\r\n    <collation id=\"33\" parent=\"1\" name=\"dec8_swedish_ci\">\r\n      <Charset>dec8</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"34\" parent=\"1\" name=\"eucjpms_bin\">\r\n      <Charset>eucjpms</Charset>\r\n    </collation>\r\n    <collation id=\"35\" parent=\"1\" name=\"eucjpms_japanese_ci\">\r\n      <Charset>eucjpms</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"36\" parent=\"1\" name=\"euckr_bin\">\r\n      <Charset>euckr</Charset>\r\n    </collation>\r\n    <collation id=\"37\" parent=\"1\" name=\"euckr_korean_ci\">\r\n      <Charset>euckr</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"38\" parent=\"1\" name=\"gb18030_bin\">\r\n      <Charset>gb18030</Charset>\r\n    </collation>\r\n    <collation id=\"39\" parent=\"1\" name=\"gb18030_chinese_ci\">\r\n      <Charset>gb18030</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"40\" parent=\"1\" name=\"gb18030_unicode_520_ci\">\r\n      <Charset>gb18030</Charset>\r\n    </collation>\r\n    <collation id=\"41\" parent=\"1\" name=\"gb2312_bin\">\r\n      <Charset>gb2312</Charset>\r\n    </collation>\r\n    <collation id=\"42\" parent=\"1\" name=\"gb2312_chinese_ci\">\r\n      <Charset>gb2312</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"43\" parent=\"1\" name=\"gbk_bin\">\r\n      <Charset>gbk</Charset>\r\n    </collation>\r\n    <collation id=\"44\" parent=\"1\" name=\"gbk_chinese_ci\">\r\n      <Charset>gbk</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"45\" parent=\"1\" name=\"geostd8_bin\">\r\n      <Charset>geostd8</Charset>\r\n    </collation>\r\n    <collation id=\"46\" parent=\"1\" name=\"geostd8_general_ci\">\r\n      <Charset>geostd8</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"47\" parent=\"1\" name=\"greek_bin\">\r\n      <Charset>greek</Charset>\r\n    </collation>\r\n    <collation id=\"48\" parent=\"1\" name=\"greek_general_ci\">\r\n      <Charset>greek</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"49\" parent=\"1\" name=\"hebrew_bin\">\r\n      <Charset>hebrew</Charset>\r\n    </collation>\r\n    <collation id=\"50\" parent=\"1\" name=\"hebrew_general_ci\">\r\n      <Charset>hebrew</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"51\" parent=\"1\" name=\"hp8_bin\">\r\n      <Charset>hp8</Charset>\r\n    </collation>\r\n    <collation id=\"52\" parent=\"1\" name=\"hp8_english_ci\">\r\n      <Charset>hp8</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"53\" parent=\"1\" name=\"keybcs2_bin\">\r\n      <Charset>keybcs2</Charset>\r\n    </collation>\r\n    <collation id=\"54\" parent=\"1\" name=\"keybcs2_general_ci\">\r\n      <Charset>keybcs2</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"55\" parent=\"1\" name=\"koi8r_bin\">\r\n      <Charset>koi8r</Charset>\r\n    </collation>\r\n    <collation id=\"56\" parent=\"1\" name=\"koi8r_general_ci\">\r\n      <Charset>koi8r</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"57\" parent=\"1\" name=\"koi8u_bin\">\r\n      <Charset>koi8u</Charset>\r\n    </collation>\r\n    <collation id=\"58\" parent=\"1\" name=\"koi8u_general_ci\">\r\n      <Charset>koi8u</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"59\" parent=\"1\" name=\"latin1_bin\">\r\n      <Charset>latin1</Charset>\r\n    </collation>\r\n    <collation id=\"60\" parent=\"1\" name=\"latin1_danish_ci\">\r\n      <Charset>latin1</Charset>\r\n    </collation>\r\n    <collation id=\"61\" parent=\"1\" name=\"latin1_general_ci\">\r\n      <Charset>latin1</Charset>\r\n    </collation>\r\n    <collation id=\"62\" parent=\"1\" name=\"latin1_general_cs\">\r\n      <Charset>latin1</Charset>\r\n    </collation>\r\n    <collation id=\"63\" parent=\"1\" name=\"latin1_german1_ci\">\r\n      <Charset>latin1</Charset>\r\n    </collation>\r\n    <collation id=\"64\" parent=\"1\" name=\"latin1_german2_ci\">\r\n      <Charset>latin1</Charset>\r\n    </collation>\r\n    <collation id=\"65\" parent=\"1\" name=\"latin1_spanish_ci\">\r\n      <Charset>latin1</Charset>\r\n    </collation>\r\n    <collation id=\"66\" parent=\"1\" name=\"latin1_swedish_ci\">\r\n      <Charset>latin1</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"67\" parent=\"1\" name=\"latin2_bin\">\r\n      <Charset>latin2</Charset>\r\n    </collation>\r\n    <collation id=\"68\" parent=\"1\" name=\"latin2_croatian_ci\">\r\n      <Charset>latin2</Charset>\r\n    </collation>\r\n    <collation id=\"69\" parent=\"1\" name=\"latin2_czech_cs\">\r\n      <Charset>latin2</Charset>\r\n    </collation>\r\n    <collation id=\"70\" parent=\"1\" name=\"latin2_general_ci\">\r\n      <Charset>latin2</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"71\" parent=\"1\" name=\"latin2_hungarian_ci\">\r\n      <Charset>latin2</Charset>\r\n    </collation>\r\n    <collation id=\"72\" parent=\"1\" name=\"latin5_bin\">\r\n      <Charset>latin5</Charset>\r\n    </collation>\r\n    <collation id=\"73\" parent=\"1\" name=\"latin5_turkish_ci\">\r\n      <Charset>latin5</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"74\" parent=\"1\" name=\"latin7_bin\">\r\n      <Charset>latin7</Charset>\r\n    </collation>\r\n    <collation id=\"75\" parent=\"1\" name=\"latin7_estonian_cs\">\r\n      <Charset>latin7</Charset>\r\n    </collation>\r\n    <collation id=\"76\" parent=\"1\" name=\"latin7_general_ci\">\r\n      <Charset>latin7</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"77\" parent=\"1\" name=\"latin7_general_cs\">\r\n      <Charset>latin7</Charset>\r\n    </collation>\r\n    <collation id=\"78\" parent=\"1\" name=\"macce_bin\">\r\n      <Charset>macce</Charset>\r\n    </collation>\r\n    <collation id=\"79\" parent=\"1\" name=\"macce_general_ci\">\r\n      <Charset>macce</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"80\" parent=\"1\" name=\"macroman_bin\">\r\n      <Charset>macroman</Charset>\r\n    </collation>\r\n    <collation id=\"81\" parent=\"1\" name=\"macroman_general_ci\">\r\n      <Charset>macroman</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"82\" parent=\"1\" name=\"sjis_bin\">\r\n      <Charset>sjis</Charset>\r\n    </collation>\r\n    <collation id=\"83\" parent=\"1\" name=\"sjis_japanese_ci\">\r\n      <Charset>sjis</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"84\" parent=\"1\" name=\"swe7_bin\">\r\n      <Charset>swe7</Charset>\r\n    </collation>\r\n    <collation id=\"85\" parent=\"1\" name=\"swe7_swedish_ci\">\r\n      <Charset>swe7</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"86\" parent=\"1\" name=\"tis620_bin\">\r\n      <Charset>tis620</Charset>\r\n    </collation>\r\n    <collation id=\"87\" parent=\"1\" name=\"tis620_thai_ci\">\r\n      <Charset>tis620</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"88\" parent=\"1\" name=\"ucs2_bin\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"89\" parent=\"1\" name=\"ucs2_croatian_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"90\" parent=\"1\" name=\"ucs2_czech_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"91\" parent=\"1\" name=\"ucs2_danish_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"92\" parent=\"1\" name=\"ucs2_esperanto_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"93\" parent=\"1\" name=\"ucs2_estonian_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"94\" parent=\"1\" name=\"ucs2_general_ci\">\r\n      <Charset>ucs2</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"95\" parent=\"1\" name=\"ucs2_general_mysql500_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"96\" parent=\"1\" name=\"ucs2_german2_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"97\" parent=\"1\" name=\"ucs2_hungarian_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"98\" parent=\"1\" name=\"ucs2_icelandic_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"99\" parent=\"1\" name=\"ucs2_latvian_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"100\" parent=\"1\" name=\"ucs2_lithuanian_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"101\" parent=\"1\" name=\"ucs2_persian_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"102\" parent=\"1\" name=\"ucs2_polish_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"103\" parent=\"1\" name=\"ucs2_roman_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"104\" parent=\"1\" name=\"ucs2_romanian_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"105\" parent=\"1\" name=\"ucs2_sinhala_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"106\" parent=\"1\" name=\"ucs2_slovak_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"107\" parent=\"1\" name=\"ucs2_slovenian_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"108\" parent=\"1\" name=\"ucs2_spanish2_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"109\" parent=\"1\" name=\"ucs2_spanish_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"110\" parent=\"1\" name=\"ucs2_swedish_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"111\" parent=\"1\" name=\"ucs2_turkish_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"112\" parent=\"1\" name=\"ucs2_unicode_520_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"113\" parent=\"1\" name=\"ucs2_unicode_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"114\" parent=\"1\" name=\"ucs2_vietnamese_ci\">\r\n      <Charset>ucs2</Charset>\r\n    </collation>\r\n    <collation id=\"115\" parent=\"1\" name=\"ujis_bin\">\r\n      <Charset>ujis</Charset>\r\n    </collation>\r\n    <collation id=\"116\" parent=\"1\" name=\"ujis_japanese_ci\">\r\n      <Charset>ujis</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"117\" parent=\"1\" name=\"utf16_bin\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"118\" parent=\"1\" name=\"utf16_croatian_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"119\" parent=\"1\" name=\"utf16_czech_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"120\" parent=\"1\" name=\"utf16_danish_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"121\" parent=\"1\" name=\"utf16_esperanto_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"122\" parent=\"1\" name=\"utf16_estonian_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"123\" parent=\"1\" name=\"utf16_general_ci\">\r\n      <Charset>utf16</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"124\" parent=\"1\" name=\"utf16_german2_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"125\" parent=\"1\" name=\"utf16_hungarian_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"126\" parent=\"1\" name=\"utf16_icelandic_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"127\" parent=\"1\" name=\"utf16_latvian_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"128\" parent=\"1\" name=\"utf16_lithuanian_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"129\" parent=\"1\" name=\"utf16_persian_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"130\" parent=\"1\" name=\"utf16_polish_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"131\" parent=\"1\" name=\"utf16_roman_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"132\" parent=\"1\" name=\"utf16_romanian_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"133\" parent=\"1\" name=\"utf16_sinhala_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"134\" parent=\"1\" name=\"utf16_slovak_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"135\" parent=\"1\" name=\"utf16_slovenian_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"136\" parent=\"1\" name=\"utf16_spanish2_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"137\" parent=\"1\" name=\"utf16_spanish_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"138\" parent=\"1\" name=\"utf16_swedish_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"139\" parent=\"1\" name=\"utf16_turkish_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"140\" parent=\"1\" name=\"utf16_unicode_520_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"141\" parent=\"1\" name=\"utf16_unicode_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"142\" parent=\"1\" name=\"utf16_vietnamese_ci\">\r\n      <Charset>utf16</Charset>\r\n    </collation>\r\n    <collation id=\"143\" parent=\"1\" name=\"utf16le_bin\">\r\n      <Charset>utf16le</Charset>\r\n    </collation>\r\n    <collation id=\"144\" parent=\"1\" name=\"utf16le_general_ci\">\r\n      <Charset>utf16le</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"145\" parent=\"1\" name=\"utf32_bin\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"146\" parent=\"1\" name=\"utf32_croatian_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"147\" parent=\"1\" name=\"utf32_czech_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"148\" parent=\"1\" name=\"utf32_danish_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"149\" parent=\"1\" name=\"utf32_esperanto_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"150\" parent=\"1\" name=\"utf32_estonian_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"151\" parent=\"1\" name=\"utf32_general_ci\">\r\n      <Charset>utf32</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"152\" parent=\"1\" name=\"utf32_german2_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"153\" parent=\"1\" name=\"utf32_hungarian_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"154\" parent=\"1\" name=\"utf32_icelandic_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"155\" parent=\"1\" name=\"utf32_latvian_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"156\" parent=\"1\" name=\"utf32_lithuanian_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"157\" parent=\"1\" name=\"utf32_persian_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"158\" parent=\"1\" name=\"utf32_polish_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"159\" parent=\"1\" name=\"utf32_roman_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"160\" parent=\"1\" name=\"utf32_romanian_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"161\" parent=\"1\" name=\"utf32_sinhala_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"162\" parent=\"1\" name=\"utf32_slovak_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"163\" parent=\"1\" name=\"utf32_slovenian_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"164\" parent=\"1\" name=\"utf32_spanish2_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"165\" parent=\"1\" name=\"utf32_spanish_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"166\" parent=\"1\" name=\"utf32_swedish_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"167\" parent=\"1\" name=\"utf32_turkish_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"168\" parent=\"1\" name=\"utf32_unicode_520_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"169\" parent=\"1\" name=\"utf32_unicode_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"170\" parent=\"1\" name=\"utf32_vietnamese_ci\">\r\n      <Charset>utf32</Charset>\r\n    </collation>\r\n    <collation id=\"171\" parent=\"1\" name=\"utf8mb3_bin\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"172\" parent=\"1\" name=\"utf8mb3_croatian_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"173\" parent=\"1\" name=\"utf8mb3_czech_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"174\" parent=\"1\" name=\"utf8mb3_danish_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"175\" parent=\"1\" name=\"utf8mb3_esperanto_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"176\" parent=\"1\" name=\"utf8mb3_estonian_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"177\" parent=\"1\" name=\"utf8mb3_general_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"178\" parent=\"1\" name=\"utf8mb3_general_mysql500_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"179\" parent=\"1\" name=\"utf8mb3_german2_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"180\" parent=\"1\" name=\"utf8mb3_hungarian_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"181\" parent=\"1\" name=\"utf8mb3_icelandic_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"182\" parent=\"1\" name=\"utf8mb3_latvian_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"183\" parent=\"1\" name=\"utf8mb3_lithuanian_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"184\" parent=\"1\" name=\"utf8mb3_persian_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"185\" parent=\"1\" name=\"utf8mb3_polish_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"186\" parent=\"1\" name=\"utf8mb3_roman_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"187\" parent=\"1\" name=\"utf8mb3_romanian_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"188\" parent=\"1\" name=\"utf8mb3_sinhala_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"189\" parent=\"1\" name=\"utf8mb3_slovak_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"190\" parent=\"1\" name=\"utf8mb3_slovenian_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"191\" parent=\"1\" name=\"utf8mb3_spanish2_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"192\" parent=\"1\" name=\"utf8mb3_spanish_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"193\" parent=\"1\" name=\"utf8mb3_swedish_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"194\" parent=\"1\" name=\"utf8mb3_tolower_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"195\" parent=\"1\" name=\"utf8mb3_turkish_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"196\" parent=\"1\" name=\"utf8mb3_unicode_520_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"197\" parent=\"1\" name=\"utf8mb3_unicode_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"198\" parent=\"1\" name=\"utf8mb3_vietnamese_ci\">\r\n      <Charset>utf8mb3</Charset>\r\n    </collation>\r\n    <collation id=\"199\" parent=\"1\" name=\"utf8mb4_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n      <DefaultForCharset>1</DefaultForCharset>\r\n    </collation>\r\n    <collation id=\"200\" parent=\"1\" name=\"utf8mb4_0900_as_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"201\" parent=\"1\" name=\"utf8mb4_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"202\" parent=\"1\" name=\"utf8mb4_0900_bin\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"203\" parent=\"1\" name=\"utf8mb4_bg_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"204\" parent=\"1\" name=\"utf8mb4_bg_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"205\" parent=\"1\" name=\"utf8mb4_bin\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"206\" parent=\"1\" name=\"utf8mb4_bs_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"207\" parent=\"1\" name=\"utf8mb4_bs_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"208\" parent=\"1\" name=\"utf8mb4_croatian_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"209\" parent=\"1\" name=\"utf8mb4_cs_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"210\" parent=\"1\" name=\"utf8mb4_cs_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"211\" parent=\"1\" name=\"utf8mb4_czech_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"212\" parent=\"1\" name=\"utf8mb4_da_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"213\" parent=\"1\" name=\"utf8mb4_da_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"214\" parent=\"1\" name=\"utf8mb4_danish_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"215\" parent=\"1\" name=\"utf8mb4_de_pb_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"216\" parent=\"1\" name=\"utf8mb4_de_pb_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"217\" parent=\"1\" name=\"utf8mb4_eo_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"218\" parent=\"1\" name=\"utf8mb4_eo_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"219\" parent=\"1\" name=\"utf8mb4_es_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"220\" parent=\"1\" name=\"utf8mb4_es_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"221\" parent=\"1\" name=\"utf8mb4_es_trad_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"222\" parent=\"1\" name=\"utf8mb4_es_trad_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"223\" parent=\"1\" name=\"utf8mb4_esperanto_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"224\" parent=\"1\" name=\"utf8mb4_estonian_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"225\" parent=\"1\" name=\"utf8mb4_et_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"226\" parent=\"1\" name=\"utf8mb4_et_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"227\" parent=\"1\" name=\"utf8mb4_general_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"228\" parent=\"1\" name=\"utf8mb4_german2_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"229\" parent=\"1\" name=\"utf8mb4_gl_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"230\" parent=\"1\" name=\"utf8mb4_gl_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"231\" parent=\"1\" name=\"utf8mb4_hr_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"232\" parent=\"1\" name=\"utf8mb4_hr_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"233\" parent=\"1\" name=\"utf8mb4_hu_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"234\" parent=\"1\" name=\"utf8mb4_hu_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"235\" parent=\"1\" name=\"utf8mb4_hungarian_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"236\" parent=\"1\" name=\"utf8mb4_icelandic_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"237\" parent=\"1\" name=\"utf8mb4_is_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"238\" parent=\"1\" name=\"utf8mb4_is_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"239\" parent=\"1\" name=\"utf8mb4_ja_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"240\" parent=\"1\" name=\"utf8mb4_ja_0900_as_cs_ks\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"241\" parent=\"1\" name=\"utf8mb4_la_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"242\" parent=\"1\" name=\"utf8mb4_la_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"243\" parent=\"1\" name=\"utf8mb4_latvian_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"244\" parent=\"1\" name=\"utf8mb4_lithuanian_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"245\" parent=\"1\" name=\"utf8mb4_lt_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"246\" parent=\"1\" name=\"utf8mb4_lt_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"247\" parent=\"1\" name=\"utf8mb4_lv_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"248\" parent=\"1\" name=\"utf8mb4_lv_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"249\" parent=\"1\" name=\"utf8mb4_mn_cyrl_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"250\" parent=\"1\" name=\"utf8mb4_mn_cyrl_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"251\" parent=\"1\" name=\"utf8mb4_nb_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"252\" parent=\"1\" name=\"utf8mb4_nb_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"253\" parent=\"1\" name=\"utf8mb4_nn_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"254\" parent=\"1\" name=\"utf8mb4_nn_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"255\" parent=\"1\" name=\"utf8mb4_persian_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"256\" parent=\"1\" name=\"utf8mb4_pl_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"257\" parent=\"1\" name=\"utf8mb4_pl_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"258\" parent=\"1\" name=\"utf8mb4_polish_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"259\" parent=\"1\" name=\"utf8mb4_ro_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"260\" parent=\"1\" name=\"utf8mb4_ro_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"261\" parent=\"1\" name=\"utf8mb4_roman_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"262\" parent=\"1\" name=\"utf8mb4_romanian_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"263\" parent=\"1\" name=\"utf8mb4_ru_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"264\" parent=\"1\" name=\"utf8mb4_ru_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"265\" parent=\"1\" name=\"utf8mb4_sinhala_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"266\" parent=\"1\" name=\"utf8mb4_sk_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"267\" parent=\"1\" name=\"utf8mb4_sk_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"268\" parent=\"1\" name=\"utf8mb4_sl_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"269\" parent=\"1\" name=\"utf8mb4_sl_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"270\" parent=\"1\" name=\"utf8mb4_slovak_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"271\" parent=\"1\" name=\"utf8mb4_slovenian_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"272\" parent=\"1\" name=\"utf8mb4_spanish2_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"273\" parent=\"1\" name=\"utf8mb4_spanish_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"274\" parent=\"1\" name=\"utf8mb4_sr_latn_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"275\" parent=\"1\" name=\"utf8mb4_sr_latn_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"276\" parent=\"1\" name=\"utf8mb4_sv_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"277\" parent=\"1\" name=\"utf8mb4_sv_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"278\" parent=\"1\" name=\"utf8mb4_swedish_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"279\" parent=\"1\" name=\"utf8mb4_tr_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"280\" parent=\"1\" name=\"utf8mb4_tr_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"281\" parent=\"1\" name=\"utf8mb4_turkish_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"282\" parent=\"1\" name=\"utf8mb4_unicode_520_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"283\" parent=\"1\" name=\"utf8mb4_unicode_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"284\" parent=\"1\" name=\"utf8mb4_vi_0900_ai_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"285\" parent=\"1\" name=\"utf8mb4_vi_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"286\" parent=\"1\" name=\"utf8mb4_vietnamese_ci\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <collation id=\"287\" parent=\"1\" name=\"utf8mb4_zh_0900_as_cs\">\r\n      <Charset>utf8mb4</Charset>\r\n    </collation>\r\n    <schema id=\"288\" parent=\"1\" name=\"hcmanagement\">\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </schema>\r\n    <schema id=\"289\" parent=\"1\" name=\"information_schema\">\r\n      <CollationName>utf8mb3_general_ci</CollationName>\r\n    </schema>\r\n    <schema id=\"290\" parent=\"1\" name=\"mysql\">\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </schema>\r\n    <schema id=\"291\" parent=\"1\" name=\"nats\">\r\n      <Current>1</Current>\r\n      <LastIntrospectionLocalTimestamp>2025-03-23.12:04:35</LastIntrospectionLocalTimestamp>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </schema>\r\n    <schema id=\"292\" parent=\"1\" name=\"nats_backup\">\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </schema>\r\n    <schema id=\"293\" parent=\"1\" name=\"natsinternal\">\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </schema>\r\n    <schema id=\"294\" parent=\"1\" name=\"performance_schema\">\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </schema>\r\n    <schema id=\"295\" parent=\"1\" name=\"sys\">\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </schema>\r\n    <user id=\"296\" parent=\"1\" name=\"mysql.infoschema\">\r\n      <CanLogin>0</CanLogin>\r\n      <Host>localhost</Host>\r\n      <Plugin>caching_sha2_password</Plugin>\r\n    </user>\r\n    <user id=\"297\" parent=\"1\" name=\"mysql.session\">\r\n      <CanLogin>0</CanLogin>\r\n      <Host>localhost</Host>\r\n      <Plugin>caching_sha2_password</Plugin>\r\n    </user>\r\n    <user id=\"298\" parent=\"1\" name=\"mysql.sys\">\r\n      <CanLogin>0</CanLogin>\r\n      <Host>localhost</Host>\r\n      <Plugin>caching_sha2_password</Plugin>\r\n    </user>\r\n    <user id=\"299\" parent=\"1\" name=\"root\">\r\n      <Host>localhost</Host>\r\n      <Plugin>caching_sha2_password</Plugin>\r\n    </user>\r\n    <table id=\"300\" parent=\"291\" name=\"about_us_introductions\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"301\" parent=\"291\" name=\"catalog_item_photos\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"302\" parent=\"291\" name=\"catalog_items\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"303\" parent=\"291\" name=\"certificates\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"304\" parent=\"291\" name=\"contact_info\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"305\" parent=\"291\" name=\"enquiries\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"306\" parent=\"291\" name=\"general_settings\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"307\" parent=\"291\" name=\"members\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"308\" parent=\"291\" name=\"posts\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"309\" parent=\"291\" name=\"role_claims\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"310\" parent=\"291\" name=\"roles\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"311\" parent=\"291\" name=\"slider_items\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"312\" parent=\"291\" name=\"summary_items\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"313\" parent=\"291\" name=\"traffic_by_date\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"314\" parent=\"291\" name=\"traffic_by_hour\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"315\" parent=\"291\" name=\"traffic_by_hour_ip_address\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"316\" parent=\"291\" name=\"user_claims\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"317\" parent=\"291\" name=\"user_logins\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"318\" parent=\"291\" name=\"user_roles\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"319\" parent=\"291\" name=\"user_tokens\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <table id=\"320\" parent=\"291\" name=\"users\">\r\n      <Engine>InnoDB</Engine>\r\n      <CollationName>utf8mb4_0900_ai_ci</CollationName>\r\n    </table>\r\n    <column id=\"321\" parent=\"300\" name=\"id\">\r\n      <AutoIncrement>2</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"322\" parent=\"300\" name=\"thumbnail_url\">\r\n      <Position>2</Position>\r\n      <StoredType>varchar(1000)|0s</StoredType>\r\n    </column>\r\n    <column id=\"323\" parent=\"300\" name=\"thumbnail_type\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"324\" parent=\"300\" name=\"main_quote_content\">\r\n      <NotNull>1</NotNull>\r\n      <Position>4</Position>\r\n      <StoredType>varchar(1000)|0s</StoredType>\r\n    </column>\r\n    <column id=\"325\" parent=\"300\" name=\"about_us_content\">\r\n      <NotNull>1</NotNull>\r\n      <Position>5</Position>\r\n      <StoredType>varchar(1500)|0s</StoredType>\r\n    </column>\r\n    <column id=\"326\" parent=\"300\" name=\"why_choose_us_content\">\r\n      <NotNull>1</NotNull>\r\n      <Position>6</Position>\r\n      <StoredType>varchar(1500)|0s</StoredType>\r\n    </column>\r\n    <column id=\"327\" parent=\"300\" name=\"our_difference_content\">\r\n      <NotNull>1</NotNull>\r\n      <Position>7</Position>\r\n      <StoredType>varchar(1500)|0s</StoredType>\r\n    </column>\r\n    <column id=\"328\" parent=\"300\" name=\"our_culture_content\">\r\n      <NotNull>1</NotNull>\r\n      <Position>8</Position>\r\n      <StoredType>varchar(1500)|0s</StoredType>\r\n    </column>\r\n    <index id=\"329\" parent=\"300\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"330\" parent=\"300\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"331\" parent=\"301\" name=\"id\">\r\n      <AutoIncrement>21</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"332\" parent=\"301\" name=\"url\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"333\" parent=\"301\" name=\"item_id\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <foreign-key id=\"334\" parent=\"301\" name=\"FK_catalog_item_photos_catalog_items_item_id\">\r\n      <ColNames>item_id</ColNames>\r\n      <OnDelete>cascade</OnDelete>\r\n      <RefColNames>id</RefColNames>\r\n      <RefTableName>catalog_items</RefTableName>\r\n    </foreign-key>\r\n    <index id=\"335\" parent=\"301\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"336\" parent=\"301\" name=\"IX_catalog_item_photos_item_id\">\r\n      <ColNames>item_id</ColNames>\r\n      <Type>btree</Type>\r\n    </index>\r\n    <key id=\"337\" parent=\"301\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"338\" parent=\"302\" name=\"id\">\r\n      <AutoIncrement>9</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"339\" parent=\"302\" name=\"name\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>varchar(50)|0s</StoredType>\r\n    </column>\r\n    <column id=\"340\" parent=\"302\" name=\"type\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"341\" parent=\"302\" name=\"summary\">\r\n      <Position>4</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <column id=\"342\" parent=\"302\" name=\"detail\">\r\n      <Position>5</Position>\r\n      <StoredType>varchar(5000)|0s</StoredType>\r\n    </column>\r\n    <column id=\"343\" parent=\"302\" name=\"thumbnail_url\">\r\n      <Position>6</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <index id=\"344\" parent=\"302\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"345\" parent=\"302\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"346\" parent=\"303\" name=\"id\">\r\n      <AutoIncrement>2</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"347\" parent=\"303\" name=\"name\">\r\n      <Position>2</Position>\r\n      <StoredType>varchar(100)|0s</StoredType>\r\n    </column>\r\n    <column id=\"348\" parent=\"303\" name=\"photo_url\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <index id=\"349\" parent=\"303\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"350\" parent=\"303\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"351\" parent=\"304\" name=\"id\">\r\n      <AutoIncrement>5</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"352\" parent=\"304\" name=\"type\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"353\" parent=\"304\" name=\"content\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <index id=\"354\" parent=\"304\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"355\" parent=\"304\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"356\" parent=\"305\" name=\"id\">\r\n      <AutoIncrement>1</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"357\" parent=\"305\" name=\"full_name\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>varchar(50)|0s</StoredType>\r\n    </column>\r\n    <column id=\"358\" parent=\"305\" name=\"email\">\r\n      <Position>3</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <column id=\"359\" parent=\"305\" name=\"phone_number\">\r\n      <NotNull>1</NotNull>\r\n      <Position>4</Position>\r\n      <StoredType>varchar(15)|0s</StoredType>\r\n    </column>\r\n    <column id=\"360\" parent=\"305\" name=\"content\">\r\n      <NotNull>1</NotNull>\r\n      <Position>5</Position>\r\n      <StoredType>varchar(1000)|0s</StoredType>\r\n    </column>\r\n    <column id=\"361\" parent=\"305\" name=\"received_datetime\">\r\n      <NotNull>1</NotNull>\r\n      <Position>6</Position>\r\n      <StoredType>datetime(6)|0s</StoredType>\r\n    </column>\r\n    <column id=\"362\" parent=\"305\" name=\"is_completed\">\r\n      <NotNull>1</NotNull>\r\n      <Position>7</Position>\r\n      <StoredType>tinyint(1)|0s</StoredType>\r\n    </column>\r\n    <index id=\"363\" parent=\"305\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"364\" parent=\"305\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"365\" parent=\"306\" name=\"id\">\r\n      <AutoIncrement>2</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"366\" parent=\"306\" name=\"application_name\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>varchar(100)|0s</StoredType>\r\n    </column>\r\n    <column id=\"367\" parent=\"306\" name=\"application_short_name\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>varchar(15)|0s</StoredType>\r\n    </column>\r\n    <column id=\"368\" parent=\"306\" name=\"fav_icon_url\">\r\n      <Position>4</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <column id=\"369\" parent=\"306\" name=\"under_maintainance\">\r\n      <NotNull>1</NotNull>\r\n      <Position>5</Position>\r\n      <StoredType>tinyint(1)|0s</StoredType>\r\n    </column>\r\n    <index id=\"370\" parent=\"306\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"371\" parent=\"306\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"372\" parent=\"307\" name=\"id\">\r\n      <AutoIncrement>5</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"373\" parent=\"307\" name=\"full_name\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>varchar(50)|0s</StoredType>\r\n    </column>\r\n    <column id=\"374\" parent=\"307\" name=\"role_name\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>varchar(50)|0s</StoredType>\r\n    </column>\r\n    <column id=\"375\" parent=\"307\" name=\"description\">\r\n      <NotNull>1</NotNull>\r\n      <Position>4</Position>\r\n      <StoredType>varchar(400)|0s</StoredType>\r\n    </column>\r\n    <column id=\"376\" parent=\"307\" name=\"thumbnail_url\">\r\n      <Position>5</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <index id=\"377\" parent=\"307\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"378\" parent=\"307\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"379\" parent=\"308\" name=\"id\">\r\n      <AutoIncrement>31</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"380\" parent=\"308\" name=\"title\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>varchar(150)|0s</StoredType>\r\n    </column>\r\n    <column id=\"381\" parent=\"308\" name=\"normalized_title\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <column id=\"382\" parent=\"308\" name=\"thumbnail_url\">\r\n      <Position>4</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <column id=\"383\" parent=\"308\" name=\"content\">\r\n      <NotNull>1</NotNull>\r\n      <Position>5</Position>\r\n      <StoredType>varchar(10000)|0s</StoredType>\r\n    </column>\r\n    <column id=\"384\" parent=\"308\" name=\"created_datetime\">\r\n      <NotNull>1</NotNull>\r\n      <Position>6</Position>\r\n      <StoredType>datetime(6)|0s</StoredType>\r\n    </column>\r\n    <column id=\"385\" parent=\"308\" name=\"updated_datetime\">\r\n      <Position>7</Position>\r\n      <StoredType>datetime(6)|0s</StoredType>\r\n    </column>\r\n    <column id=\"386\" parent=\"308\" name=\"is_pinned\">\r\n      <NotNull>1</NotNull>\r\n      <Position>8</Position>\r\n      <StoredType>tinyint(1)|0s</StoredType>\r\n    </column>\r\n    <column id=\"387\" parent=\"308\" name=\"is_published\">\r\n      <NotNull>1</NotNull>\r\n      <Position>9</Position>\r\n      <StoredType>tinyint(1)|0s</StoredType>\r\n    </column>\r\n    <column id=\"388\" parent=\"308\" name=\"views\">\r\n      <NotNull>1</NotNull>\r\n      <Position>10</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"389\" parent=\"308\" name=\"user_id\">\r\n      <NotNull>1</NotNull>\r\n      <Position>11</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <foreign-key id=\"390\" parent=\"308\" name=\"FK_posts_users_user_id\">\r\n      <ColNames>user_id</ColNames>\r\n      <OnDelete>cascade</OnDelete>\r\n      <RefColNames>id</RefColNames>\r\n      <RefTableName>users</RefTableName>\r\n    </foreign-key>\r\n    <index id=\"391\" parent=\"308\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"392\" parent=\"308\" name=\"unique__post__normalized_name\">\r\n      <ColNames>normalized_title</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"393\" parent=\"308\" name=\"IX_posts_user_id\">\r\n      <ColNames>user_id</ColNames>\r\n      <Type>btree</Type>\r\n    </index>\r\n    <key id=\"394\" parent=\"308\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <key id=\"395\" parent=\"308\" name=\"unique__post__normalized_name\">\r\n      <UnderlyingIndexName>unique__post__normalized_name</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"396\" parent=\"309\" name=\"id\">\r\n      <AutoIncrement>1</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"397\" parent=\"309\" name=\"role_id\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"398\" parent=\"309\" name=\"claim_type\">\r\n      <Position>3</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"399\" parent=\"309\" name=\"claim_value\">\r\n      <Position>4</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <index id=\"400\" parent=\"309\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"401\" parent=\"309\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"402\" parent=\"310\" name=\"id\">\r\n      <AutoIncrement>4</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"403\" parent=\"310\" name=\"display_name\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>varchar(50)|0s</StoredType>\r\n    </column>\r\n    <column id=\"404\" parent=\"310\" name=\"name\">\r\n      <Position>3</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <column id=\"405\" parent=\"310\" name=\"normalized_name\">\r\n      <Position>4</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"406\" parent=\"310\" name=\"concurrent_stamp\">\r\n      <Position>5</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <index id=\"407\" parent=\"310\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"408\" parent=\"310\" name=\"unique__roles__display_name\">\r\n      <ColNames>display_name</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"409\" parent=\"310\" name=\"unique__roles__name\">\r\n      <ColNames>name</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"410\" parent=\"310\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <key id=\"411\" parent=\"310\" name=\"unique__roles__display_name\">\r\n      <UnderlyingIndexName>unique__roles__display_name</UnderlyingIndexName>\r\n    </key>\r\n    <key id=\"412\" parent=\"310\" name=\"unique__roles__name\">\r\n      <UnderlyingIndexName>unique__roles__name</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"413\" parent=\"311\" name=\"id\">\r\n      <AutoIncrement>4</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"414\" parent=\"311\" name=\"title\">\r\n      <Position>2</Position>\r\n      <StoredType>varchar(100)|0s</StoredType>\r\n    </column>\r\n    <column id=\"415\" parent=\"311\" name=\"thumbnail_url\">\r\n      <Position>3</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <column id=\"416\" parent=\"311\" name=\"index\">\r\n      <NotNull>1</NotNull>\r\n      <Position>4</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <index id=\"417\" parent=\"311\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"418\" parent=\"311\" name=\"unique__slider_items__index\">\r\n      <ColNames>index</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"419\" parent=\"311\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <key id=\"420\" parent=\"311\" name=\"unique__slider_items__index\">\r\n      <UnderlyingIndexName>unique__slider_items__index</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"421\" parent=\"312\" name=\"id\">\r\n      <AutoIncrement>5</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"422\" parent=\"312\" name=\"name\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>varchar(25)|0s</StoredType>\r\n    </column>\r\n    <column id=\"423\" parent=\"312\" name=\"summary_content\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <column id=\"424\" parent=\"312\" name=\"detail_content\">\r\n      <NotNull>1</NotNull>\r\n      <Position>4</Position>\r\n      <StoredType>varchar(3000)|0s</StoredType>\r\n    </column>\r\n    <column id=\"425\" parent=\"312\" name=\"thumbnail_url\">\r\n      <Position>5</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <index id=\"426\" parent=\"312\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"427\" parent=\"312\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"428\" parent=\"313\" name=\"id\">\r\n      <AutoIncrement>1</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"429\" parent=\"313\" name=\"recorded_date\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>date|0s</StoredType>\r\n    </column>\r\n    <column id=\"430\" parent=\"313\" name=\"access_count\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"431\" parent=\"313\" name=\"guest_count\">\r\n      <NotNull>1</NotNull>\r\n      <Position>4</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <index id=\"432\" parent=\"313\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"433\" parent=\"313\" name=\"unique__traffic_by_date__recorded_date\">\r\n      <ColNames>recorded_date</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"434\" parent=\"313\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <key id=\"435\" parent=\"313\" name=\"unique__traffic_by_date__recorded_date\">\r\n      <UnderlyingIndexName>unique__traffic_by_date__recorded_date</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"436\" parent=\"314\" name=\"id\">\r\n      <AutoIncrement>1</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"437\" parent=\"314\" name=\"recorded_datetime\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>datetime(6)|0s</StoredType>\r\n    </column>\r\n    <column id=\"438\" parent=\"314\" name=\"access_count\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"439\" parent=\"314\" name=\"guest_count\">\r\n      <NotNull>1</NotNull>\r\n      <Position>4</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"440\" parent=\"314\" name=\"traffic_by_date_id\">\r\n      <NotNull>1</NotNull>\r\n      <Position>5</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <foreign-key id=\"441\" parent=\"314\" name=\"FK_traffic_by_hour_traffic_by_date_traffic_by_date_id\">\r\n      <ColNames>traffic_by_date_id</ColNames>\r\n      <OnDelete>cascade</OnDelete>\r\n      <RefColNames>id</RefColNames>\r\n      <RefTableName>traffic_by_date</RefTableName>\r\n    </foreign-key>\r\n    <index id=\"442\" parent=\"314\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"443\" parent=\"314\" name=\"unique__traffic_by_hour__recoreded_datetime\">\r\n      <ColNames>recorded_datetime</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"444\" parent=\"314\" name=\"IX_traffic_by_hour_traffic_by_date_id\">\r\n      <ColNames>traffic_by_date_id</ColNames>\r\n      <Type>btree</Type>\r\n    </index>\r\n    <key id=\"445\" parent=\"314\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <key id=\"446\" parent=\"314\" name=\"unique__traffic_by_hour__recoreded_datetime\">\r\n      <UnderlyingIndexName>unique__traffic_by_hour__recoreded_datetime</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"447\" parent=\"315\" name=\"id\">\r\n      <AutoIncrement>1</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"448\" parent=\"315\" name=\"ip_address\">\r\n      <Position>2</Position>\r\n      <StoredType>varchar(15)|0s</StoredType>\r\n    </column>\r\n    <column id=\"449\" parent=\"315\" name=\"access_count\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"450\" parent=\"315\" name=\"last_access_at\">\r\n      <NotNull>1</NotNull>\r\n      <Position>4</Position>\r\n      <StoredType>datetime(6)|0s</StoredType>\r\n    </column>\r\n    <column id=\"451\" parent=\"315\" name=\"last_user_agent\">\r\n      <Position>5</Position>\r\n      <StoredType>varchar(10000)|0s</StoredType>\r\n    </column>\r\n    <column id=\"452\" parent=\"315\" name=\"traffic_by_hour_id\">\r\n      <NotNull>1</NotNull>\r\n      <Position>6</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <foreign-key id=\"453\" parent=\"315\" name=\"FK_traffic_by_hour_ip_address_traffic_by_hour_traffic_by_hour_id\">\r\n      <ColNames>traffic_by_hour_id</ColNames>\r\n      <OnDelete>cascade</OnDelete>\r\n      <RefColNames>id</RefColNames>\r\n      <RefTableName>traffic_by_hour</RefTableName>\r\n    </foreign-key>\r\n    <index id=\"454\" parent=\"315\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"455\" parent=\"315\" name=\"IX_traffic_by_hour_ip_address_last_access_at\">\r\n      <ColNames>last_access_at</ColNames>\r\n      <Type>btree</Type>\r\n    </index>\r\n    <index id=\"456\" parent=\"315\" name=\"IX_traffic_by_hour_ip_address_traffic_by_hour_id\">\r\n      <ColNames>traffic_by_hour_id</ColNames>\r\n      <Type>btree</Type>\r\n    </index>\r\n    <key id=\"457\" parent=\"315\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"458\" parent=\"316\" name=\"id\">\r\n      <AutoIncrement>1</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"459\" parent=\"316\" name=\"user_id\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"460\" parent=\"316\" name=\"claim_type\">\r\n      <Position>3</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"461\" parent=\"316\" name=\"claim_value\">\r\n      <Position>4</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <index id=\"462\" parent=\"316\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"463\" parent=\"316\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"464\" parent=\"317\" name=\"user_id\">\r\n      <AutoIncrement>1</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"465\" parent=\"317\" name=\"login_providers\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"466\" parent=\"317\" name=\"provider_key\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"467\" parent=\"317\" name=\"provider_display_name\">\r\n      <Position>4</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <index id=\"468\" parent=\"317\" name=\"PRIMARY\">\r\n      <ColNames>user_id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"469\" parent=\"317\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"470\" parent=\"318\" name=\"user_id\">\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"471\" parent=\"318\" name=\"role_id\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <foreign-key id=\"472\" parent=\"318\" name=\"FK_user_roles_users_user_id\">\r\n      <ColNames>user_id</ColNames>\r\n      <OnDelete>cascade</OnDelete>\r\n      <RefColNames>id</RefColNames>\r\n      <RefTableName>users</RefTableName>\r\n    </foreign-key>\r\n    <foreign-key id=\"473\" parent=\"318\" name=\"FK_user_roles_roles_role_id\">\r\n      <ColNames>role_id</ColNames>\r\n      <OnDelete>cascade</OnDelete>\r\n      <RefColNames>id</RefColNames>\r\n      <RefTableName>roles</RefTableName>\r\n    </foreign-key>\r\n    <index id=\"474\" parent=\"318\" name=\"PRIMARY\">\r\n      <ColNames>role_id\r\nuser_id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"475\" parent=\"318\" name=\"IX_user_roles_user_id\">\r\n      <ColNames>user_id</ColNames>\r\n      <Type>btree</Type>\r\n    </index>\r\n    <key id=\"476\" parent=\"318\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"477\" parent=\"319\" name=\"UserId\">\r\n      <AutoIncrement>1</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"478\" parent=\"319\" name=\"LoginProvider\">\r\n      <NotNull>1</NotNull>\r\n      <Position>2</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"479\" parent=\"319\" name=\"Name\">\r\n      <NotNull>1</NotNull>\r\n      <Position>3</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"480\" parent=\"319\" name=\"Value\">\r\n      <Position>4</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <index id=\"481\" parent=\"319\" name=\"PRIMARY\">\r\n      <ColNames>UserId</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"482\" parent=\"319\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <column id=\"483\" parent=\"320\" name=\"id\">\r\n      <AutoIncrement>4</AutoIncrement>\r\n      <NotNull>1</NotNull>\r\n      <Position>1</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <column id=\"484\" parent=\"320\" name=\"username\">\r\n      <Position>2</Position>\r\n      <StoredType>varchar(255)|0s</StoredType>\r\n    </column>\r\n    <column id=\"485\" parent=\"320\" name=\"normalized_username\">\r\n      <Position>3</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"486\" parent=\"320\" name=\"email\">\r\n      <Position>4</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"487\" parent=\"320\" name=\"normalized_email\">\r\n      <Position>5</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"488\" parent=\"320\" name=\"email_confirmed\">\r\n      <NotNull>1</NotNull>\r\n      <Position>6</Position>\r\n      <StoredType>tinyint(1)|0s</StoredType>\r\n    </column>\r\n    <column id=\"489\" parent=\"320\" name=\"password_hash\">\r\n      <Position>7</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"490\" parent=\"320\" name=\"security_stamp\">\r\n      <Position>8</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"491\" parent=\"320\" name=\"concurrent_stamp\">\r\n      <Position>9</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"492\" parent=\"320\" name=\"phone_number\">\r\n      <Position>10</Position>\r\n      <StoredType>longtext|0s</StoredType>\r\n    </column>\r\n    <column id=\"493\" parent=\"320\" name=\"phone_number_confirmed\">\r\n      <NotNull>1</NotNull>\r\n      <Position>11</Position>\r\n      <StoredType>tinyint(1)|0s</StoredType>\r\n    </column>\r\n    <column id=\"494\" parent=\"320\" name=\"two_factor_enabled\">\r\n      <NotNull>1</NotNull>\r\n      <Position>12</Position>\r\n      <StoredType>tinyint(1)|0s</StoredType>\r\n    </column>\r\n    <column id=\"495\" parent=\"320\" name=\"lockout_end\">\r\n      <Position>13</Position>\r\n      <StoredType>datetime(6)|0s</StoredType>\r\n    </column>\r\n    <column id=\"496\" parent=\"320\" name=\"lockout_enabled\">\r\n      <NotNull>1</NotNull>\r\n      <Position>14</Position>\r\n      <StoredType>tinyint(1)|0s</StoredType>\r\n    </column>\r\n    <column id=\"497\" parent=\"320\" name=\"access_failed_count\">\r\n      <NotNull>1</NotNull>\r\n      <Position>15</Position>\r\n      <StoredType>int|0s</StoredType>\r\n    </column>\r\n    <index id=\"498\" parent=\"320\" name=\"PRIMARY\">\r\n      <ColNames>id</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <index id=\"499\" parent=\"320\" name=\"unique__users__username\">\r\n      <ColNames>username</ColNames>\r\n      <Type>btree</Type>\r\n      <Unique>1</Unique>\r\n    </index>\r\n    <key id=\"500\" parent=\"320\" name=\"PRIMARY\">\r\n      <NameSurrogate>1</NameSurrogate>\r\n      <Primary>1</Primary>\r\n      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>\r\n    </key>\r\n    <key id=\"501\" parent=\"320\" name=\"unique__users__username\">\r\n      <UnderlyingIndexName>unique__users__username</UnderlyingIndexName>\r\n    </key>\r\n  </database-model>\r\n</dataSource>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.NATS/.idea/dataSources/c6a547f5-00cc-4032-98a7-ed5b8fde1cb8.xml b/.idea/.idea.NATS/.idea/dataSources/c6a547f5-00cc-4032-98a7-ed5b8fde1cb8.xml
+--- a/.idea/.idea.NATS/.idea/dataSources/c6a547f5-00cc-4032-98a7-ed5b8fde1cb8.xml	(revision 2153870133fad336853c057ffac1e4e6b1bc1ea7)
++++ b/.idea/.idea.NATS/.idea/dataSources/c6a547f5-00cc-4032-98a7-ed5b8fde1cb8.xml	(date 1746206424939)
+@@ -1,99 +1,164 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+-<dataSource name="nats@localhost">
++<dataSource name="@localhost">
+   <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.53">
+     <root id="1">
+-      <DefaultCasing>lower/lower</DefaultCasing>
++      <DefaultCasing>exact</DefaultCasing>
+       <DefaultEngine>InnoDB</DefaultEngine>
+       <DefaultTmpEngine>InnoDB</DefaultTmpEngine>
+-      <Grants>|root||root|localhost|ALTER|G
++      <Grants>|root||debian-sys-maint|localhost|ALTER|G
++|root||root|localhost|ALTER|G
++|root||debian-sys-maint|localhost|ALTER ROUTINE|G
+ |root||root|localhost|ALTER ROUTINE|G
++|root||debian-sys-maint|localhost|APPLICATION_PASSWORD_ADMIN|G
+ |root||root|localhost|APPLICATION_PASSWORD_ADMIN|G
+ |root||mysql.infoschema|localhost|AUDIT_ABORT_EXEMPT|G
+ |root||mysql.session|localhost|AUDIT_ABORT_EXEMPT|G
+ |root||mysql.sys|localhost|AUDIT_ABORT_EXEMPT|G
+ |root||root|localhost|AUDIT_ABORT_EXEMPT|G
++|root||debian-sys-maint|localhost|AUDIT_ADMIN|G
+ |root||root|localhost|AUDIT_ADMIN|G
++|root||debian-sys-maint|localhost|AUTHENTICATION_POLICY_ADMIN|G
+ |root||mysql.session|localhost|AUTHENTICATION_POLICY_ADMIN|G
+ |root||root|localhost|AUTHENTICATION_POLICY_ADMIN|G
++|root||debian-sys-maint|localhost|BACKUP_ADMIN|G
+ |root||mysql.session|localhost|BACKUP_ADMIN|G
+ |root||root|localhost|BACKUP_ADMIN|G
++|root||debian-sys-maint|localhost|BINLOG_ADMIN|G
+ |root||root|localhost|BINLOG_ADMIN|G
++|root||debian-sys-maint|localhost|BINLOG_ENCRYPTION_ADMIN|G
+ |root||root|localhost|BINLOG_ENCRYPTION_ADMIN|G
++|root||debian-sys-maint|localhost|CLONE_ADMIN|G
+ |root||mysql.session|localhost|CLONE_ADMIN|G
+ |root||root|localhost|CLONE_ADMIN|G
++|root||debian-sys-maint|localhost|CONNECTION_ADMIN|G
+ |root||mysql.session|localhost|CONNECTION_ADMIN|G
+ |root||root|localhost|CONNECTION_ADMIN|G
++|root||debian-sys-maint|localhost|CREATE|G
+ |root||root|localhost|CREATE|G
++|root||debian-sys-maint|localhost|CREATE ROLE|G
+ |root||root|localhost|CREATE ROLE|G
++|root||debian-sys-maint|localhost|CREATE ROUTINE|G
+ |root||root|localhost|CREATE ROUTINE|G
++|root||debian-sys-maint|localhost|CREATE TABLESPACE|G
+ |root||root|localhost|CREATE TABLESPACE|G
++|root||debian-sys-maint|localhost|CREATE TEMPORARY TABLES|G
+ |root||root|localhost|CREATE TEMPORARY TABLES|G
++|root||debian-sys-maint|localhost|CREATE USER|G
+ |root||root|localhost|CREATE USER|G
++|root||debian-sys-maint|localhost|CREATE VIEW|G
+ |root||root|localhost|CREATE VIEW|G
++|root||debian-sys-maint|localhost|DELETE|G
+ |root||root|localhost|DELETE|G
++|root||debian-sys-maint|localhost|DROP|G
+ |root||root|localhost|DROP|G
++|root||debian-sys-maint|localhost|DROP ROLE|G
+ |root||root|localhost|DROP ROLE|G
++|root||debian-sys-maint|localhost|ENCRYPTION_KEY_ADMIN|G
+ |root||root|localhost|ENCRYPTION_KEY_ADMIN|G
++|root||debian-sys-maint|localhost|EVENT|G
+ |root||root|localhost|EVENT|G
++|root||debian-sys-maint|localhost|EXECUTE|G
+ |root||root|localhost|EXECUTE|G
++|root||debian-sys-maint|localhost|FILE|G
+ |root||root|localhost|FILE|G
+ |root||mysql.infoschema|localhost|FIREWALL_EXEMPT|G
+ |root||mysql.session|localhost|FIREWALL_EXEMPT|G
+ |root||mysql.sys|localhost|FIREWALL_EXEMPT|G
+ |root||root|localhost|FIREWALL_EXEMPT|G
++|root||debian-sys-maint|localhost|FLUSH_OPTIMIZER_COSTS|G
+ |root||root|localhost|FLUSH_OPTIMIZER_COSTS|G
++|root||debian-sys-maint|localhost|FLUSH_STATUS|G
+ |root||root|localhost|FLUSH_STATUS|G
++|root||debian-sys-maint|localhost|FLUSH_TABLES|G
+ |root||root|localhost|FLUSH_TABLES|G
++|root||debian-sys-maint|localhost|FLUSH_USER_RESOURCES|G
+ |root||root|localhost|FLUSH_USER_RESOURCES|G
++|root||debian-sys-maint|localhost|GROUP_REPLICATION_ADMIN|G
+ |root||root|localhost|GROUP_REPLICATION_ADMIN|G
++|root||debian-sys-maint|localhost|GROUP_REPLICATION_STREAM|G
+ |root||root|localhost|GROUP_REPLICATION_STREAM|G
++|root||debian-sys-maint|localhost|INDEX|G
+ |root||root|localhost|INDEX|G
++|root||debian-sys-maint|localhost|INNODB_REDO_LOG_ARCHIVE|G
+ |root||root|localhost|INNODB_REDO_LOG_ARCHIVE|G
++|root||debian-sys-maint|localhost|INNODB_REDO_LOG_ENABLE|G
+ |root||root|localhost|INNODB_REDO_LOG_ENABLE|G
++|root||debian-sys-maint|localhost|INSERT|G
+ |root||root|localhost|INSERT|G
++|root||debian-sys-maint|localhost|LOCK TABLES|G
+ |root||root|localhost|LOCK TABLES|G
++|root||debian-sys-maint|localhost|PASSWORDLESS_USER_ADMIN|G
+ |root||root|localhost|PASSWORDLESS_USER_ADMIN|G
++|root||debian-sys-maint|localhost|PERSIST_RO_VARIABLES_ADMIN|G
+ |root||mysql.session|localhost|PERSIST_RO_VARIABLES_ADMIN|G
+ |root||root|localhost|PERSIST_RO_VARIABLES_ADMIN|G
++|root||debian-sys-maint|localhost|PROCESS|G
+ |root||root|localhost|PROCESS|G
++|root||debian-sys-maint|localhost|REFERENCES|G
+ |root||root|localhost|REFERENCES|G
++|root||debian-sys-maint|localhost|RELOAD|G
+ |root||root|localhost|RELOAD|G
++|root||debian-sys-maint|localhost|REPLICATION CLIENT|G
+ |root||root|localhost|REPLICATION CLIENT|G
++|root||debian-sys-maint|localhost|REPLICATION SLAVE|G
+ |root||root|localhost|REPLICATION SLAVE|G
++|root||debian-sys-maint|localhost|REPLICATION_APPLIER|G
+ |root||root|localhost|REPLICATION_APPLIER|G
++|root||debian-sys-maint|localhost|REPLICATION_SLAVE_ADMIN|G
+ |root||root|localhost|REPLICATION_SLAVE_ADMIN|G
++|root||debian-sys-maint|localhost|RESOURCE_GROUP_ADMIN|G
+ |root||root|localhost|RESOURCE_GROUP_ADMIN|G
++|root||debian-sys-maint|localhost|RESOURCE_GROUP_USER|G
+ |root||root|localhost|RESOURCE_GROUP_USER|G
++|root||debian-sys-maint|localhost|ROLE_ADMIN|G
+ |root||root|localhost|ROLE_ADMIN|G
++|root||debian-sys-maint|localhost|SELECT|G
+ |root||mysql.infoschema|localhost|SELECT|G
+ |root||root|localhost|SELECT|G
++|root||debian-sys-maint|localhost|SENSITIVE_VARIABLES_OBSERVER|G
+ |root||root|localhost|SENSITIVE_VARIABLES_OBSERVER|G
++|root||debian-sys-maint|localhost|SERVICE_CONNECTION_ADMIN|G
+ |root||root|localhost|SERVICE_CONNECTION_ADMIN|G
++|root||debian-sys-maint|localhost|SESSION_VARIABLES_ADMIN|G
+ |root||mysql.session|localhost|SESSION_VARIABLES_ADMIN|G
+ |root||root|localhost|SESSION_VARIABLES_ADMIN|G
++|root||debian-sys-maint|localhost|SET_USER_ID|G
+ |root||root|localhost|SET_USER_ID|G
++|root||debian-sys-maint|localhost|SHOW DATABASES|G
+ |root||root|localhost|SHOW DATABASES|G
++|root||debian-sys-maint|localhost|SHOW VIEW|G
+ |root||root|localhost|SHOW VIEW|G
++|root||debian-sys-maint|localhost|SHOW_ROUTINE|G
+ |root||root|localhost|SHOW_ROUTINE|G
++|root||debian-sys-maint|localhost|SHUTDOWN|G
+ |root||mysql.session|localhost|SHUTDOWN|G
+ |root||root|localhost|SHUTDOWN|G
++|root||debian-sys-maint|localhost|SUPER|G
+ |root||mysql.session|localhost|SUPER|G
+ |root||root|localhost|SUPER|G
++|root||debian-sys-maint|localhost|SYSTEM_USER|G
+ |root||mysql.infoschema|localhost|SYSTEM_USER|G
+ |root||mysql.session|localhost|SYSTEM_USER|G
+ |root||mysql.sys|localhost|SYSTEM_USER|G
+ |root||root|localhost|SYSTEM_USER|G
++|root||debian-sys-maint|localhost|SYSTEM_VARIABLES_ADMIN|G
+ |root||mysql.session|localhost|SYSTEM_VARIABLES_ADMIN|G
+ |root||root|localhost|SYSTEM_VARIABLES_ADMIN|G
++|root||debian-sys-maint|localhost|TABLE_ENCRYPTION_ADMIN|G
+ |root||root|localhost|TABLE_ENCRYPTION_ADMIN|G
++|root||debian-sys-maint|localhost|TELEMETRY_LOG_ADMIN|G
+ |root||root|localhost|TELEMETRY_LOG_ADMIN|G
++|root||debian-sys-maint|localhost|TRIGGER|G
+ |root||root|localhost|TRIGGER|G
++|root||debian-sys-maint|localhost|UPDATE|G
+ |root||root|localhost|UPDATE|G
++|root||debian-sys-maint|localhost|XA_RECOVER_ADMIN|G
+ |root||root|localhost|XA_RECOVER_ADMIN|G
++|root||debian-sys-maint|localhost|grant option|G
+ |root||root|localhost|grant option|G
+ performance_schema|schema||mysql.session|localhost|SELECT|G
+ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
+-      <ServerVersion>8.1.0</ServerVersion>
++      <ServerVersion>8.0.40</ServerVersion>
+     </root>
+     <collation id="2" parent="1" name="armscii8_bin">
+       <Charset>armscii8</Charset>
+@@ -994,1013 +1059,49 @@
+     <collation id="287" parent="1" name="utf8mb4_zh_0900_as_cs">
+       <Charset>utf8mb4</Charset>
+     </collation>
+-    <schema id="288" parent="1" name="hcmanagement">
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </schema>
+-    <schema id="289" parent="1" name="information_schema">
++    <schema id="288" parent="1" name="information_schema">
+       <CollationName>utf8mb3_general_ci</CollationName>
+     </schema>
+-    <schema id="290" parent="1" name="mysql">
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </schema>
+-    <schema id="291" parent="1" name="nats">
+-      <Current>1</Current>
+-      <LastIntrospectionLocalTimestamp>2025-03-23.12:04:35</LastIntrospectionLocalTimestamp>
++    <schema id="289" parent="1" name="mysql">
+       <CollationName>utf8mb4_0900_ai_ci</CollationName>
+     </schema>
+-    <schema id="292" parent="1" name="nats_backup">
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
++    <schema id="290" parent="1" name="nats">
++      <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
++      <LastIntrospectionLevel>3</LastIntrospectionLevel>
++      <LastIntrospectionLocalTimestamp>2025-05-02.17:19:58</LastIntrospectionLocalTimestamp>
++      <CollationName>utf8mb4_unicode_ci</CollationName>
+     </schema>
+-    <schema id="293" parent="1" name="natsinternal">
++    <schema id="291" parent="1" name="natsinternal">
+       <CollationName>utf8mb4_0900_ai_ci</CollationName>
+     </schema>
+-    <schema id="294" parent="1" name="performance_schema">
++    <schema id="292" parent="1" name="performance_schema">
+       <CollationName>utf8mb4_0900_ai_ci</CollationName>
+     </schema>
+-    <schema id="295" parent="1" name="sys">
++    <schema id="293" parent="1" name="sys">
+       <CollationName>utf8mb4_0900_ai_ci</CollationName>
+     </schema>
+-    <user id="296" parent="1" name="mysql.infoschema">
++    <user id="294" parent="1" name="debian-sys-maint">
++      <Host>localhost</Host>
++      <Plugin>caching_sha2_password</Plugin>
++    </user>
++    <user id="295" parent="1" name="mysql.infoschema">
+       <CanLogin>0</CanLogin>
+       <Host>localhost</Host>
+       <Plugin>caching_sha2_password</Plugin>
+     </user>
+-    <user id="297" parent="1" name="mysql.session">
++    <user id="296" parent="1" name="mysql.session">
+       <CanLogin>0</CanLogin>
+       <Host>localhost</Host>
+       <Plugin>caching_sha2_password</Plugin>
+     </user>
+-    <user id="298" parent="1" name="mysql.sys">
++    <user id="297" parent="1" name="mysql.sys">
+       <CanLogin>0</CanLogin>
+       <Host>localhost</Host>
+       <Plugin>caching_sha2_password</Plugin>
+     </user>
+-    <user id="299" parent="1" name="root">
++    <user id="298" parent="1" name="root">
+       <Host>localhost</Host>
+       <Plugin>caching_sha2_password</Plugin>
+     </user>
+-    <table id="300" parent="291" name="about_us_introductions">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="301" parent="291" name="catalog_item_photos">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="302" parent="291" name="catalog_items">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="303" parent="291" name="certificates">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="304" parent="291" name="contact_info">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="305" parent="291" name="enquiries">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="306" parent="291" name="general_settings">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="307" parent="291" name="members">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="308" parent="291" name="posts">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="309" parent="291" name="role_claims">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="310" parent="291" name="roles">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="311" parent="291" name="slider_items">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="312" parent="291" name="summary_items">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="313" parent="291" name="traffic_by_date">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="314" parent="291" name="traffic_by_hour">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="315" parent="291" name="traffic_by_hour_ip_address">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="316" parent="291" name="user_claims">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="317" parent="291" name="user_logins">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="318" parent="291" name="user_roles">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="319" parent="291" name="user_tokens">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <table id="320" parent="291" name="users">
+-      <Engine>InnoDB</Engine>
+-      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+-    </table>
+-    <column id="321" parent="300" name="id">
+-      <AutoIncrement>2</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="322" parent="300" name="thumbnail_url">
+-      <Position>2</Position>
+-      <StoredType>varchar(1000)|0s</StoredType>
+-    </column>
+-    <column id="323" parent="300" name="thumbnail_type">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="324" parent="300" name="main_quote_content">
+-      <NotNull>1</NotNull>
+-      <Position>4</Position>
+-      <StoredType>varchar(1000)|0s</StoredType>
+-    </column>
+-    <column id="325" parent="300" name="about_us_content">
+-      <NotNull>1</NotNull>
+-      <Position>5</Position>
+-      <StoredType>varchar(1500)|0s</StoredType>
+-    </column>
+-    <column id="326" parent="300" name="why_choose_us_content">
+-      <NotNull>1</NotNull>
+-      <Position>6</Position>
+-      <StoredType>varchar(1500)|0s</StoredType>
+-    </column>
+-    <column id="327" parent="300" name="our_difference_content">
+-      <NotNull>1</NotNull>
+-      <Position>7</Position>
+-      <StoredType>varchar(1500)|0s</StoredType>
+-    </column>
+-    <column id="328" parent="300" name="our_culture_content">
+-      <NotNull>1</NotNull>
+-      <Position>8</Position>
+-      <StoredType>varchar(1500)|0s</StoredType>
+-    </column>
+-    <index id="329" parent="300" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="330" parent="300" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="331" parent="301" name="id">
+-      <AutoIncrement>21</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="332" parent="301" name="url">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="333" parent="301" name="item_id">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <foreign-key id="334" parent="301" name="FK_catalog_item_photos_catalog_items_item_id">
+-      <ColNames>item_id</ColNames>
+-      <OnDelete>cascade</OnDelete>
+-      <RefColNames>id</RefColNames>
+-      <RefTableName>catalog_items</RefTableName>
+-    </foreign-key>
+-    <index id="335" parent="301" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="336" parent="301" name="IX_catalog_item_photos_item_id">
+-      <ColNames>item_id</ColNames>
+-      <Type>btree</Type>
+-    </index>
+-    <key id="337" parent="301" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="338" parent="302" name="id">
+-      <AutoIncrement>9</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="339" parent="302" name="name">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>varchar(50)|0s</StoredType>
+-    </column>
+-    <column id="340" parent="302" name="type">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="341" parent="302" name="summary">
+-      <Position>4</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <column id="342" parent="302" name="detail">
+-      <Position>5</Position>
+-      <StoredType>varchar(5000)|0s</StoredType>
+-    </column>
+-    <column id="343" parent="302" name="thumbnail_url">
+-      <Position>6</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <index id="344" parent="302" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="345" parent="302" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="346" parent="303" name="id">
+-      <AutoIncrement>2</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="347" parent="303" name="name">
+-      <Position>2</Position>
+-      <StoredType>varchar(100)|0s</StoredType>
+-    </column>
+-    <column id="348" parent="303" name="photo_url">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <index id="349" parent="303" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="350" parent="303" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="351" parent="304" name="id">
+-      <AutoIncrement>5</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="352" parent="304" name="type">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="353" parent="304" name="content">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <index id="354" parent="304" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="355" parent="304" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="356" parent="305" name="id">
+-      <AutoIncrement>1</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="357" parent="305" name="full_name">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>varchar(50)|0s</StoredType>
+-    </column>
+-    <column id="358" parent="305" name="email">
+-      <Position>3</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <column id="359" parent="305" name="phone_number">
+-      <NotNull>1</NotNull>
+-      <Position>4</Position>
+-      <StoredType>varchar(15)|0s</StoredType>
+-    </column>
+-    <column id="360" parent="305" name="content">
+-      <NotNull>1</NotNull>
+-      <Position>5</Position>
+-      <StoredType>varchar(1000)|0s</StoredType>
+-    </column>
+-    <column id="361" parent="305" name="received_datetime">
+-      <NotNull>1</NotNull>
+-      <Position>6</Position>
+-      <StoredType>datetime(6)|0s</StoredType>
+-    </column>
+-    <column id="362" parent="305" name="is_completed">
+-      <NotNull>1</NotNull>
+-      <Position>7</Position>
+-      <StoredType>tinyint(1)|0s</StoredType>
+-    </column>
+-    <index id="363" parent="305" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="364" parent="305" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="365" parent="306" name="id">
+-      <AutoIncrement>2</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="366" parent="306" name="application_name">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>varchar(100)|0s</StoredType>
+-    </column>
+-    <column id="367" parent="306" name="application_short_name">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>varchar(15)|0s</StoredType>
+-    </column>
+-    <column id="368" parent="306" name="fav_icon_url">
+-      <Position>4</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <column id="369" parent="306" name="under_maintainance">
+-      <NotNull>1</NotNull>
+-      <Position>5</Position>
+-      <StoredType>tinyint(1)|0s</StoredType>
+-    </column>
+-    <index id="370" parent="306" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="371" parent="306" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="372" parent="307" name="id">
+-      <AutoIncrement>5</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="373" parent="307" name="full_name">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>varchar(50)|0s</StoredType>
+-    </column>
+-    <column id="374" parent="307" name="role_name">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>varchar(50)|0s</StoredType>
+-    </column>
+-    <column id="375" parent="307" name="description">
+-      <NotNull>1</NotNull>
+-      <Position>4</Position>
+-      <StoredType>varchar(400)|0s</StoredType>
+-    </column>
+-    <column id="376" parent="307" name="thumbnail_url">
+-      <Position>5</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <index id="377" parent="307" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="378" parent="307" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="379" parent="308" name="id">
+-      <AutoIncrement>31</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="380" parent="308" name="title">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>varchar(150)|0s</StoredType>
+-    </column>
+-    <column id="381" parent="308" name="normalized_title">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <column id="382" parent="308" name="thumbnail_url">
+-      <Position>4</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <column id="383" parent="308" name="content">
+-      <NotNull>1</NotNull>
+-      <Position>5</Position>
+-      <StoredType>varchar(10000)|0s</StoredType>
+-    </column>
+-    <column id="384" parent="308" name="created_datetime">
+-      <NotNull>1</NotNull>
+-      <Position>6</Position>
+-      <StoredType>datetime(6)|0s</StoredType>
+-    </column>
+-    <column id="385" parent="308" name="updated_datetime">
+-      <Position>7</Position>
+-      <StoredType>datetime(6)|0s</StoredType>
+-    </column>
+-    <column id="386" parent="308" name="is_pinned">
+-      <NotNull>1</NotNull>
+-      <Position>8</Position>
+-      <StoredType>tinyint(1)|0s</StoredType>
+-    </column>
+-    <column id="387" parent="308" name="is_published">
+-      <NotNull>1</NotNull>
+-      <Position>9</Position>
+-      <StoredType>tinyint(1)|0s</StoredType>
+-    </column>
+-    <column id="388" parent="308" name="views">
+-      <NotNull>1</NotNull>
+-      <Position>10</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="389" parent="308" name="user_id">
+-      <NotNull>1</NotNull>
+-      <Position>11</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <foreign-key id="390" parent="308" name="FK_posts_users_user_id">
+-      <ColNames>user_id</ColNames>
+-      <OnDelete>cascade</OnDelete>
+-      <RefColNames>id</RefColNames>
+-      <RefTableName>users</RefTableName>
+-    </foreign-key>
+-    <index id="391" parent="308" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="392" parent="308" name="unique__post__normalized_name">
+-      <ColNames>normalized_title</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="393" parent="308" name="IX_posts_user_id">
+-      <ColNames>user_id</ColNames>
+-      <Type>btree</Type>
+-    </index>
+-    <key id="394" parent="308" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <key id="395" parent="308" name="unique__post__normalized_name">
+-      <UnderlyingIndexName>unique__post__normalized_name</UnderlyingIndexName>
+-    </key>
+-    <column id="396" parent="309" name="id">
+-      <AutoIncrement>1</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="397" parent="309" name="role_id">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="398" parent="309" name="claim_type">
+-      <Position>3</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="399" parent="309" name="claim_value">
+-      <Position>4</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <index id="400" parent="309" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="401" parent="309" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="402" parent="310" name="id">
+-      <AutoIncrement>4</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="403" parent="310" name="display_name">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>varchar(50)|0s</StoredType>
+-    </column>
+-    <column id="404" parent="310" name="name">
+-      <Position>3</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <column id="405" parent="310" name="normalized_name">
+-      <Position>4</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="406" parent="310" name="concurrent_stamp">
+-      <Position>5</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <index id="407" parent="310" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="408" parent="310" name="unique__roles__display_name">
+-      <ColNames>display_name</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="409" parent="310" name="unique__roles__name">
+-      <ColNames>name</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="410" parent="310" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <key id="411" parent="310" name="unique__roles__display_name">
+-      <UnderlyingIndexName>unique__roles__display_name</UnderlyingIndexName>
+-    </key>
+-    <key id="412" parent="310" name="unique__roles__name">
+-      <UnderlyingIndexName>unique__roles__name</UnderlyingIndexName>
+-    </key>
+-    <column id="413" parent="311" name="id">
+-      <AutoIncrement>4</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="414" parent="311" name="title">
+-      <Position>2</Position>
+-      <StoredType>varchar(100)|0s</StoredType>
+-    </column>
+-    <column id="415" parent="311" name="thumbnail_url">
+-      <Position>3</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <column id="416" parent="311" name="index">
+-      <NotNull>1</NotNull>
+-      <Position>4</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <index id="417" parent="311" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="418" parent="311" name="unique__slider_items__index">
+-      <ColNames>index</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="419" parent="311" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <key id="420" parent="311" name="unique__slider_items__index">
+-      <UnderlyingIndexName>unique__slider_items__index</UnderlyingIndexName>
+-    </key>
+-    <column id="421" parent="312" name="id">
+-      <AutoIncrement>5</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="422" parent="312" name="name">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>varchar(25)|0s</StoredType>
+-    </column>
+-    <column id="423" parent="312" name="summary_content">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <column id="424" parent="312" name="detail_content">
+-      <NotNull>1</NotNull>
+-      <Position>4</Position>
+-      <StoredType>varchar(3000)|0s</StoredType>
+-    </column>
+-    <column id="425" parent="312" name="thumbnail_url">
+-      <Position>5</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <index id="426" parent="312" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="427" parent="312" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="428" parent="313" name="id">
+-      <AutoIncrement>1</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="429" parent="313" name="recorded_date">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>date|0s</StoredType>
+-    </column>
+-    <column id="430" parent="313" name="access_count">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="431" parent="313" name="guest_count">
+-      <NotNull>1</NotNull>
+-      <Position>4</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <index id="432" parent="313" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="433" parent="313" name="unique__traffic_by_date__recorded_date">
+-      <ColNames>recorded_date</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="434" parent="313" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <key id="435" parent="313" name="unique__traffic_by_date__recorded_date">
+-      <UnderlyingIndexName>unique__traffic_by_date__recorded_date</UnderlyingIndexName>
+-    </key>
+-    <column id="436" parent="314" name="id">
+-      <AutoIncrement>1</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="437" parent="314" name="recorded_datetime">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>datetime(6)|0s</StoredType>
+-    </column>
+-    <column id="438" parent="314" name="access_count">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="439" parent="314" name="guest_count">
+-      <NotNull>1</NotNull>
+-      <Position>4</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="440" parent="314" name="traffic_by_date_id">
+-      <NotNull>1</NotNull>
+-      <Position>5</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <foreign-key id="441" parent="314" name="FK_traffic_by_hour_traffic_by_date_traffic_by_date_id">
+-      <ColNames>traffic_by_date_id</ColNames>
+-      <OnDelete>cascade</OnDelete>
+-      <RefColNames>id</RefColNames>
+-      <RefTableName>traffic_by_date</RefTableName>
+-    </foreign-key>
+-    <index id="442" parent="314" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="443" parent="314" name="unique__traffic_by_hour__recoreded_datetime">
+-      <ColNames>recorded_datetime</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="444" parent="314" name="IX_traffic_by_hour_traffic_by_date_id">
+-      <ColNames>traffic_by_date_id</ColNames>
+-      <Type>btree</Type>
+-    </index>
+-    <key id="445" parent="314" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <key id="446" parent="314" name="unique__traffic_by_hour__recoreded_datetime">
+-      <UnderlyingIndexName>unique__traffic_by_hour__recoreded_datetime</UnderlyingIndexName>
+-    </key>
+-    <column id="447" parent="315" name="id">
+-      <AutoIncrement>1</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="448" parent="315" name="ip_address">
+-      <Position>2</Position>
+-      <StoredType>varchar(15)|0s</StoredType>
+-    </column>
+-    <column id="449" parent="315" name="access_count">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="450" parent="315" name="last_access_at">
+-      <NotNull>1</NotNull>
+-      <Position>4</Position>
+-      <StoredType>datetime(6)|0s</StoredType>
+-    </column>
+-    <column id="451" parent="315" name="last_user_agent">
+-      <Position>5</Position>
+-      <StoredType>varchar(10000)|0s</StoredType>
+-    </column>
+-    <column id="452" parent="315" name="traffic_by_hour_id">
+-      <NotNull>1</NotNull>
+-      <Position>6</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <foreign-key id="453" parent="315" name="FK_traffic_by_hour_ip_address_traffic_by_hour_traffic_by_hour_id">
+-      <ColNames>traffic_by_hour_id</ColNames>
+-      <OnDelete>cascade</OnDelete>
+-      <RefColNames>id</RefColNames>
+-      <RefTableName>traffic_by_hour</RefTableName>
+-    </foreign-key>
+-    <index id="454" parent="315" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="455" parent="315" name="IX_traffic_by_hour_ip_address_last_access_at">
+-      <ColNames>last_access_at</ColNames>
+-      <Type>btree</Type>
+-    </index>
+-    <index id="456" parent="315" name="IX_traffic_by_hour_ip_address_traffic_by_hour_id">
+-      <ColNames>traffic_by_hour_id</ColNames>
+-      <Type>btree</Type>
+-    </index>
+-    <key id="457" parent="315" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="458" parent="316" name="id">
+-      <AutoIncrement>1</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="459" parent="316" name="user_id">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="460" parent="316" name="claim_type">
+-      <Position>3</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="461" parent="316" name="claim_value">
+-      <Position>4</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <index id="462" parent="316" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="463" parent="316" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="464" parent="317" name="user_id">
+-      <AutoIncrement>1</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="465" parent="317" name="login_providers">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="466" parent="317" name="provider_key">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="467" parent="317" name="provider_display_name">
+-      <Position>4</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <index id="468" parent="317" name="PRIMARY">
+-      <ColNames>user_id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="469" parent="317" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="470" parent="318" name="user_id">
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="471" parent="318" name="role_id">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <foreign-key id="472" parent="318" name="FK_user_roles_users_user_id">
+-      <ColNames>user_id</ColNames>
+-      <OnDelete>cascade</OnDelete>
+-      <RefColNames>id</RefColNames>
+-      <RefTableName>users</RefTableName>
+-    </foreign-key>
+-    <foreign-key id="473" parent="318" name="FK_user_roles_roles_role_id">
+-      <ColNames>role_id</ColNames>
+-      <OnDelete>cascade</OnDelete>
+-      <RefColNames>id</RefColNames>
+-      <RefTableName>roles</RefTableName>
+-    </foreign-key>
+-    <index id="474" parent="318" name="PRIMARY">
+-      <ColNames>role_id
+-user_id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="475" parent="318" name="IX_user_roles_user_id">
+-      <ColNames>user_id</ColNames>
+-      <Type>btree</Type>
+-    </index>
+-    <key id="476" parent="318" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="477" parent="319" name="UserId">
+-      <AutoIncrement>1</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="478" parent="319" name="LoginProvider">
+-      <NotNull>1</NotNull>
+-      <Position>2</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="479" parent="319" name="Name">
+-      <NotNull>1</NotNull>
+-      <Position>3</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="480" parent="319" name="Value">
+-      <Position>4</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <index id="481" parent="319" name="PRIMARY">
+-      <ColNames>UserId</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="482" parent="319" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <column id="483" parent="320" name="id">
+-      <AutoIncrement>4</AutoIncrement>
+-      <NotNull>1</NotNull>
+-      <Position>1</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <column id="484" parent="320" name="username">
+-      <Position>2</Position>
+-      <StoredType>varchar(255)|0s</StoredType>
+-    </column>
+-    <column id="485" parent="320" name="normalized_username">
+-      <Position>3</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="486" parent="320" name="email">
+-      <Position>4</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="487" parent="320" name="normalized_email">
+-      <Position>5</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="488" parent="320" name="email_confirmed">
+-      <NotNull>1</NotNull>
+-      <Position>6</Position>
+-      <StoredType>tinyint(1)|0s</StoredType>
+-    </column>
+-    <column id="489" parent="320" name="password_hash">
+-      <Position>7</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="490" parent="320" name="security_stamp">
+-      <Position>8</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="491" parent="320" name="concurrent_stamp">
+-      <Position>9</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="492" parent="320" name="phone_number">
+-      <Position>10</Position>
+-      <StoredType>longtext|0s</StoredType>
+-    </column>
+-    <column id="493" parent="320" name="phone_number_confirmed">
+-      <NotNull>1</NotNull>
+-      <Position>11</Position>
+-      <StoredType>tinyint(1)|0s</StoredType>
+-    </column>
+-    <column id="494" parent="320" name="two_factor_enabled">
+-      <NotNull>1</NotNull>
+-      <Position>12</Position>
+-      <StoredType>tinyint(1)|0s</StoredType>
+-    </column>
+-    <column id="495" parent="320" name="lockout_end">
+-      <Position>13</Position>
+-      <StoredType>datetime(6)|0s</StoredType>
+-    </column>
+-    <column id="496" parent="320" name="lockout_enabled">
+-      <NotNull>1</NotNull>
+-      <Position>14</Position>
+-      <StoredType>tinyint(1)|0s</StoredType>
+-    </column>
+-    <column id="497" parent="320" name="access_failed_count">
+-      <NotNull>1</NotNull>
+-      <Position>15</Position>
+-      <StoredType>int|0s</StoredType>
+-    </column>
+-    <index id="498" parent="320" name="PRIMARY">
+-      <ColNames>id</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <index id="499" parent="320" name="unique__users__username">
+-      <ColNames>username</ColNames>
+-      <Type>btree</Type>
+-      <Unique>1</Unique>
+-    </index>
+-    <key id="500" parent="320" name="PRIMARY">
+-      <NameSurrogate>1</NameSurrogate>
+-      <Primary>1</Primary>
+-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+-    </key>
+-    <key id="501" parent="320" name="unique__users__username">
+-      <UnderlyingIndexName>unique__users__username</UnderlyingIndexName>
+-    </key>
+   </database-model>
+ </dataSource>
+\ No newline at end of file

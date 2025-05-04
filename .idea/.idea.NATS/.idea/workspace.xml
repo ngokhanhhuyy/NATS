@@ -16,11 +16,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="906859bb-e68b-47c5-b55b-4e77815ff55d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Views/SliderItem/Upsert.cshtml.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/projectSettingsUpdater.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources/c6a547f5-00cc-4032-98a7-ed5b8fde1cb8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/dataSources/c6a547f5-00cc-4032-98a7-ed5b8fde1cb8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NATS/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/Protected/Controllers/SliderItemController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Controllers/SliderItemController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml.css" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Views/Shared/Form/_ThumbnailInput.cshtml.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/Areas/Protected/Views/SliderItem/Upsert.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/Areas/Protected/Views/SliderItem/Upsert.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NATS/global.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/NATS/wwwroot/js/protected/thumbnail_input.js" beforeDir="false" afterPath="$PROJECT_DIR$/NATS/wwwroot/js/protected/thumbnail_input.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,6 +72,9 @@
   &quot;associatedIndex&quot;: 5
 }</component>
   <component name="ProjectId" id="2u7Z7ut5snaxdOwcEouYQcpC3Ss" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -101,8 +110,8 @@
       <window_info id="Commit_Guest" show_stripe_button="false" />
       <window_info id="Pull Requests" />
       <window_info id="Learn" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24105915" />
-      <window_info id="Commit" order="1" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20442177" />
+      <window_info id="Commit" order="1" weight="0.20442177" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Database Changes" />
       <window_info anchor="bottom" id="TypeScript" />
@@ -117,10 +126,9 @@
       <window_info anchor="bottom" id="Unity" />
       <window_info anchor="bottom" id="Version Control" order="0" />
       <window_info anchor="bottom" id="Problems" order="1" />
-      <window_info active="true" anchor="bottom" id="Problems View" order="2" visible="true" weight="0.319928" />
-      <window_info anchor="bottom" id="Terminal" order="3" />
-      <window_info anchor="bottom" id="Services" order="4" />
-      <window_info anchor="bottom" id="EF Core" order="5" weight="0.319928" />
+      <window_info anchor="bottom" id="Problems View" order="2" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="3" visible="true" weight="0.22687703" />
+      <window_info anchor="bottom" id="Services" order="4" weight="0.33025026" />
       <window_info anchor="right" id="RoslynVisualizer" />
       <window_info anchor="right" id="Endpoints" />
       <window_info anchor="right" id="Monitoring" />
@@ -129,7 +137,7 @@
       <window_info anchor="right" id="Test Coverage" />
       <window_info anchor="right" content_ui="combo" id="Notifications" order="0" weight="0.25" />
       <window_info anchor="right" id="AIAssistant" order="1" weight="0.25" />
-      <window_info anchor="right" id="Database" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="2" weight="0.3302721" />
       <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
       <window_info anchor="right" id="Maven" order="4" weight="0.25" />
     </layout>
@@ -231,7 +239,8 @@
       <workItem from="1744645428805" duration="177000" />
       <workItem from="1744645804608" duration="75000" />
       <workItem from="1744645899766" duration="1677000" />
-      <workItem from="1746172015743" duration="602000" />
+      <workItem from="1746261598314" duration="10570000" />
+      <workItem from="1746340675837" duration="3972000" />
     </task>
     <task id="LOCAL-00001" summary="Commit">
       <option name="closed" value="true" />
@@ -253,24 +262,6 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Commit" />
     <option name="LAST_COMMIT_MESSAGE" value="Commit" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
-          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
-          <option name="timeStamp" value="1" />
-        </breakpoint>
-        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
-          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
-          <option name="timeStamp" value="2" />
-        </breakpoint>
-        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
-          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
-          <option name="timeStamp" value="3" />
-        </breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

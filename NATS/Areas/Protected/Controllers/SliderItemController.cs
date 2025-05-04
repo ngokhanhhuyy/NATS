@@ -56,4 +56,28 @@ public class SliderItemController : Controller
             return Redirect("/Error");
         }
     }
+
+    [HttpPost("{id:int}", Name = UpdateRouteName)]
+    public async Task<IActionResult> Update(int id, [FromForm] SliderItemUpsertViewModel model)
+    {
+        SliderItemUpsertRequestDto requestDto = model.ToRequestDto();
+        ValidationResult validationResult = _validator.Validate(requestDto);
+        if (!validationResult.IsValid)
+        {
+            ModelState.AddModelErrorsFromValidationErrors(validationResult.Errors);
+            return View("Upsert", model);
+        }
+
+        try
+        {
+            await _service.UpdateAsync(id, requestDto);
+            return RedirectToRoute(ListRouteName);
+        }
+        catch (ResourceNotFoundException exception)
+        {
+            ModelState.AddModelErrorsFromServiceException(exception);
+            return View("Upsert", model);
+        }
+        catch ()
+    }
 }

@@ -14,6 +14,10 @@
  */
 
 /**
+ * @typedef {{ thumbnailUrl: string; imageUrl: string }} UploadingResult
+ */
+
+/**
  * Creates a controller that controls the input element for uploading thumbnail image.
  * 
  * @param {string} imgbbApiKey The api key to ImgBB api.
@@ -64,15 +68,6 @@ function createThumbnailInputController(imgbbApiKey, container) {
     const validationMessageElement = thumbnailAddingIndicatorElement
         .querySelector(".validation-message");
     
-    /** @type {HTMLDivElement} */
-    const modalElement = containerElement.querySelector(".modal");
-    
-    /** @type {HTMLDivElement} */
-    const modalBodyElement = modalElement.querySelector(".modal-body");
-    
-    /** @type {bootstrap.Modal} */
-    const modal = new window.bootstrap.Modal(modalElement);
-    
     buttonElement.addEventListener("click", () => {
         fileInputElement.click();
     });
@@ -83,7 +78,7 @@ function createThumbnailInputController(imgbbApiKey, container) {
         /** @type {HTMLInputElement} */
         const inputElement = event.target;
         if (!inputElement.files || !inputElement.files[0]) {
-            clearThumbnail();
+            clearThumbnail(event);
         }
         
         const file = inputElement.files[0];
@@ -91,9 +86,18 @@ function createThumbnailInputController(imgbbApiKey, container) {
             await validateFile(file);
             showValidationErrorMessage(null);
             switchMode("thumbnailUploading");
-            const uploadingResult = await uploadFile(file);
+            const /** @type {Promise<string>[]} */ promises = [
+                convertFileToBase64(file),
+                uploadFile(file)
+            ];
+
+            /** @type {[string, UploadingResponseJSON]} */
+            let /** @type {string} */ previewSource;
+            let /** @type {UploadingResponseJSON} */ uploadedResult
+            [previewSource, uploadedResult] = await Promise.all(promises);
             switchMode("thumbnailAdded");
-            thumbnailPreviewImageElement.setAttribute("src", uploadingResult.thumbnailUrl);
+            thumbnailPreviewImageElement.setAttribute("src", previewSource);
+            hiddenInputElement.value = uploadedResult.data.url;
         } catch (error) {
             if (typeof error !== "string") {
                 throw error;
@@ -158,10 +162,32 @@ function createThumbnailInputController(imgbbApiKey, container) {
     }
 
     /**
+     * Convert the given file, specified by {@link file}, to a base64 string which is used as
+     * src value for the preview image element.
+     * 
+     * @param file The file that user has selected via file input element.
+     * @returns {Promise<string>} A {@link Promise} representing the asynchronous opreation,
+     * which result is a base64 string used as src value for the thumbnail preview image
+     * element.
+     */
+    async function convertFileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+
+            fileReader.onload = () => resolve(fileReader.result);
+            fileReader.onerror = () => {
+                return reject();
+            };
+            
+            fileReader.readAsDataURL(file);
+        })
+    }
+
+    /**
      * Uploads the specified file to ImgBB api and retrieve the image url.
      * 
      * @param file
-     * @returns {Promise<{ thumbnailUrl: string; imageUrl: string }>} A {@link Promise} which
+     * @returns {Promise<>} A {@link Promise} which
      * resolves to an object containing the preview thumbnail url and the full size image url.
      * 
      * @throws "InvalidFileType" Throws when the uploaded file type is invalid.
@@ -210,23 +236,6 @@ function createThumbnailInputController(imgbbApiKey, container) {
         thumbnailAddingIndicatorTextElement.classList.remove("d-none");
         validationMessageContainerElement.classList.add("d-none");
         validationMessageElement.textContent = "";
-    }
-
-    /**
-     * Show the validation error notification modal with the specified texts.
-     * 
-     * @param {string[]} texts An array of strings, representing the sentences in the
-     * messages that are shown in the modal body.
-     */
-    function showModal(texts) {
-        modalBodyElement.replaceChildren();
-        for (const text of texts) {
-            const spanElement = document.createElement("span");
-            spanElement.textContent = text;
-            modalBodyElement.appendChild(spanElement);
-        }
-        
-        modal.show();
     }
 
     /**

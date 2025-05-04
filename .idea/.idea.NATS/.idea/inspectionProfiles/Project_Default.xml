@@ -2,6 +2,7 @@
   <profile version="1.0">
     <option name="myName" value="Project Default" />
     <inspection_tool class="CssUnusedSymbol" enabled="true" level="INFORMATION" enabled_by_default="true" />
+    <inspection_tool class="ES6MissingAwait" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="HtmlRequiredAltAttribute" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
       <option name="processCode" value="true" />
